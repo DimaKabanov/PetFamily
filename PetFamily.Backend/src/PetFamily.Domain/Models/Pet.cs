@@ -34,7 +34,9 @@ public class Pet
     
     public AssistanceStatus AssistanceStatus { get; private set; }
     
-    public List<Requisite> Requisite { get; private set; } = [];
+    public List<Requisite> Requisites { get; private set; } = [];
 
     public DateTime CreatedDate { get; private set; }
+    
+    public List<PetPhoto> Photos { get; private set; } = [];
 }
