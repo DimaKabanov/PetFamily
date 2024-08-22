@@ -9,7 +9,7 @@ public class SocialNetworkConfiguration : IEntityTypeConfiguration<SocialNetwork
 {
     public void Configure(EntityTypeBuilder<SocialNetwork> b)
     {
-        b.ToTable("SocialNetworks");
+        b.ToTable("social_networks");
 
         b.HasKey(s => s.Id);
 

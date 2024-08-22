@@ -9,7 +9,7 @@ public class PetPhotoConfiguration : IEntityTypeConfiguration<PetPhoto>
 {
     public void Configure(EntityTypeBuilder<PetPhoto> b)
     {
-        b.ToTable("PetPhotos");
+        b.ToTable("pet_photos");
 
         b.HasKey(p => p.Id);
 

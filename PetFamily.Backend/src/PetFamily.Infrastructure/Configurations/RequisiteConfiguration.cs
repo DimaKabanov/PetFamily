@@ -9,7 +9,7 @@ public class RequisiteConfiguration : IEntityTypeConfiguration<Requisite>
 {
     public void Configure(EntityTypeBuilder<Requisite> b)
     {
-        b.ToTable("Requisites");
+        b.ToTable("requisites");
 
         b.HasKey(r => r.Id);
 
