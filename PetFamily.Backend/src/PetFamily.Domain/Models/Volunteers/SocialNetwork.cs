@@ -1,4 +1,4 @@
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Models.Volunteers;
 
 public class SocialNetwork
 {
