@@ -1,11 +1,14 @@
 using PetFamily.Domain.Enums;
+using PetFamily.Domain.Models.Pets;
+using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models;
+namespace PetFamily.Domain.Models.Volunteers;
 
-public class Volunteer
+public class Volunteer : Entity<VolunteerId>
 {
-    public Guid Id { get; private set; }
-
+    private Volunteer(VolunteerId id) : base(id)
+    {
+    }
     public string FullName { get; private set; } = default!;
 
     public string Description { get; private set; } = default!;
