@@ -74,7 +74,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         
         b.OwnsOne(p => p.Details, pb =>
         {
-            pb.ToJson();
+            pb.ToJson("details");
             
             pb.OwnsMany(d => d.Photos, ppb =>
             {
