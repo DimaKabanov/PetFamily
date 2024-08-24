@@ -2,12 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Models.Pets;
+using PetFamily.Domain.Models.Volunteers;
 
 namespace PetFamily.Infrastructure;
 
 public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
     public DbSet<Pet> Pets => Set<Pet>();
+    public DbSet<Volunteer> Volunteers => Set<Volunteer>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

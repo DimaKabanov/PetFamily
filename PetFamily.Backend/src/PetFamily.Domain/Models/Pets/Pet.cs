@@ -39,7 +39,5 @@ public class Pet : Entity<PetId>
 
     public DateTime CreatedDate { get; private set; }
     
-    public List<Requisite> Requisites { get; private set; } = [];
-    
-    public List<PetPhoto> Photos { get; private set; } = [];
+    public Detail Details { get; private set; }
 }

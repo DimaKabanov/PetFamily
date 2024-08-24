@@ -1,10 +1,8 @@
 namespace PetFamily.Domain.Models.Volunteers;
 
-public class SocialNetwork
+public record SocialNetwork
 {
-    public Guid Id { get; private set; }
-    
-    public string Title { get; private set; } = default!;
+    public string Title { get; }
 
-    public string Url { get; private set; } = default!;
+    public string Url { get; }
 }
