@@ -6,5 +6,5 @@ public record PetProperty
 {
     public SpeciesId SpeciesId { get; }
 
-    public BreedId BreedId { get; }
+    public Guid BreedId { get; }
 }

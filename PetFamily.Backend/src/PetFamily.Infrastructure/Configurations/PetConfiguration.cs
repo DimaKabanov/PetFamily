@@ -102,10 +102,6 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("species_id");
             
             pb.Property(pp => pp.BreedId)
-                .HasConversion(
-                    breedId => breedId.Id,
-                    id => BreedId.Create(id)
-                )
                 .IsRequired()
                 .HasColumnName("breed_id");
         });
