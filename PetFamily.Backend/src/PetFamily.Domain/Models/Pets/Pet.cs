@@ -1,4 +1,5 @@
 ﻿using PetFamily.Domain.Enums;
+using PetFamily.Domain.Models.Pets.Ids;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Pets;
@@ -11,11 +12,7 @@ public class Pet : Entity<PetId>
     
     public string Name { get; private set; } = default!;
     
-    public string Type { get; private set; } = default!;
-    
     public string Description { get; private set; } = default!;
-    
-    public string Breed { get; private set; } = default!;
     
     public string Color { get; private set; } = default!;
     
@@ -40,4 +37,6 @@ public class Pet : Entity<PetId>
     public DateTime CreatedDate { get; private set; }
     
     public Detail Details { get; private set; }
+    
+    public PetProperty PetProperties { get; private set; }
 }
