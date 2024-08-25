@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Pets;
+using PetFamily.Domain.Models.Pets.Ids;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -22,18 +23,10 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-
-        b.Property(p => p.Type)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
         
         b.Property(p => p.Description)
             .IsRequired()
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
-        
-        b.Property(p => p.Breed)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
         
         b.Property(p => p.Color)
             .IsRequired()
@@ -96,6 +89,25 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
             });
+        });
+
+        b.ComplexProperty(p => p.PetProperties, pb =>
+        {
+            pb.Property(pp => pp.SpeciesId)
+                .HasConversion(
+                    speciesId => speciesId.Id,
+                    id => SpeciesId.Create(id)
+                )
+                .IsRequired()
+                .HasColumnName("species_id");
+            
+            pb.Property(pp => pp.BreedId)
+                .HasConversion(
+                    breedId => breedId.Id,
+                    id => BreedId.Create(id)
+                )
+                .IsRequired()
+                .HasColumnName("breed_id");
         });
     }
 }
