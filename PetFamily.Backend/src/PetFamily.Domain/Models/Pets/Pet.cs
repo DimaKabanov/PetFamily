@@ -1,5 +1,5 @@
 ﻿using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Pets.Ids;
+using PetFamily.Domain.Models.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Pets;
