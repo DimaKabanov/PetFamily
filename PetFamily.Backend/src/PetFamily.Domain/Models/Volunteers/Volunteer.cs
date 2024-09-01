@@ -1,6 +1,6 @@
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Pets;
-using PetFamily.Domain.Models.Volunteers.Ids;
+using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers;
@@ -10,13 +10,30 @@ public class Volunteer : Entity<VolunteerId>
     private Volunteer(VolunteerId id) : base(id)
     {
     }
-    public string FullName { get; private set; } = default!;
-
-    public string Description { get; private set; } = default!;
-
-    public int Experience { get; private set; }
     
-    public string Phone { get; private set; } = default!;
+    public Volunteer(
+        VolunteerId id,
+        FullName fullName,
+        Description description,
+        Experience experience,
+        Phone phone,
+        Detail details
+    ) : base(id)
+    {
+        FullName = fullName;
+        Description = description;
+        Experience = experience;
+        Phone = phone;
+        Details = details;
+    }
+    
+    public FullName FullName { get; private set; }
+
+    public Description Description { get; private set; }
+
+    public Experience Experience { get; private set; }
+    
+    public Phone Phone { get; private set; }
 
     public Detail Details { get; private set; }
 

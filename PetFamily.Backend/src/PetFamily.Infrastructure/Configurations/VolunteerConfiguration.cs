@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Volunteers;
-using PetFamily.Domain.Models.Volunteers.Ids;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -16,24 +15,50 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         
         b.Property(v => v.Id)
             .HasConversion(
-                volunteerId => volunteerId.Id,
+                volunteerId => volunteerId.Value,
                 id => VolunteerId.Create(id)
             );
 
-        b.Property(v => v.FullName)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
-        
-        b.Property(v => v.Description)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
-        
-        b.Property(v => v.Experience)
-            .IsRequired();
-        
-        b.Property(v => v.Phone)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+        b.ComplexProperty(v => v.FullName, fnb =>
+        {
+            fnb.Property(fn => fn.Name)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("name");
+            
+            fnb.Property(fn => fn.Surname)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("surname");
+            
+            fnb.Property(fn => fn.Patronymic)
+                .IsRequired(false)
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("patronymic");
+        });
+
+        b.ComplexProperty(v => v.Description, db =>
+        {
+            db.Property(d => d.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH)
+                .HasColumnName("description");
+        });
+
+        b.ComplexProperty(v => v.Experience, eb =>
+        {
+            eb.Property(e => e.Value)
+                .IsRequired()
+                .HasColumnName("experience");
+        });
+
+        b.ComplexProperty(v => v.Phone, pb =>
+        {
+            pb.Property(p => p.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasColumnName("phone");
+        });
 
         b.OwnsOne(v => v.Details, vb =>
         {

@@ -1,6 +1,6 @@
-using PetFamily.Domain.Models.Pets.Ids;
+using PetFamily.Domain.Models.Species;
 
-namespace PetFamily.Domain.Models.Pets;
+namespace PetFamily.Domain.Models.Pets.ValueObjects;
 
 public record PetProperty
 {
