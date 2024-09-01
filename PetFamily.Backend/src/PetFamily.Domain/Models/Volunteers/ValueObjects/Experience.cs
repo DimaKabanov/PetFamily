@@ -2,9 +2,9 @@ namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record Experience
 {
-    private Experience(int experience)
+    private Experience(int value)
     {
-        Value = experience;
+        Value = value;
     }
     
     public int Value { get; }

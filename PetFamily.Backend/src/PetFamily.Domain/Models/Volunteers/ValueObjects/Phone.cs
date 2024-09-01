@@ -2,9 +2,9 @@ namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record Phone
 {
-    private Phone(string phone)
+    private Phone(string value)
     {
-        Value = phone;
+        Value = value;
     }
     
     public string Value { get; }

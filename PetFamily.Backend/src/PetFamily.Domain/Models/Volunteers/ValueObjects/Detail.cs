@@ -2,17 +2,17 @@ namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record Detail
 {
-    private Detail(List<SocialNetwork> socialNetworks, List<Requisite> requisites)
+    private Detail(IEnumerable<SocialNetwork> socialNetworks, IEnumerable<Requisite> requisites)
     {
-        SocialNetworks = socialNetworks;
-        Requisites = requisites;
+        SocialNetworks = socialNetworks.ToList();
+        Requisites = requisites.ToList();
     }
     
-    public List<SocialNetwork> SocialNetworks { get; } = [];
+    public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
     
-    public List<Requisite> Requisites { get; } = [];
+    public IReadOnlyList<Requisite> Requisites { get; } = [];
     
-    public static Detail Create(List<SocialNetwork> socialNetworks, List<Requisite> requisites)
+    public static Detail Create(IEnumerable<SocialNetwork> socialNetworks, IEnumerable<Requisite> requisites)
     {
         return new Detail(socialNetworks, requisites);
     }

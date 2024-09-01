@@ -31,11 +31,11 @@ public class CreateVolunteerService
 
         var socialNetworks = request.SocialNetworks.Select(
             s => SocialNetwork.Create(s.Title, s.Url)
-        ).ToList();
+        );
 
         var requisites = request.Requisites.Select(
             r => Requisite.Create(r.Name, r.Description)
-        ).ToList();
+        );
 
         var details = Detail.Create(socialNetworks, requisites);
 
