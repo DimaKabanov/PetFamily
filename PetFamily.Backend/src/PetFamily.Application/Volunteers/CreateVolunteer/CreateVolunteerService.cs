@@ -45,13 +45,23 @@ public class CreateVolunteerService
         if (phone.IsFailure)
             return phone.Error;
 
-        var socialNetworks = request.SocialNetworks.Select(
-            s => SocialNetwork.Create(s.Title, s.Url).Value
+        var socialNetworksResults = request.SocialNetworks.Select(
+            s => SocialNetwork.Create(s.Title, s.Url)
         );
 
-        var requisites = request.Requisites.Select(
-            r => Requisite.Create(r.Name, r.Description).Value
+        if (socialNetworksResults.Any(s => s.IsFailure))
+            return socialNetworksResults.FirstOrDefault(s => s.IsFailure).Error;
+
+        var socialNetworks = socialNetworksResults.Select(s => s.Value);
+
+        var requisitesResults = request.Requisites.Select(
+            r => Requisite.Create(r.Name, r.Description)
         );
+        
+        if (requisitesResults.Any(r => r.IsFailure))
+            return requisitesResults.FirstOrDefault(r => r.IsFailure).Error;
+        
+        var requisites = requisitesResults.Select(r => r.Value);
 
         var details = Detail.Create(socialNetworks, requisites);
 
