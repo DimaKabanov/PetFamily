@@ -1,6 +1,8 @@
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.Models;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
@@ -13,7 +15,9 @@ public class CreateVolunteerService
         _volunteersRepository = volunteersRepository;
     }
     
-    public async Task<Guid> Create(CreateVolunteerRequest request, CancellationToken cancellationToken)
+    public async Task<Result<Guid, Error>> Create(
+        CreateVolunteerRequest request,
+        CancellationToken cancellationToken)
     {
         var volunteerId = VolunteerId.NewId();
 
@@ -23,28 +27,40 @@ public class CreateVolunteerService
             request.FullName.Patronymic
         );
 
+        if (fullName.IsFailure)
+            return fullName.Error;
+            
         var description = Description.Create(request.Description);
+        
+        if (description.IsFailure)
+            return description.Error;
 
         var experience = Experience.Create(request.Experience);
+        
+        if (experience.IsFailure)
+            return experience.Error;
 
         var phone = Phone.Create(request.Phone);
+        
+        if (phone.IsFailure)
+            return phone.Error;
 
         var socialNetworks = request.SocialNetworks.Select(
-            s => SocialNetwork.Create(s.Title, s.Url)
+            s => SocialNetwork.Create(s.Title, s.Url).Value
         );
 
         var requisites = request.Requisites.Select(
-            r => Requisite.Create(r.Name, r.Description)
+            r => Requisite.Create(r.Name, r.Description).Value
         );
 
         var details = Detail.Create(socialNetworks, requisites);
 
         var volunteer = new Volunteer(
             volunteerId,
-            fullName,
-            description,
-            experience,
-            phone,
+            fullName.Value,
+            description.Value,
+            experience.Value,
+            phone.Value,
             details
         );
 

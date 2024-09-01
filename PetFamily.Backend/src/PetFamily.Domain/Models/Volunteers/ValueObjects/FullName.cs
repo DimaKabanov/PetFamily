@@ -1,3 +1,6 @@
+using CSharpFunctionalExtensions;
+using PetFamily.Domain.Shared;
+
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record FullName
@@ -15,8 +18,23 @@ public record FullName
 
     public string? Patronymic { get; }
     
-    public static FullName Create(string name, string surname, string? patronymic)
+    public static Result<FullName, Error> Create(string name, string surname, string? patronymic)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            return Errors.General.ValueIsRequired("Name");
+
+        if (name.Length > Constants.MAX_LOW_TEXT_LENGTH)
+            return Errors.General.ValueTooLong(Constants.MAX_LOW_TEXT_LENGTH, "Name");
+        
+        if (string.IsNullOrWhiteSpace(surname))
+            return Errors.General.ValueIsRequired("Surname");
+
+        if (surname.Length > Constants.MAX_LOW_TEXT_LENGTH)
+            return Errors.General.ValueTooLong(Constants.MAX_LOW_TEXT_LENGTH, "Surname");
+        
+        if (patronymic is not null && patronymic.Length > Constants.MAX_LOW_TEXT_LENGTH)
+            return Errors.General.ValueTooLong(Constants.MAX_LOW_TEXT_LENGTH, "Patronymic");
+        
         return new FullName(name, surname, patronymic);
     }
 }
