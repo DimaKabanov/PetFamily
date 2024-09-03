@@ -1,4 +1,4 @@
-namespace PetFamily.Domain.Models.Species;
+namespace PetFamily.Domain.Models.Species.Ids;
 
 public record SpeciesId
 {

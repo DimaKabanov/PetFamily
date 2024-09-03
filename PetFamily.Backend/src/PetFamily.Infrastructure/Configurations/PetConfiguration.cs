@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PetFamily.Domain.Models.Pets;
-using PetFamily.Domain.Models.Species;
+using PetFamily.Domain.Models.Species.Ids;
+using PetFamily.Domain.Models.Volunteers;
+using PetFamily.Domain.Models.Volunteers.Ids;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -65,7 +66,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.CreatedDate)
             .IsRequired();
         
-        b.OwnsOne(p => p.Details, pb =>
+        b.OwnsOne(p => p.PetDetails, pb =>
         {
             pb.ToJson("details");
             

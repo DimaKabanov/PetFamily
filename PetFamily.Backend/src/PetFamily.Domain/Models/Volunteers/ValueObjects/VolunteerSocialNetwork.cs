@@ -3,9 +3,9 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
-public record SocialNetwork
+public record VolunteerSocialNetwork
 {
-    private SocialNetwork(string title, string url)
+    private VolunteerSocialNetwork(string title, string url)
     {
         Title = title;
         Url = url;
@@ -15,7 +15,7 @@ public record SocialNetwork
 
     public string Url { get; }
     
-    public static Result<SocialNetwork, Error> Create(string title, string url)
+    public static Result<VolunteerSocialNetwork, Error> Create(string title, string url)
     {
         if (string.IsNullOrWhiteSpace(title))
             return Errors.General.ValueIsRequired("Title");
@@ -29,6 +29,6 @@ public record SocialNetwork
         if (url.Length > Constants.MAX_LOW_TEXT_LENGTH)
             return Errors.General.ValueTooLong(Constants.MAX_LOW_TEXT_LENGTH, "Url");
         
-        return new SocialNetwork(title, url);
+        return new VolunteerSocialNetwork(title, url);
     }
 }

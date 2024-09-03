@@ -1,5 +1,5 @@
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Pets;
+using PetFamily.Domain.Models.Volunteers.Ids;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 
@@ -13,29 +13,29 @@ public class Volunteer : Entity<VolunteerId>
     
     public Volunteer(
         VolunteerId id,
-        FullName fullName,
-        Description description,
-        Experience experience,
-        Phone phone,
-        Detail details
+        VolunteerFullName volunteerFullName,
+        VolunteerDescription volunteerDescription,
+        VolunteerExperience volunteerExperience,
+        VolunteerPhone volunteerPhone,
+        VolunteerDetail volunteerDetails
     ) : base(id)
     {
-        FullName = fullName;
-        Description = description;
-        Experience = experience;
-        Phone = phone;
-        Details = details;
+        VolunteerFullName = volunteerFullName;
+        VolunteerDescription = volunteerDescription;
+        VolunteerExperience = volunteerExperience;
+        VolunteerPhone = volunteerPhone;
+        VolunteerDetails = volunteerDetails;
     }
     
-    public FullName FullName { get; private set; }
+    public VolunteerFullName VolunteerFullName { get; private set; }
 
-    public Description Description { get; private set; }
+    public VolunteerDescription VolunteerDescription { get; private set; }
 
-    public Experience Experience { get; private set; }
+    public VolunteerExperience VolunteerExperience { get; private set; }
     
-    public Phone Phone { get; private set; }
+    public VolunteerPhone VolunteerPhone { get; private set; }
 
-    public Detail Details { get; private set; }
+    public VolunteerDetail VolunteerDetails { get; private set; }
 
     public List<Pet> Pets { get; private set; } = [];
     

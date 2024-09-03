@@ -1,8 +1,9 @@
 using CSharpFunctionalExtensions;
-using PetFamily.Domain.Models;
 using PetFamily.Domain.Models.Volunteers;
+using PetFamily.Domain.Models.Volunteers.Ids;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
@@ -21,7 +22,7 @@ public class CreateVolunteerService
     {
         var volunteerId = VolunteerId.NewId();
 
-        var fullName = FullName.Create(
+        var fullName = VolunteerFullName.Create(
             request.FullName.Name,
             request.FullName.Surname,
             request.FullName.Patronymic
@@ -30,29 +31,30 @@ public class CreateVolunteerService
         if (fullName.IsFailure)
             return fullName.Error;
             
-        var description = Description.Create(request.Description);
+        var description = VolunteerDescription.Create(request.Description);
         
         if (description.IsFailure)
             return description.Error;
 
-        var experience = Experience.Create(request.Experience);
+        var experience = VolunteerExperience.Create(request.Experience);
         
         if (experience.IsFailure)
             return experience.Error;
 
-        var phone = Phone.Create(request.Phone);
+        var phone = VolunteerPhone.Create(request.Phone);
         
         if (phone.IsFailure)
             return phone.Error;
 
         var socialNetworksResults = request.SocialNetworks.Select(
-            s => SocialNetwork.Create(s.Title, s.Url)
+            s => VolunteerSocialNetwork.Create(s.Title, s.Url)
         );
 
         if (socialNetworksResults.Any(s => s.IsFailure))
             return socialNetworksResults.FirstOrDefault(s => s.IsFailure).Error;
 
-        var socialNetworks = socialNetworksResults.Select(s => s.Value);
+        var socialNetworks = socialNetworksResults.Select(
+            s => s.Value);
 
         var requisitesResults = request.Requisites.Select(
             r => Requisite.Create(r.Name, r.Description)
@@ -63,7 +65,7 @@ public class CreateVolunteerService
         
         var requisites = requisitesResults.Select(r => r.Value);
 
-        var details = Detail.Create(socialNetworks, requisites);
+        var details = VolunteerDetail.Create(socialNetworks, requisites);
 
         var volunteer = new Volunteer(
             volunteerId,

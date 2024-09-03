@@ -1,6 +1,6 @@
 namespace PetFamily.Domain.Models.Species.ValueObjects;
 
-public record Name
+public record SpeciesName
 {
     public string Value { get; }
 }

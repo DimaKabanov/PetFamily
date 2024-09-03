@@ -1,8 +1,9 @@
 ﻿using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Pets.ValueObjects;
+using PetFamily.Domain.Models.Volunteers.Ids;
+using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models.Pets;
+namespace PetFamily.Domain.Models.Volunteers;
 
 public class Pet : Entity<PetId>
 {
@@ -36,7 +37,7 @@ public class Pet : Entity<PetId>
 
     public DateTime CreatedDate { get; private set; }
     
-    public Detail Details { get; private set; }
+    public PetDetail PetDetails { get; private set; }
     
     public PetProperty PetProperties { get; private set; }
 }

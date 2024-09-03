@@ -3,16 +3,16 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
-public record Description
+public record VolunteerDescription
 {
-    private Description(string value)
+    private VolunteerDescription(string value)
     {
         Value = value;
     }
     
     public string Value { get; }
     
-    public static Result<Description, Error> Create(string description)
+    public static Result<VolunteerDescription, Error> Create(string description)
     {
         if (string.IsNullOrWhiteSpace(description))
             return Errors.General.ValueIsRequired("Description");
@@ -20,6 +20,6 @@ public record Description
         if (description.Length > Constants.MAX_HIGH_TEXT_LENGTH)
             return Errors.General.ValueTooLong(Constants.MAX_HIGH_TEXT_LENGTH, "Description");
         
-        return new Description(description);
+        return new VolunteerDescription(description);
     }
 }

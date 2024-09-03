@@ -3,22 +3,22 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
-public record Phone
+public record VolunteerPhone
 {
     private const int PHONE_LENGTH = 11;
     
-    private Phone(string value)
+    private VolunteerPhone(string value)
     {
         Value = value;
     }
     
     public string Value { get; }
     
-    public static Result<Phone, Error> Create(string phone)
+    public static Result<VolunteerPhone, Error> Create(string phone)
     {
         if (phone.Length != PHONE_LENGTH)
             return Errors.General.ValueIsInvalid("Phone");
         
-        return new Phone(phone);
+        return new VolunteerPhone(phone);
     }
 }
