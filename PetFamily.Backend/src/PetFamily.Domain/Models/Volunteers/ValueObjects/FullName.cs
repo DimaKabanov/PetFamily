@@ -3,9 +3,9 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
-public record VolunteerFullName
+public record FullName
 {
-    private VolunteerFullName(string name, string surname, string? patronymic)
+    private FullName(string name, string surname, string? patronymic)
     {
         Name = name;
         Surname = surname;
@@ -18,7 +18,7 @@ public record VolunteerFullName
 
     public string? Patronymic { get; }
     
-    public static Result<VolunteerFullName, Error> Create(string name, string surname, string? patronymic)
+    public static Result<FullName, Error> Create(string name, string surname, string? patronymic)
     {
         if (string.IsNullOrWhiteSpace(name))
             return Errors.General.ValueIsRequired("Name");
@@ -35,6 +35,6 @@ public record VolunteerFullName
         if (patronymic is not null && patronymic.Length > Constants.MAX_LOW_TEXT_LENGTH)
             return Errors.General.ValueTooLong(Constants.MAX_LOW_TEXT_LENGTH, "Patronymic");
         
-        return new VolunteerFullName(name, surname, patronymic);
+        return new FullName(name, surname, patronymic);
     }
 }

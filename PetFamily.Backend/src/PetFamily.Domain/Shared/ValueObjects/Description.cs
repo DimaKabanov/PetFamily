@@ -1,18 +1,17 @@
 using CSharpFunctionalExtensions;
-using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
+namespace PetFamily.Domain.Shared.ValueObjects;
 
-public record VolunteerDescription
+public record Description
 {
-    private VolunteerDescription(string value)
+    private Description(string value)
     {
         Value = value;
     }
     
     public string Value { get; }
     
-    public static Result<VolunteerDescription, Error> Create(string description)
+    public static Result<Description, Error> Create(string description)
     {
         if (string.IsNullOrWhiteSpace(description))
             return Errors.General.ValueIsRequired("Description");
@@ -20,6 +19,6 @@ public record VolunteerDescription
         if (description.Length > Constants.MAX_HIGH_TEXT_LENGTH)
             return Errors.General.ValueTooLong(Constants.MAX_HIGH_TEXT_LENGTH, "Description");
         
-        return new VolunteerDescription(description);
+        return new Description(description);
     }
 }

@@ -1,6 +1,5 @@
 using CSharpFunctionalExtensions;
 using PetFamily.Domain.Models.Volunteers;
-using PetFamily.Domain.Models.Volunteers.Ids;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -22,7 +21,7 @@ public class CreateVolunteerService
     {
         var volunteerId = VolunteerId.NewId();
 
-        var fullName = VolunteerFullName.Create(
+        var fullName = FullName.Create(
             request.FullName.Name,
             request.FullName.Surname,
             request.FullName.Patronymic
@@ -31,23 +30,23 @@ public class CreateVolunteerService
         if (fullName.IsFailure)
             return fullName.Error;
             
-        var description = VolunteerDescription.Create(request.Description);
+        var description = Description.Create(request.Description);
         
         if (description.IsFailure)
             return description.Error;
 
-        var experience = VolunteerExperience.Create(request.Experience);
+        var experience = Experience.Create(request.Experience);
         
         if (experience.IsFailure)
             return experience.Error;
 
-        var phone = VolunteerPhone.Create(request.Phone);
+        var phone = Phone.Create(request.Phone);
         
         if (phone.IsFailure)
             return phone.Error;
 
         var socialNetworksResults = request.SocialNetworks.Select(
-            s => VolunteerSocialNetwork.Create(s.Title, s.Url)
+            s => SocialNetwork.Create(s.Title, s.Url)
         );
 
         if (socialNetworksResults.Any(s => s.IsFailure))
@@ -65,7 +64,7 @@ public class CreateVolunteerService
         
         var requisites = requisitesResults.Select(r => r.Value);
 
-        var details = VolunteerDetail.Create(socialNetworks, requisites);
+        var details = new Detail(socialNetworks, requisites);
 
         var volunteer = new Volunteer(
             volunteerId,

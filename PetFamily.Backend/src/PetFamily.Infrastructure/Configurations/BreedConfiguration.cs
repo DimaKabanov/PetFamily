@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Species;
-using PetFamily.Domain.Models.Species.Ids;
+using PetFamily.Domain.Models.Species.Breeds;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -20,7 +20,7 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
                 id => BreedId.Create(id)
             );
 
-        b.ComplexProperty(br => br.BreedName, nb =>
+        b.ComplexProperty(br => br.Name, nb =>
         {
             nb.Property(n => n.Value)
                 .IsRequired()

@@ -1,4 +1,4 @@
-using PetFamily.Domain.Models.Species.Ids;
+using PetFamily.Domain.Models.Species.Breeds;
 using PetFamily.Domain.Models.Species.ValueObjects;
 using PetFamily.Domain.Shared;
 
@@ -12,20 +12,13 @@ public class Species : Entity<SpeciesId>
     {
     }
     
-    private Species(SpeciesId id, SpeciesName speciesName,  List<Breed> breeds) : base(id)
+    public Species(SpeciesId id, Name name,  List<Breed> breeds) : base(id)
     {
-        SpeciesName = speciesName;
+        Name = name;
         _breeds = breeds;
     }
     
-    public SpeciesName SpeciesName { get; private set; } = default!;
+    public Name Name { get; private set; } = default!;
     
     public IReadOnlyList<Breed> Breeds => _breeds;
-    
-    public static Species Create(SpeciesId id, SpeciesName speciesName, List<Breed> breeds)
-    {
-        var species = new Species(id, speciesName, breeds);
-
-        return species;
-    }
 }
