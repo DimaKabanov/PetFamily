@@ -16,7 +16,7 @@ public record Detail
         Requisites = requisites.ToList();
     }
 
-    public IReadOnlyList<Photo> Photos { get; } = [];
+    public IReadOnlyList<Photo> Photos { get; }
     
-    public IReadOnlyList<Requisite> Requisites { get; } = [];
+    public IReadOnlyList<Requisite> Requisites { get; }
 }

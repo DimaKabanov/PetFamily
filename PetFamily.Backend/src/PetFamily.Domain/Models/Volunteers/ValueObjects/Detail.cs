@@ -16,7 +16,7 @@ public record Detail
         Requisites = requisites.ToList();
     }
     
-    public IReadOnlyList<SocialNetwork> SocialNetworks { get; } = [];
+    public IReadOnlyList<SocialNetwork> SocialNetworks { get; }
     
-    public IReadOnlyList<Requisite> Requisites { get; } = [];
+    public IReadOnlyList<Requisite> Requisites { get; }
 }
