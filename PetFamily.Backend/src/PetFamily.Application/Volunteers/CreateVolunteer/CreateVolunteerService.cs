@@ -1,8 +1,8 @@
 using CSharpFunctionalExtensions;
-using PetFamily.Domain.Models;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
 
@@ -52,7 +52,8 @@ public class CreateVolunteerService
         if (socialNetworksResults.Any(s => s.IsFailure))
             return socialNetworksResults.FirstOrDefault(s => s.IsFailure).Error;
 
-        var socialNetworks = socialNetworksResults.Select(s => s.Value);
+        var socialNetworks = socialNetworksResults.Select(
+            s => s.Value);
 
         var requisitesResults = request.Requisites.Select(
             r => Requisite.Create(r.Name, r.Description)
@@ -63,7 +64,7 @@ public class CreateVolunteerService
         
         var requisites = requisitesResults.Select(r => r.Value);
 
-        var details = Detail.Create(socialNetworks, requisites);
+        var details = new Detail(socialNetworks, requisites);
 
         var volunteer = new Volunteer(
             volunteerId,

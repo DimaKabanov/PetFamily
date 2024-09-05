@@ -1,6 +1,6 @@
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
+namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record Detail
 {
@@ -9,14 +9,14 @@ public record Detail
     }
     
     public Detail(
-        IEnumerable<SocialNetwork> socialNetworks,
+        IEnumerable<Photo> photos,
         IEnumerable<Requisite> requisites)
     {
-        SocialNetworks = socialNetworks.ToList();
+        Photos = photos.ToList();
         Requisites = requisites.ToList();
     }
-    
-    public IReadOnlyList<SocialNetwork> SocialNetworks { get; }
+
+    public IReadOnlyList<Photo> Photos { get; }
     
     public IReadOnlyList<Requisite> Requisites { get; }
 }

@@ -1,7 +1,8 @@
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Pets;
+using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
+using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers;
 
@@ -17,8 +18,7 @@ public class Volunteer : Entity<VolunteerId>
         Description description,
         Experience experience,
         Phone phone,
-        Detail details
-    ) : base(id)
+        Detail details) : base(id)
     {
         FullName = fullName;
         Description = description;

@@ -1,11 +1,10 @@
 using CSharpFunctionalExtensions;
-using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
+namespace PetFamily.Domain.Shared.ValueObjects;
 
 public record Phone
 {
-    private const int PHONE_LENGTH = 11;
+    public const int PHONE_LENGTH = 11;
     
     private Phone(string value)
     {

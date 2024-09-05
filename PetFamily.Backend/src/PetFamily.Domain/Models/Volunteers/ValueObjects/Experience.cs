@@ -5,8 +5,8 @@ namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record Experience
 {
-    private const int MIN_EXPERIENCE = 0;
-    private const int MAX_EXPERIENCE = 99;
+    public const int MIN_EXPERIENCE = 0;
+    public const int MAX_EXPERIENCE = 99;
     
     private Experience(int value)
     {

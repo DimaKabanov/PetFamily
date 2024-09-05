@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Domain.Models.Species.ValueObjects;
+namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record Name
 {
@@ -9,7 +9,7 @@ public record Name
     {
         Value = value;
     }
-
+    
     public string Value { get; }
     
     public static Result<Name, Error> Create(string name)
