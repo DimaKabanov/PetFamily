@@ -1,10 +1,22 @@
+using PetFamily.API.Validation;
+using PetFamily.Application;
 using PetFamily.Infrastructure;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ApplicationDbContext>();
+
+builder.Services
+    .AddInfrastructure()
+    .AddApplication();
+
+builder.Services.AddFluentValidationAutoValidation(configuration =>
+{
+    configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
+});
 
 var app = builder.Build();
 
@@ -16,8 +28,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Hello, World!")
-    .WithName("/")
-    .WithOpenApi();
+app.MapControllers();
 
 app.Run();
