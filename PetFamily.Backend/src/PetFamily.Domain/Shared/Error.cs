@@ -4,6 +4,8 @@ namespace PetFamily.Domain.Shared;
 
 public record Error
 {
+    public const string SEPARATOR = "|";
+    
     private Error(string code, string message, ErrorType type)
     {
         Code = code;
@@ -28,4 +30,24 @@ public record Error
     
     public static Error Conflict(string code, string message) =>
         new Error(code, message, ErrorType.Conflict);
+
+    public string Serialize()
+    {
+        return string.Join(SEPARATOR, Code, Message, Type);
+    }
+    
+    public static Error Deserialize(string serialized)
+    {
+        const int MIN_ERROR_PARTS_COUNT = 3;
+        
+        var parts = serialized.Split(SEPARATOR);
+
+        if (parts.Length < MIN_ERROR_PARTS_COUNT)
+            throw new ArgumentException("Invalid format");   
+
+        if (!Enum.TryParse<ErrorType>(parts[2], out var type))
+            throw new ArgumentException("Invalid format");
+
+        return new Error(parts[0], parts[1], type);
+    }
 }

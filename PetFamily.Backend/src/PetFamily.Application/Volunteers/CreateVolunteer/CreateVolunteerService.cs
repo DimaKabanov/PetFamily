@@ -24,56 +24,29 @@ public class CreateVolunteerService
         var fullName = FullName.Create(
             request.FullName.Name,
             request.FullName.Surname,
-            request.FullName.Patronymic
-        );
-
-        if (fullName.IsFailure)
-            return fullName.Error;
+            request.FullName.Patronymic).Value;
             
-        var description = Description.Create(request.Description);
-        
-        if (description.IsFailure)
-            return description.Error;
+        var description = Description.Create(request.Description).Value;
 
-        var experience = Experience.Create(request.Experience);
-        
-        if (experience.IsFailure)
-            return experience.Error;
+        var experience = Experience.Create(request.Experience).Value;
 
-        var phone = Phone.Create(request.Phone);
-        
-        if (phone.IsFailure)
-            return phone.Error;
+        var phone = Phone.Create(request.Phone).Value;
 
-        var socialNetworksResults = request.SocialNetworks.Select(
-            s => SocialNetwork.Create(s.Title, s.Url)
-        );
+        var socialNetworks = request.SocialNetworks
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value);
 
-        if (socialNetworksResults.Any(s => s.IsFailure))
-            return socialNetworksResults.FirstOrDefault(s => s.IsFailure).Error;
-
-        var socialNetworks = socialNetworksResults.Select(
-            s => s.Value);
-
-        var requisitesResults = request.Requisites.Select(
-            r => Requisite.Create(r.Name, r.Description)
-        );
-        
-        if (requisitesResults.Any(r => r.IsFailure))
-            return requisitesResults.FirstOrDefault(r => r.IsFailure).Error;
-        
-        var requisites = requisitesResults.Select(r => r.Value);
+        var requisites = request.Requisites
+            .Select(r => Requisite.Create(r.Name, r.Description).Value);
 
         var details = new Detail(socialNetworks, requisites);
 
         var volunteer = new Volunteer(
             volunteerId,
-            fullName.Value,
-            description.Value,
-            experience.Value,
-            phone.Value,
-            details
-        );
+            fullName,
+            description,
+            experience,
+            phone,
+            details);
 
         await _volunteersRepository.Add(volunteer, cancellationToken);
 
