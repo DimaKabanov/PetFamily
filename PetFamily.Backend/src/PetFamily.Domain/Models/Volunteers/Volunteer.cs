@@ -44,4 +44,16 @@ public class Volunteer : Entity<VolunteerId>
     public int PetsSearchHomeCount() => Pets.Count(p => p.AssistanceStatus == AssistanceStatus.SearchAHome);
     
     public int PetsFoundHomeCount() => Pets.Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHome);
+
+    public void UpdateMainInfo(
+        FullName fullName,
+        Description description,
+        Experience experience,
+        Phone phone)
+    {
+        FullName = fullName;
+        Description = description;
+        Experience = experience;
+        Phone = phone;
+    }
 }

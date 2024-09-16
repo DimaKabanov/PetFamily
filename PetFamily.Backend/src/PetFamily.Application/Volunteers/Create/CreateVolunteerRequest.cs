@@ -1,4 +1,4 @@
-using PetFamily.Application.Volunteers.Create.DTO;
+using PetFamily.Application.Volunteers.DTO;
 
 namespace PetFamily.Application.Volunteers.Create;
 

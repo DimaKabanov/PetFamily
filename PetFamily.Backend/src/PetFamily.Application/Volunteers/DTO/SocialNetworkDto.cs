@@ -1,3 +1,3 @@
-namespace PetFamily.Application.Volunteers.Create.DTO;
+namespace PetFamily.Application.Volunteers.DTO;
 
 public record SocialNetworkDto(string Title, string Url);

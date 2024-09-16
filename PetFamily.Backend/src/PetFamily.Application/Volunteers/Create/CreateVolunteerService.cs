@@ -7,19 +7,10 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.Create;
 
-public class CreateVolunteerService
+public class CreateVolunteerService(
+    IVolunteersRepository volunteersRepository,
+    ILogger<CreateVolunteerService> logger)
 {
-    private readonly IVolunteersRepository _volunteersRepository;
-    private readonly ILogger<CreateVolunteerService> _logger;
-
-    public CreateVolunteerService(
-        IVolunteersRepository volunteersRepository,
-        ILogger<CreateVolunteerService> logger)
-    {
-        _volunteersRepository = volunteersRepository;
-        _logger = logger;
-    }
-    
     public async Task<Result<Guid, Error>> Create(
         CreateVolunteerRequest request,
         CancellationToken cancellationToken)
@@ -53,9 +44,9 @@ public class CreateVolunteerService
             phone,
             details);
 
-        await _volunteersRepository.Add(volunteer, cancellationToken);
+        await volunteersRepository.Add(volunteer, cancellationToken);
         
-        _logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
+        logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
 
         return volunteerId.Value;
     }
