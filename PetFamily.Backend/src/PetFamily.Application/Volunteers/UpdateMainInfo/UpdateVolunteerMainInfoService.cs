@@ -45,5 +45,4 @@ public class UpdateVolunteerMainInfoService(
 
         return result;
     }
-    
 }

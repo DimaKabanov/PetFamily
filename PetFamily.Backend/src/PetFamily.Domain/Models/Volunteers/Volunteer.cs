@@ -60,4 +60,14 @@ public class Volunteer : Entity<VolunteerId>
         Experience = experience;
         Phone = phone;
     }
+    
+    public void UpdateSocialNetworkList(SocialNetworkList socialNetworkList)
+    {
+        SocialNetworkList = socialNetworkList;
+    }
+    
+    public void UpdateRequisiteList(RequisiteList requisiteList)
+    {
+        RequisiteList = requisiteList;
+    }
 }
