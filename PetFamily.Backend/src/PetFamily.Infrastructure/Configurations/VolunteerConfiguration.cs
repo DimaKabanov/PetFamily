@@ -59,10 +59,10 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("phone");
         });
-
-        b.OwnsOne(v => v.Details, vb =>
+        
+        b.OwnsOne(v => v.SocialNetworkList, vb =>
         {
-            vb.ToJson("details");
+            vb.ToJson("social_network_list");
             
             vb.OwnsMany(d => d.SocialNetworks, sb =>
             {
@@ -74,7 +74,12 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
             });
-            
+        });
+        
+        b.OwnsOne(v => v.RequisiteList, vb =>
+        {
+            vb.ToJson("requisite_list");
+
             vb.OwnsMany(d => d.Requisites, rb =>
             {
                 rb.Property(r => r.Name)

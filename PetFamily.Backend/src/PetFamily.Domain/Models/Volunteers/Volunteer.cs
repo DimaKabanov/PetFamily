@@ -18,13 +18,15 @@ public class Volunteer : Entity<VolunteerId>
         Description description,
         Experience experience,
         Phone phone,
-        Detail details) : base(id)
+        SocialNetworkList socialNetworkList,
+        RequisiteList requisiteList) : base(id)
     {
         FullName = fullName;
         Description = description;
         Experience = experience;
         Phone = phone;
-        Details = details;
+        SocialNetworkList = socialNetworkList;
+        RequisiteList = requisiteList;
     }
     
     public FullName FullName { get; private set; }
@@ -35,7 +37,9 @@ public class Volunteer : Entity<VolunteerId>
     
     public Phone Phone { get; private set; }
 
-    public Detail Details { get; private set; }
+    public RequisiteList RequisiteList { get; private set; }
+    
+    public SocialNetworkList SocialNetworkList { get; private set; }
 
     public List<Pet> Pets { get; private set; } = [];
     
