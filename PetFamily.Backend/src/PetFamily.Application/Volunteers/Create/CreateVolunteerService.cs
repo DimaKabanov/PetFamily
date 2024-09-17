@@ -5,21 +5,12 @@ using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Volunteers.Create;
 
-public class CreateVolunteerService
+public class CreateVolunteerService(
+    IVolunteersRepository volunteersRepository,
+    ILogger<CreateVolunteerService> logger)
 {
-    private readonly IVolunteersRepository _volunteersRepository;
-    private readonly ILogger<CreateVolunteerService> _logger;
-
-    public CreateVolunteerService(
-        IVolunteersRepository volunteersRepository,
-        ILogger<CreateVolunteerService> logger)
-    {
-        _volunteersRepository = volunteersRepository;
-        _logger = logger;
-    }
-    
     public async Task<Result<Guid, Error>> Create(
         CreateVolunteerRequest request,
         CancellationToken cancellationToken)
@@ -43,7 +34,8 @@ public class CreateVolunteerService
         var requisites = request.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value);
 
-        var details = new Detail(socialNetworks, requisites);
+        var socialNetworkList = new SocialNetworkList(socialNetworks);
+        var requisiteList = new RequisiteList(requisites);
 
         var volunteer = new Volunteer(
             volunteerId,
@@ -51,11 +43,12 @@ public class CreateVolunteerService
             description,
             experience,
             phone,
-            details);
+            socialNetworkList,
+            requisiteList);
 
-        await _volunteersRepository.Add(volunteer, cancellationToken);
+        await volunteersRepository.Add(volunteer, cancellationToken);
         
-        _logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
+        logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
 
         return volunteerId.Value;
     }
