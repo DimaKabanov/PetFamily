@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.Application.Volunteers.Create;
+using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisites;
 using PetFamily.Application.Volunteers.UpdateSocialNetworks;
@@ -22,7 +23,7 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPatch("{id:guid}/main-info")]
-    public async Task<ActionResult> Update(
+    public async Task<ActionResult> UpdateMainInfo(
         [FromServices] UpdateVolunteerMainInfoService service,
         [FromServices] IValidator<UpdateVolunteerMainInfoRequest> validator,
         [FromBody] UpdateVolunteerMainInfoDto dto,
@@ -74,6 +75,24 @@ public class VolunteersController : ApplicationController
             return validationResult.ToValidationErrorResponse();
         
         var result = await service.Update(request, cancellationToken);
+        
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> Delete(
+        [FromServices] DeleteVolunteerService service,
+        [FromServices] IValidator<DeleteVolunteerRequest> validator,
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
+    {
+        var request = new DeleteVolunteerRequest(id);
+        
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToValidationErrorResponse();
+        
+        var result = await service.Delete(request, cancellationToken);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
