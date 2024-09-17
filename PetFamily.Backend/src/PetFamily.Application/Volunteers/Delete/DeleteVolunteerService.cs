@@ -18,8 +18,10 @@ public class DeleteVolunteerService(
         var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error;
+
+        volunteerResult.Value.Delete();
         
-        var result = await volunteersRepository.Delete(volunteerResult.Value, cancellationToken);
+        var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
         
         logger.LogInformation("Deleted volunteer with id: {volunteerId}", volunteerId);
 
