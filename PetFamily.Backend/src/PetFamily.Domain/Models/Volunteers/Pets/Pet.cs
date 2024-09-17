@@ -5,8 +5,10 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers.Pets;
 
-public class Pet : Entity<PetId>
+public class Pet : Entity<PetId>, ISoftDeletable
 {
+    private bool _isDeleted = false;
+    
     private Pet(PetId id) : base(id)
     {
     }
@@ -63,4 +65,16 @@ public class Pet : Entity<PetId>
     public Detail Details { get; private set; }
     
     public Property Properties { get; private set; }
+    
+    public void Delete()
+    {
+        if (!_isDeleted)
+            _isDeleted = true;
+    }
+
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
+    }
 }

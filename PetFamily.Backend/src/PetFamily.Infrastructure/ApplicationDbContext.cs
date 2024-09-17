@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;
+using PetFamily.Infrastructure.Interceptors;
 
 namespace PetFamily.Infrastructure;
 
@@ -15,6 +16,7 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString("Database"));
         optionsBuilder.UseSnakeCaseNamingConvention();
+        optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
     }
 

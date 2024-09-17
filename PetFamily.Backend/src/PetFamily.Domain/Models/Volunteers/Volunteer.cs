@@ -6,8 +6,12 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers;
 
-public class Volunteer : Entity<VolunteerId>
+public class Volunteer : Entity<VolunteerId>, ISoftDeletable
 {
+    private readonly List<Pet> _pets = [];
+    
+    private bool _isDeleted = false;
+    
     private Volunteer(VolunteerId id) : base(id)
     {
     }
@@ -41,13 +45,13 @@ public class Volunteer : Entity<VolunteerId>
     
     public SocialNetworkList SocialNetworkList { get; private set; }
 
-    public List<Pet> Pets { get; private set; } = [];
+    public IReadOnlyList<Pet> Pets => _pets;
     
-    public int PetsNeedsHelpCount() => Pets.Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
+    public int PetsNeedsHelpCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
     
-    public int PetsSearchHomeCount() => Pets.Count(p => p.AssistanceStatus == AssistanceStatus.SearchAHome);
+    public int PetsSearchHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.SearchAHome);
     
-    public int PetsFoundHomeCount() => Pets.Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHome);
+    public int PetsFoundHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHome);
 
     public void UpdateMainInfo(
         FullName fullName,
@@ -69,5 +73,23 @@ public class Volunteer : Entity<VolunteerId>
     public void UpdateRequisiteList(RequisiteList requisiteList)
     {
         RequisiteList = requisiteList;
+    }
+
+    public void Delete()
+    {
+        if (_isDeleted) return;
+        
+        _isDeleted = true;
+        foreach (var pet in _pets)
+            pet.Delete();
+    }
+
+    public void Restore()
+    {
+        if (!_isDeleted) return;
+        
+        _isDeleted = false;
+        foreach (var pet in _pets)
+            pet.Restore();
     }
 }

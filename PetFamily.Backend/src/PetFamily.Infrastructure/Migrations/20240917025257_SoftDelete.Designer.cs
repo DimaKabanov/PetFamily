@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Infrastructure;
@@ -12,9 +13,11 @@ using PetFamily.Infrastructure;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240917025257_SoftDelete")]
+    partial class SoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,7 +294,6 @@ namespace PetFamily.Infrastructure.Migrations
                     b.HasOne("PetFamily.Domain.Models.Volunteers.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
 
                     b.OwnsOne("PetFamily.Domain.Models.Volunteers.Pets.ValueObjects.Detail", "Details", b1 =>

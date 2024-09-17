@@ -136,5 +136,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired()
                 .HasColumnName("breed_id");
         });
+        
+        b.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
     }
 }
