@@ -10,4 +10,13 @@ public interface IFileProvider
         string bucketName,
         string fileName,
         CancellationToken cancellationToken);
+    
+    Task<Result<string, Error>> DeleteFile(
+        string bucketName,
+        string fileName,
+        CancellationToken cancellationToken);
+    
+    Task<Result<string, Error>> DownloadFile(
+        string bucketName,
+        string fileName);
 }

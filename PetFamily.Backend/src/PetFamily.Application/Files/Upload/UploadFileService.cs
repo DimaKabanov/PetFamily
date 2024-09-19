@@ -10,6 +10,10 @@ public class UploadFileService(IFileProvider fileProvider)
         UploadFileRequest request,
         CancellationToken cancellationToken)
     {
-        return await fileProvider.UploadFile(request.stream, request.bucketName, request.fileName, cancellationToken);
+        return await fileProvider.UploadFile(
+            request.Stream,
+            request.BucketName,
+            request.FileName,
+            cancellationToken);
     }
 }

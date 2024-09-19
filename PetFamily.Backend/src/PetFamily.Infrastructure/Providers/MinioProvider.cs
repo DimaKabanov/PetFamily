@@ -43,4 +43,48 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
             return Error.Failure("file.upload", "Failed to upload file");
         }
     }
+    
+    public async Task<Result<string, Error>> DeleteFile(
+        string bucketName,
+        string fileName,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var removeObjectArgs = new RemoveObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(fileName);
+            
+            await minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
+            
+            return fileName;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to delete file");
+
+            return Error.Failure("file.delete", "Failed to delete file");
+        }
+    }
+    
+    public async Task<Result<string, Error>> DownloadFile(string bucketName, string fileName)
+    {
+        try
+        {
+            var presignedGetObjectArgs = new PresignedGetObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(fileName)
+                .WithExpiry(60 * 60 * 24);
+            
+            var url = await minioClient.PresignedGetObjectAsync(presignedGetObjectArgs);
+            
+            return url;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to download file");
+
+            return Error.Failure("file.download", "Failed to download file");
+        }
+    }
 }
