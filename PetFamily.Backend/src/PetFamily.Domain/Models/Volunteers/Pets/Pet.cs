@@ -21,11 +21,12 @@ public class Pet : Entity<PetId>, ISoftDeletable
         Address address,
         Phone phone,
         bool isCastrated,
-        DateOnly dateOfBirth,
+        DateOfBirth dateOfBirth,
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
-        DateTime createdDate,
-        Detail details,
+        CreatedDate createdDate,
+        RequisiteList requisiteList,
+        PhotoList photoList,
         Property properties) : base(id)
     {
         Name = name;
@@ -38,7 +39,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         IsVaccinated = isVaccinated;
         AssistanceStatus = assistanceStatus;
         CreatedDate = createdDate;
-        Details = details;
+        RequisiteList = requisiteList;
+        PhotoList = photoList;
         Properties = properties;
     }
     
@@ -54,15 +56,17 @@ public class Pet : Entity<PetId>, ISoftDeletable
     
     public bool IsCastrated { get; private set; }
     
-    public DateOnly DateOfBirth { get; private set; }
+    public DateOfBirth DateOfBirth { get; private set; }
     
     public bool IsVaccinated { get; private set; }
     
     public AssistanceStatus AssistanceStatus { get; private set; }
 
-    public DateTime CreatedDate { get; private set; }
+    public CreatedDate CreatedDate { get; private set; }
     
-    public Detail Details { get; private set; }
+    public RequisiteList RequisiteList { get; private set; }
+    
+    public PhotoList PhotoList { get; private set; }
     
     public Property Properties { get; private set; }
     

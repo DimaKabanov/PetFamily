@@ -1,5 +1,3 @@
-using PetFamily.Domain.Shared.ValueObjects;
-
 namespace PetFamily.Domain.Models.Volunteers.ValueObjects;
 
 public record SocialNetworkList

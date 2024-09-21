@@ -84,8 +84,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.IsCastrated)
             .IsRequired();
         
-        b.Property(p => p.DateOfBirth)
-            .IsRequired();
+        b.ComplexProperty(p => p.DateOfBirth, pb =>
+        {
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasColumnName("date_of_birth");
+        });
         
         b.Property(p => p.IsVaccinated)
             .IsRequired();
@@ -93,12 +97,16 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.AssistanceStatus)
             .IsRequired();
         
-        b.Property(p => p.CreatedDate)
-            .IsRequired();
-        
-        b.OwnsOne(p => p.Details, pb =>
+        b.ComplexProperty(p => p.CreatedDate, pb =>
         {
-            pb.ToJson("details");
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasColumnName("created_date");
+        });
+        
+        b.OwnsOne(p => p.PhotoList, pb =>
+        {
+            pb.ToJson("photo_list");
             
             pb.OwnsMany(d => d.Photos, ppb =>
             {
@@ -109,8 +117,13 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 ppb.Property(pp => pp.IsMain)
                     .IsRequired();
             });
-            
-            pb.OwnsMany(d => d.Requisites, rb =>
+        });
+        
+        b.OwnsOne(p => p.RequisiteList, pb =>
+        {
+            pb.ToJson("requisite_list");
+
+            pb.OwnsMany(r => r.Requisites, rb =>
             {
                 rb.Property(r => r.Name)
                     .IsRequired()
