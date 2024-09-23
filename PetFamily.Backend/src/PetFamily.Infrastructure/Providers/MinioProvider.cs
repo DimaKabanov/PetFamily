@@ -2,46 +2,64 @@
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
+using PetFamily.Application.FIleProvider;
 using PetFamily.Application.Providers;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Providers;
 
-public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logger) : IFileProvider
+public class MinioProvider(
+    IMinioClient minioClient,
+    ILogger<MinioProvider> logger) : IFileProvider
 {
-    public async Task<Result<string, Error>> UploadFile(
-        Stream stream,
-        string bucketName,
-        string fileName,
+    public const int MAX_PARALLELISM = 10;
+    public async Task<UnitResult<Error>> UploadFiles(
+        FileData fileData,
         CancellationToken cancellationToken)
     {
+        var semaphore = new SemaphoreSlim(MAX_PARALLELISM);
         try
         {
-            var bucketExistArgs = new BucketExistsArgs().WithBucket(bucketName);
+            var bucketExistArgs = new BucketExistsArgs().WithBucket(fileData.BucketName);
             var bucketExist = await minioClient.BucketExistsAsync(bucketExistArgs, cancellationToken);
-        
+
             if (!bucketExist)
             {
-                var makeBucketArgs = new MakeBucketArgs().WithBucket(bucketName);
+                var makeBucketArgs = new MakeBucketArgs().WithBucket(fileData.BucketName);
                 await minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
             }
 
-            var putObjectArgs = new PutObjectArgs()
-                .WithBucket(bucketName)
-                .WithStreamData(stream)
-                .WithObjectSize(stream.Length)
-                .WithObject(fileName);
+            List<Task> tasks = [];
+            foreach (var file in fileData.Files)
+            {
+                await semaphore.WaitAsync(cancellationToken);
 
-            var result = await minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
-            
-            return result.ObjectName;
+                var putObjectArgs = new PutObjectArgs()
+                    .WithBucket(fileData.BucketName)
+                    .WithStreamData(file.Stream)
+                    .WithObjectSize(file.Stream.Length)
+                    .WithObject(file.ObjectName);
+
+                var task = minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
+
+                semaphore.Release();
+
+                tasks.Add(task);
+            }
+
+            await Task.WhenAll(tasks);
         }
         catch (Exception e)
         {
             logger.LogError(e, "Failed to upload file");
-            
             return Error.Failure("file.upload", "Failed to upload file");
         }
+        finally
+        {
+            semaphore.Release();
+        }
+
+        return Result.Success<Error>();
     }
     
     public async Task<Result<string, Error>> DeleteFile(

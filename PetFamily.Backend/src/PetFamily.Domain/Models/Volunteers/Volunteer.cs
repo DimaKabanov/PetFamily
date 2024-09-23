@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -6,7 +7,7 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers;
 
-public class Volunteer : Entity<VolunteerId>, ISoftDeletable
+public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
     
@@ -91,5 +92,11 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         _isDeleted = false;
         foreach (var pet in _pets)
             pet.Restore();
+    }
+
+    public UnitResult<Error> AddPet(Pet pet)
+    {
+        _pets.Add(pet);
+        return Result.Success<Error>();
     }
 }

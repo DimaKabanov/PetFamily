@@ -1,6 +1,8 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using PetFamily.API.Contracts;
 using PetFamily.API.Extensions;
+using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -24,10 +26,10 @@ public class VolunteersController : ApplicationController
     
     [HttpPatch("{id:guid}/main-info")]
     public async Task<ActionResult> UpdateMainInfo(
+        [FromRoute] Guid id,
         [FromServices] UpdateVolunteerMainInfoService service,
         [FromServices] IValidator<UpdateVolunteerMainInfoRequest> validator,
         [FromBody] UpdateVolunteerMainInfoDto dto,
-        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         var request = new UpdateVolunteerMainInfoRequest(id, dto);
@@ -43,10 +45,10 @@ public class VolunteersController : ApplicationController
     
     [HttpPatch("{id:guid}/social-networks")]
     public async Task<ActionResult> UpdateSocialNetworks(
+        [FromRoute] Guid id,
         [FromServices] UpdateVolunteerSocialNetworksService service,
         [FromServices] IValidator<UpdateVolunteerSocialNetworksRequest> validator,
         [FromBody] UpdateVolunteerSocialNetworksDto dto,
-        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         var request = new UpdateVolunteerSocialNetworksRequest(id, dto);
@@ -62,10 +64,10 @@ public class VolunteersController : ApplicationController
     
     [HttpPatch("{id:guid}/requisites")]
     public async Task<ActionResult> UpdateRequisites(
+        [FromRoute] Guid id,
         [FromServices] UpdateVolunteerRequisitesService service,
         [FromServices] IValidator<UpdateVolunteerRequisitesRequest> validator,
         [FromBody] UpdateVolunteerRequisitesDto dto,
-        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         var request = new UpdateVolunteerRequisitesRequest(id, dto);
@@ -81,9 +83,9 @@ public class VolunteersController : ApplicationController
     
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> Delete(
+        [FromRoute] Guid id,
         [FromServices] DeleteVolunteerService service,
         [FromServices] IValidator<DeleteVolunteerRequest> validator,
-        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         var request = new DeleteVolunteerRequest(id);
@@ -95,5 +97,49 @@ public class VolunteersController : ApplicationController
         var result = await service.Delete(request, cancellationToken);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpPost("{id:guid}/pet")]
+    public async Task<ActionResult> AddPet(
+        [FromRoute] Guid id,
+        [FromForm] AddPetRequest request,
+        [FromServices] AddPetService service,
+        CancellationToken cancellationToken)
+    {
+        List<PhotoDto> photosDto = [];
+        try
+        {
+            foreach (var photo in request.Photos)
+            {
+                var stream = photo.OpenReadStream();
+                photosDto.Add(new PhotoDto(stream, photo.FileName, photo.ContentType));
+            }
+            
+            var command = new AddPetCommand(
+                id,
+                request.Name,
+                request.Description,
+                request.PhysicalProperty,
+                request.Address,
+                request.Phone,
+                request.IsCastrated,
+                request.DateOfBirth,
+                request.IsVaccinated,
+                request.AssistanceStatus,
+                request.CreatedDate,
+                request.Requisites,
+                photosDto);
+        
+            var result = await service.AddPet(command, cancellationToken);
+        
+            return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+        }
+        finally
+        {
+            foreach (var photoDto in photosDto)
+            {
+                await photoDto.Stream.DisposeAsync();
+            }
+        }
     }
 }

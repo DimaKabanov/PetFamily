@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers.Pets;
+using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -111,6 +112,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.OwnsMany(d => d.Photos, ppb =>
             {
                 ppb.Property(pp => pp.Path)
+                    .HasConversion(
+                        p => p.Path,
+                        value => FilePath.Create(value).Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_MIDDLE_TEXT_LENGTH);
                 

@@ -1,14 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Application.FIleProvider;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Providers;
 
 public interface IFileProvider
 {
-    Task<Result<string, Error>> UploadFile(
-        Stream stream,
-        string bucketName,
-        string fileName,
+    Task<UnitResult<Error>> UploadFiles(
+        FileData fileData,
         CancellationToken cancellationToken);
     
     Task<Result<string, Error>> DeleteFile(
