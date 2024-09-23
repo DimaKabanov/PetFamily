@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Contracts;
 using PetFamily.API.Extensions;
+using PetFamily.API.Processors;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
@@ -9,7 +10,7 @@ using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisites;
 using PetFamily.Application.Volunteers.UpdateSocialNetworks;
 
-namespace PetFamily.API.Controllers;
+namespace PetFamily.API.Controllers.Volunteer;
 
 public class VolunteersController : ApplicationController
 {
@@ -106,40 +107,27 @@ public class VolunteersController : ApplicationController
         [FromServices] AddPetService service,
         CancellationToken cancellationToken)
     {
-        List<PhotoDto> photosDto = [];
-        try
-        {
-            foreach (var photo in request.Photos)
-            {
-                var stream = photo.OpenReadStream();
-                photosDto.Add(new PhotoDto(stream, photo.FileName, photo.ContentType));
-            }
-            
-            var command = new AddPetCommand(
-                id,
-                request.Name,
-                request.Description,
-                request.PhysicalProperty,
-                request.Address,
-                request.Phone,
-                request.IsCastrated,
-                request.DateOfBirth,
-                request.IsVaccinated,
-                request.AssistanceStatus,
-                request.CreatedDate,
-                request.Requisites,
-                photosDto);
+        await using var photoProcessor = new FormPhotoProcessor();
+
+        var photoDtos = photoProcessor.Process(request.Photos);
+
+        var command = new AddPetCommand(
+            id,
+            request.Name,
+            request.Description,
+            request.PhysicalProperty,
+            request.Address,
+            request.Phone,
+            request.IsCastrated,
+            request.DateOfBirth,
+            request.IsVaccinated,
+            request.AssistanceStatus,
+            request.CreatedDate,
+            request.Requisites,
+            photoDtos);
         
-            var result = await service.AddPet(command, cancellationToken);
+        var result = await service.AddPet(command, cancellationToken);
         
-            return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
-        }
-        finally
-        {
-            foreach (var photoDto in photosDto)
-            {
-                await photoDto.Stream.DisposeAsync();
-            }
-        }
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 }

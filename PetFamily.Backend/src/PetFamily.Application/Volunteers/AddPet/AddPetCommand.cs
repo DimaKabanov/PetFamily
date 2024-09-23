@@ -16,6 +16,6 @@ public record AddPetCommand(
     AssistanceStatus AssistanceStatus,
     DateTime CreatedDate,
     IEnumerable<RequisiteDto> Requisites,
-    IEnumerable<PhotoDto> Photos);
+    IEnumerable<CreatePhotoDto> Photos);
 
-public record PhotoDto(Stream Stream, string PhotoName, string ContentType);
+public record CreatePhotoDto(Stream Content, string PhotoName);
