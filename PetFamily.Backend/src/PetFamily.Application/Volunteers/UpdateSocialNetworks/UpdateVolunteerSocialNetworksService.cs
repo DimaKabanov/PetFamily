@@ -4,7 +4,6 @@ using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.UpdateSocialNetworks;
 
@@ -23,11 +22,10 @@ public class UpdateVolunteerSocialNetworksService(
             return volunteerResult.Error;
         
         var socialNetworks = request.Dto.SocialNetworks
-            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value);
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
+            .ToList();
 
-        var socialNetworkList = new ValueObjectList<SocialNetwork>(socialNetworks);
-
-        volunteerResult.Value.UpdateSocialNetworks(socialNetworkList);
+        volunteerResult.Value.UpdateSocialNetworks(socialNetworks);
         
         var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
         

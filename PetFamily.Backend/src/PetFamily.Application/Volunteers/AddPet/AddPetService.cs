@@ -53,7 +53,8 @@ public class AddPetService(
         var createdDate = CreatedDate.Create(command.CreatedDate).Value;
         
         var requisites = command.Requisites
-            .Select(r => Requisite.Create(r.Name, r.Description).Value);
+            .Select(r => Requisite.Create(r.Name, r.Description).Value)
+            .ToList();
         
         List<FileContent> photoContents = [];
         List<FilePath> photoPaths = [];
@@ -74,7 +75,7 @@ public class AddPetService(
         if (uploadResult.IsFailure)
             return uploadResult.Error;
 
-        var photos = photoPaths.Select(p => new Photo(p, false));
+        var photos = photoPaths.Select(p => new Photo(p, false)).ToList();
         
         var properties = new Property(SpeciesId.EmptyId, Guid.Empty);
         
@@ -90,10 +91,10 @@ public class AddPetService(
             command.IsVaccinated,
             command.AssistanceStatus,
             createdDate,
-            new ValueObjectList<Requisite>(requisites),
-            new ValueObjectList<Photo>(photos),
+            requisites,
+            photos,
             properties);
-        
+
         volunteerResult.Value.AddPet(pet);
         
         var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);

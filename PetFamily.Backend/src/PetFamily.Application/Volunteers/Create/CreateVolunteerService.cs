@@ -29,10 +29,12 @@ public class CreateVolunteerService(
         var phone = Phone.Create(request.Phone).Value;
 
         var socialNetworks = request.SocialNetworks
-            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value);
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
+            .ToList();
 
         var requisites = request.Requisites
-            .Select(r => Requisite.Create(r.Name, r.Description).Value);
+            .Select(r => Requisite.Create(r.Name, r.Description).Value)
+            .ToList();
         
         var volunteer = new Volunteer(
             volunteerId,
@@ -40,8 +42,8 @@ public class CreateVolunteerService(
             description,
             experience,
             phone,
-            new ValueObjectList<SocialNetwork>(socialNetworks),
-            new ValueObjectList<Requisite>(requisites));
+            socialNetworks,
+            requisites);
 
         await volunteersRepository.Add(volunteer, cancellationToken);
         

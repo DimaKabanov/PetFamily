@@ -22,11 +22,10 @@ public class UpdateVolunteerRequisitesService(
             return volunteerResult.Error;
 
         var requisites = request.Dto.Requisites
-            .Select(r => Requisite.Create(r.Name, r.Description).Value);
-        
-        var requisiteList = new  ValueObjectList<Requisite>(requisites);
+            .Select(r => Requisite.Create(r.Name, r.Description).Value)
+            .ToList();
 
-        volunteerResult.Value.UpdateRequisiteList(requisiteList);
+        volunteerResult.Value.UpdateRequisiteList(requisites);
         
         var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
         
