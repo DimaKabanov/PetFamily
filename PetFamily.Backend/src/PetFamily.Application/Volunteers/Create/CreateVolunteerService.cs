@@ -33,18 +33,15 @@ public class CreateVolunteerService(
 
         var requisites = request.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value);
-
-        var socialNetworkList = new SocialNetworkList(socialNetworks);
-        var requisiteList = new RequisiteList(requisites);
-
+        
         var volunteer = new Volunteer(
             volunteerId,
             fullName,
             description,
             experience,
             phone,
-            socialNetworkList,
-            requisiteList);
+            new ValueObjectList<SocialNetwork>(socialNetworks),
+            new ValueObjectList<Requisite>(requisites));
 
         await volunteersRepository.Add(volunteer, cancellationToken);
         

@@ -105,11 +105,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("created_date");
         });
         
-        b.OwnsOne(p => p.PhotoList, pb =>
+        b.OwnsOne(p => p.Photos, pb =>
         {
-            pb.ToJson("photo_list");
+            pb.ToJson("photos");
             
-            pb.OwnsMany(d => d.Photos, ppb =>
+            pb.OwnsMany(d => d.Values, ppb =>
             {
                 ppb.Property(pp => pp.Path)
                     .HasConversion(
@@ -123,11 +123,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             });
         });
         
-        b.OwnsOne(p => p.RequisiteList, pb =>
+        b.OwnsOne(p => p.Requisites, pb =>
         {
-            pb.ToJson("requisite_list");
+            pb.ToJson("requisites");
 
-            pb.OwnsMany(r => r.Requisites, rb =>
+            pb.OwnsMany(r => r.Values, rb =>
             {
                 rb.Property(r => r.Name)
                     .IsRequired()

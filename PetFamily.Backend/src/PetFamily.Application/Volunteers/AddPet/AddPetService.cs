@@ -90,8 +90,8 @@ public class AddPetService(
             command.IsVaccinated,
             command.AssistanceStatus,
             createdDate,
-            new RequisiteList(requisites),
-            new PhotoList(photos),
+            new ValueObjectList<Requisite>(requisites),
+            new ValueObjectList<Photo>(photos),
             properties);
         
         volunteerResult.Value.AddPet(pet);

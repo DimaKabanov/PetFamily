@@ -25,8 +25,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
         CreatedDate createdDate,
-        RequisiteList requisiteList,
-        PhotoList photoList,
+        ValueObjectList<Requisite> requisites,
+        ValueObjectList<Photo> photos,
         Property properties) : base(id)
     {
         Name = name;
@@ -39,8 +39,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         IsVaccinated = isVaccinated;
         AssistanceStatus = assistanceStatus;
         CreatedDate = createdDate;
-        RequisiteList = requisiteList;
-        PhotoList = photoList;
+        Requisites = requisites;
+        Photos = photos;
         Properties = properties;
     }
     
@@ -64,9 +64,9 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public CreatedDate CreatedDate { get; private set; }
     
-    public RequisiteList RequisiteList { get; private set; }
+    public ValueObjectList<Requisite> Requisites { get; private set; }
     
-    public PhotoList PhotoList { get; private set; }
+    public ValueObjectList<Photo> Photos { get; private set; }
     
     public Property Properties { get; private set; }
     

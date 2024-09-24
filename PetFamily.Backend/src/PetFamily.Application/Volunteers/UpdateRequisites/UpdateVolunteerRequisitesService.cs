@@ -24,7 +24,7 @@ public class UpdateVolunteerRequisitesService(
         var requisites = request.Dto.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value);
         
-        var requisiteList = new RequisiteList(requisites);
+        var requisiteList = new  ValueObjectList<Requisite>(requisites);
 
         volunteerResult.Value.UpdateRequisiteList(requisiteList);
         
