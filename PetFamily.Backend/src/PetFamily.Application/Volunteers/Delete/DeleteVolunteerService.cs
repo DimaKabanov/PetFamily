@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Shared;
 
@@ -11,6 +12,7 @@ public class DeleteVolunteerService(
 {
     public async Task<Result<Guid, Error>> Delete(
         DeleteVolunteerRequest request,
+        IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
         var volunteerId = VolunteerId.Create(request.VolunteerId);
@@ -21,10 +23,10 @@ public class DeleteVolunteerService(
 
         volunteerResult.Value.Delete();
         
-        var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
         
         logger.LogInformation("Deleted volunteer with id: {volunteerId}", volunteerId);
 
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }

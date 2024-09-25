@@ -11,22 +11,20 @@ public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersR
     public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken)
     {
         await dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }
     
-    public async Task<Guid> Save(Volunteer volunteer, CancellationToken cancellationToken)
+    public Guid Save(Volunteer volunteer, CancellationToken cancellationToken)
     {
-        await dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.Volunteers.Attach(volunteer);
 
         return volunteer.Id.Value;
     }
 
-    public async Task<Guid> Delete(Volunteer volunteer, CancellationToken cancellationToken)
+    public Guid Delete(Volunteer volunteer, CancellationToken cancellationToken)
     {
         dbContext.Volunteers.Remove(volunteer);
-        await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }
