@@ -3,24 +3,24 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
-public record FilePath
+public record PhotoPath
 {
-    private FilePath(string path)
+    private PhotoPath(string path)
     {
         Path = path;
     }
 
     public string Path { get; }
     
-    public static Result<FilePath, Error> Create(Guid path, string extension)
+    public static Result<PhotoPath, Error> Create(Guid path, string extension)
     {
         var fullPath = $"{path}.{extension}";
         
-        return new FilePath(fullPath);
+        return new PhotoPath(fullPath);
     }
     
-    public static Result<FilePath, Error> Create(string fullPath)
+    public static Result<PhotoPath, Error> Create(string fullPath)
     {
-        return new FilePath(fullPath);
+        return new PhotoPath(fullPath);
     }
 }

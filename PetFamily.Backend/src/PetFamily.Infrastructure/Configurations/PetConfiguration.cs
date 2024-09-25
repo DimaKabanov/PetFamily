@@ -114,7 +114,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 ppb.Property(pp => pp.Path)
                     .HasConversion(
                         p => p.Path,
-                        value => FilePath.Create(value).Value)
+                        value => PhotoPath.Create(value).Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_MIDDLE_TEXT_LENGTH);
                 

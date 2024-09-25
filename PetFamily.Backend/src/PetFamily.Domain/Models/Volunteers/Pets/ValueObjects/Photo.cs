@@ -5,13 +5,13 @@ namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record Photo
 {
-    public Photo(FilePath path, bool isMain)
+    public Photo(PhotoPath path, bool isMain)
     {
         Path = path;
         IsMain = isMain;
     }
 
-    public FilePath Path { get; }
+    public PhotoPath Path { get; }
 
     public bool IsMain { get; }
 }

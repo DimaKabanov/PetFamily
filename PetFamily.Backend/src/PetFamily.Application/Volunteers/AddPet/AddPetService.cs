@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using PetFamily.Application.FIleProvider;
+using PetFamily.Application.PhotoProvider;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Species;
@@ -17,7 +17,7 @@ public class AddPetService(
     IFileProvider fileProvider,
     ILogger<CreateVolunteerService> logger)
 {
-    private const string BUCKET_NAME = "photo";
+    private const string BUCKET_NAME = "photos";
     
     public async Task<Result<Guid, Error>> AddPet(
         AddPetCommand command,
@@ -30,9 +30,7 @@ public class AddPetService(
             return volunteerResult.Error;
 
         var petId = PetId.NewId;
-        
         var name = Name.Create(command.Name).Value;
-        
         var description = Description.Create(command.Description).Value;
 
         var physicalProperty = PhysicalProperty.Create(
@@ -47,35 +45,27 @@ public class AddPetService(
             command.Address.Flat).Value;
 
         var phone = Phone.Create(command.Phone).Value;
-
         var dateOfBirth = DateOfBirth.Create(command.DateOfBirth).Value;
-
         var createdDate = CreatedDate.Create(command.CreatedDate).Value;
         
         var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         
-        List<FileContent> photoContents = [];
-        List<FilePath> photoPaths = [];
+        List<PhotoData> photosData = [];
         foreach (var photo in command.Photos)
         {
             var extension = Path.GetExtension(photo.PhotoName);
-            var photoPath = FilePath.Create(Guid.NewGuid(), extension);
+            var photoPath = PhotoPath.Create(Guid.NewGuid(), extension);
 
-            var photoContent = new FileContent(photo.Stream, photoPath.Value.Path);
-            photoContents.Add(photoContent);
-            photoPaths.Add(photoPath.Value);
+            var photoData = new PhotoData(photo.Content, photoPath.Value, BUCKET_NAME);
+            photosData.Add(photoData);
         }
-
-        var photoData = new FileData(photoContents, BUCKET_NAME);
         
-        var uploadResult = await fileProvider.UploadFiles(photoData, cancellationToken);
-        
-        if (uploadResult.IsFailure)
-            return uploadResult.Error;
-
-        var photos = photoPaths.Select(p => new Photo(p, false)).ToList();
+        var photos = photosData
+            .Select(photo => photo.PhotoPath)
+            .Select(path => new Photo(path, false))
+            .ToList();
         
         var properties = new Property(SpeciesId.EmptyId, Guid.Empty);
         
@@ -98,6 +88,11 @@ public class AddPetService(
         volunteerResult.Value.AddPet(pet);
         
         var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+        
+        var uploadResult = await fileProvider.UploadFiles(photosData, cancellationToken);
+        
+        if (uploadResult.IsFailure)
+            return uploadResult.Error;
         
         logger.LogInformation(
             "Added pet with id {petId} to volunteer with id {volunteerId}",
