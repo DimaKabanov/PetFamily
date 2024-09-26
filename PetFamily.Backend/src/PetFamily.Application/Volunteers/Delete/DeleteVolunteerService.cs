@@ -8,11 +8,11 @@ namespace PetFamily.Application.Volunteers.Delete;
 
 public class DeleteVolunteerService(
     IVolunteersRepository volunteersRepository,
+    IUnitOfWork unitOfWork,
     ILogger<DeleteVolunteerService> logger)
 {
     public async Task<Result<Guid, Error>> Delete(
         DeleteVolunteerRequest request,
-        IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
         var volunteerId = VolunteerId.Create(request.VolunteerId);

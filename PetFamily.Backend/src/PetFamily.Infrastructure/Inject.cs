@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using PetFamily.Application.Database;
 using PetFamily.Application.Providers;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.Options;
@@ -31,6 +32,7 @@ public static class Inject
         });
 
         services.AddScoped<IFileProvider, MinioProvider>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
