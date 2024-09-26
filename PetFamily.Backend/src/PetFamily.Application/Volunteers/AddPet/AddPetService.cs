@@ -17,7 +17,7 @@ public class AddPetService(
     IVolunteersRepository volunteersRepository,
     IFileProvider fileProvider,
     IUnitOfWork unitOfWork,
-    ILogger<CreateVolunteerService> logger)
+    ILogger<AddPetService> logger)
 {
     private const string BUCKET_NAME = "photos";
     

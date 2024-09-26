@@ -21,9 +21,9 @@ public class FormPhotoProcessor : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        foreach (var file in _photoDtos)
+        foreach (var photo in _photoDtos)
         {
-            await file.Content.DisposeAsync();
+            await photo.Content.DisposeAsync();
         }
     }
 }
