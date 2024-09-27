@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Contracts;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
-using PetFamily.Application.Volunteers.AddPet;
+using PetFamily.Application.Volunteers.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -26,7 +27,7 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPatch("{id:guid}/main-info")]
-    public async Task<ActionResult> UpdateMainInfo(
+    public async Task<ActionResult<Guid>> UpdateMainInfo(
         [FromRoute] Guid id,
         [FromServices] UpdateVolunteerMainInfoService service,
         [FromServices] IValidator<UpdateVolunteerMainInfoRequest> validator,
@@ -45,7 +46,7 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPatch("{id:guid}/social-networks")]
-    public async Task<ActionResult> UpdateSocialNetworks(
+    public async Task<ActionResult<Guid>> UpdateSocialNetworks(
         [FromRoute] Guid id,
         [FromServices] UpdateVolunteerSocialNetworksService service,
         [FromServices] IValidator<UpdateVolunteerSocialNetworksRequest> validator,
@@ -64,7 +65,7 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPatch("{id:guid}/requisites")]
-    public async Task<ActionResult> UpdateRequisites(
+    public async Task<ActionResult<Guid>> UpdateRequisites(
         [FromRoute] Guid id,
         [FromServices] UpdateVolunteerRequisitesService service,
         [FromServices] IValidator<UpdateVolunteerRequisitesRequest> validator,
@@ -83,7 +84,7 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult> Delete(
+    public async Task<ActionResult<Guid>> Delete(
         [FromRoute] Guid id,
         [FromServices] DeleteVolunteerService service,
         [FromServices] IValidator<DeleteVolunteerRequest> validator,
@@ -101,32 +102,39 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPost("{id:guid}/pet")]
-    public async Task<ActionResult> AddPet(
+    public async Task<ActionResult<Guid>> AddPet(
         [FromRoute] Guid id,
-        [FromForm] AddPetRequest request,
-        [FromServices] AddPetService service,
+        [FromBody] AddPetToVolunteerDto dto,
+        [FromServices] AddPetToVolunteerService service,
+        [FromServices] IValidator<AddPetToVolunteerRequest> validator,
+        CancellationToken cancellationToken)
+    {
+        var request = new AddPetToVolunteerRequest(id, dto);
+        
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToValidationErrorResponse();
+        
+        var result = await service.AddPet(request, cancellationToken);
+        
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpPost("{id:guid}/pet/{petId:guid}/photos")]
+    public async Task<ActionResult<Guid>> AddPhotosToPet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromForm] AddPhotoToPetRequest request,
+        [FromServices] AddPhotoToPetService service,
         CancellationToken cancellationToken)
     {
         await using var photoProcessor = new FormPhotoProcessor();
-
-        var photoDtos = photoProcessor.Process(request.Photos);
-
-        var command = new AddPetCommand(
-            id,
-            request.Name,
-            request.Description,
-            request.PhysicalProperty,
-            request.Address,
-            request.Phone,
-            request.IsCastrated,
-            request.DateOfBirth,
-            request.IsVaccinated,
-            request.AssistanceStatus,
-            request.CreatedDate,
-            request.Requisites,
-            photoDtos);
         
-        var result = await service.AddPet(command, cancellationToken);
+        var photoDtos = photoProcessor.Process(request.Photos);
+        
+        var command = new AddPhotoToPetCommand(id, petId, photoDtos);
+        
+        var result = await service.AddPhoto(command, cancellationToken);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

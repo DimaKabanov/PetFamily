@@ -26,7 +26,6 @@ public class Pet : Entity<PetId>, ISoftDeletable
         AssistanceStatus assistanceStatus,
         CreatedDate createdDate,
         ValueObjectList<Requisite> requisites,
-        ValueObjectList<Photo> photos,
         Property properties) : base(id)
     {
         Name = name;
@@ -40,7 +39,6 @@ public class Pet : Entity<PetId>, ISoftDeletable
         AssistanceStatus = assistanceStatus;
         CreatedDate = createdDate;
         Requisites = requisites;
-        Photos = photos;
         Properties = properties;
     }
     
@@ -69,6 +67,11 @@ public class Pet : Entity<PetId>, ISoftDeletable
     public ValueObjectList<Photo> Photos { get; private set; }
     
     public Property Properties { get; private set; }
+    
+    public void UpdatePhotos(ValueObjectList<Photo> photos)
+    {
+        Photos = photos;
+    }
     
     public void Delete()
     {

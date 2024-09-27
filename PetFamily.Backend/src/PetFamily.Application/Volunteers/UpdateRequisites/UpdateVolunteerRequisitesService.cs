@@ -27,7 +27,7 @@ public class UpdateVolunteerRequisitesService(
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
 
-        volunteerResult.Value.UpdateRequisiteList(requisites);
+        volunteerResult.Value.UpdateRequisites(requisites);
 
         await unitOfWork.SaveChanges(cancellationToken);
         

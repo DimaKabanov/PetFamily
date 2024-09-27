@@ -17,7 +17,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         b.Property(p => p.Id)
             .HasConversion(
-                petId => petId.Id,
+                petId => petId.Value,
                 id => PetId.Create(id)
             );
 
