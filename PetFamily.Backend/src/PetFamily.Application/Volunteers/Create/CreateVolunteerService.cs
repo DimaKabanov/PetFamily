@@ -29,22 +29,21 @@ public class CreateVolunteerService(
         var phone = Phone.Create(request.Phone).Value;
 
         var socialNetworks = request.SocialNetworks
-            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value);
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
+            .ToList();
 
         var requisites = request.Requisites
-            .Select(r => Requisite.Create(r.Name, r.Description).Value);
-
-        var socialNetworkList = new SocialNetworkList(socialNetworks);
-        var requisiteList = new RequisiteList(requisites);
-
+            .Select(r => Requisite.Create(r.Name, r.Description).Value)
+            .ToList();
+        
         var volunteer = new Volunteer(
             volunteerId,
             fullName,
             description,
             experience,
             phone,
-            socialNetworkList,
-            requisiteList);
+            socialNetworks,
+            requisites);
 
         await volunteersRepository.Add(volunteer, cancellationToken);
         

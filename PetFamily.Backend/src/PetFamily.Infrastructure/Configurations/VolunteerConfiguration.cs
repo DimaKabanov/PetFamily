@@ -60,11 +60,11 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasColumnName("phone");
         });
         
-        b.OwnsOne(v => v.SocialNetworkList, vb =>
+        b.OwnsOne(v => v.SocialNetworks, vb =>
         {
-            vb.ToJson("social_network_list");
+            vb.ToJson("social_networks");
             
-            vb.OwnsMany(d => d.SocialNetworks, sb =>
+            vb.OwnsMany(d => d.Values, sb =>
             {
                 sb.Property(s => s.Title)
                     .IsRequired()
@@ -76,11 +76,11 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             });
         });
         
-        b.OwnsOne(v => v.RequisiteList, vb =>
+        b.OwnsOne(v => v.Requisites, vb =>
         {
-            vb.ToJson("requisite_list");
+            vb.ToJson("requisites");
 
-            vb.OwnsMany(d => d.Requisites, rb =>
+            vb.OwnsMany(d => d.Values, rb =>
             {
                 rb.Property(r => r.Name)
                     .IsRequired()

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers.Pets;
+using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
 namespace PetFamily.Infrastructure.Configurations;
@@ -16,7 +17,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         b.Property(p => p.Id)
             .HasConversion(
-                petId => petId.Id,
+                petId => petId.Value,
                 id => PetId.Create(id)
             );
 
@@ -84,8 +85,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.IsCastrated)
             .IsRequired();
         
-        b.Property(p => p.DateOfBirth)
-            .IsRequired();
+        b.ComplexProperty(p => p.DateOfBirth, pb =>
+        {
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasColumnName("date_of_birth");
+        });
         
         b.Property(p => p.IsVaccinated)
             .IsRequired();
@@ -93,24 +98,36 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         b.Property(p => p.AssistanceStatus)
             .IsRequired();
         
-        b.Property(p => p.CreatedDate)
-            .IsRequired();
-        
-        b.OwnsOne(p => p.Details, pb =>
+        b.ComplexProperty(p => p.CreatedDate, pb =>
         {
-            pb.ToJson("details");
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasColumnName("created_date");
+        });
+        
+        b.OwnsOne(p => p.Photos, pb =>
+        {
+            pb.ToJson("photos");
             
-            pb.OwnsMany(d => d.Photos, ppb =>
+            pb.OwnsMany(d => d.Values, ppb =>
             {
                 ppb.Property(pp => pp.Path)
+                    .HasConversion(
+                        p => p.Path,
+                        value => PhotoPath.Create(value).Value)
                     .IsRequired()
                     .HasMaxLength(Constants.MAX_MIDDLE_TEXT_LENGTH);
                 
                 ppb.Property(pp => pp.IsMain)
                     .IsRequired();
             });
-            
-            pb.OwnsMany(d => d.Requisites, rb =>
+        });
+        
+        b.OwnsOne(p => p.Requisites, pb =>
+        {
+            pb.ToJson("requisites");
+
+            pb.OwnsMany(r => r.Values, rb =>
             {
                 rb.Property(r => r.Name)
                     .IsRequired()

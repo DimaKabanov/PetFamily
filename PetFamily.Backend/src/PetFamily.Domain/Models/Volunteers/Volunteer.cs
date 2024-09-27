@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -6,7 +7,7 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers;
 
-public class Volunteer : Entity<VolunteerId>, ISoftDeletable
+public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
     
@@ -22,15 +23,15 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         Description description,
         Experience experience,
         Phone phone,
-        SocialNetworkList socialNetworkList,
-        RequisiteList requisiteList) : base(id)
+        ValueObjectList<SocialNetwork> socialNetworks,
+        ValueObjectList<Requisite> requisites) : base(id)
     {
         FullName = fullName;
         Description = description;
         Experience = experience;
         Phone = phone;
-        SocialNetworkList = socialNetworkList;
-        RequisiteList = requisiteList;
+        SocialNetworks = socialNetworks;
+        Requisites = requisites;
     }
     
     public FullName FullName { get; private set; }
@@ -41,10 +42,10 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
     
     public Phone Phone { get; private set; }
 
-    public RequisiteList RequisiteList { get; private set; }
+    public ValueObjectList<Requisite> Requisites { get; private set; }
     
-    public SocialNetworkList SocialNetworkList { get; private set; }
-
+    public ValueObjectList<SocialNetwork> SocialNetworks { get; private set; }
+    
     public IReadOnlyList<Pet> Pets => _pets;
     
     public int PetsNeedsHelpCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.NeedsHelp);
@@ -52,6 +53,15 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
     public int PetsSearchHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.SearchAHome);
     
     public int PetsFoundHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHome);
+    
+    public Result<Pet, Error> GetPetById(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        if (pet is null)
+            return Errors.General.NotFound(petId.Value);
+
+        return pet;
+    }
 
     public void UpdateMainInfo(
         FullName fullName,
@@ -65,14 +75,14 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         Phone = phone;
     }
     
-    public void UpdateSocialNetworkList(SocialNetworkList socialNetworkList)
+    public void UpdateSocialNetworks(ValueObjectList<SocialNetwork> socialNetworks)
     {
-        SocialNetworkList = socialNetworkList;
+        SocialNetworks = socialNetworks;
     }
     
-    public void UpdateRequisiteList(RequisiteList requisiteList)
+    public void UpdateRequisites(ValueObjectList<Requisite> requisites)
     {
-        RequisiteList = requisiteList;
+        Requisites = requisites;
     }
 
     public void Delete()
@@ -91,5 +101,11 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         _isDeleted = false;
         foreach (var pet in _pets)
             pet.Restore();
+    }
+
+    public UnitResult<Error> AddPet(Pet pet)
+    {
+        _pets.Add(pet);
+        return Result.Success<Error>();
     }
 }

@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -9,7 +10,8 @@ using PetFamily.Domain.Shared.ValueObjects;
 namespace PetFamily.Application.Volunteers.UpdateMainInfo;
 
 public class UpdateVolunteerMainInfoService(
-    IVolunteersRepository volunteersRepository, 
+    IVolunteersRepository volunteersRepository,
+    IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
     public async Task<Result<Guid, Error>> Update(
@@ -39,10 +41,10 @@ public class UpdateVolunteerMainInfoService(
             experience,
             phone);
 
-        var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
-        
+        await unitOfWork.SaveChanges(cancellationToken);
+
         logger.LogInformation("Updated volunteer with id: {volunteerId}", volunteerId);
 
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }

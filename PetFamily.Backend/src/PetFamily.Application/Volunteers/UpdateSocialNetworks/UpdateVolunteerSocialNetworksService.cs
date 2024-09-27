@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -9,6 +10,7 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetworks;
 
 public class UpdateVolunteerSocialNetworksService(
     IVolunteersRepository volunteersRepository,
+    IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
     public async Task<Result<Guid, Error>> Update(
@@ -22,16 +24,15 @@ public class UpdateVolunteerSocialNetworksService(
             return volunteerResult.Error;
         
         var socialNetworks = request.Dto.SocialNetworks
-            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value);
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
+            .ToList();
 
-        var socialNetworkList = new SocialNetworkList(socialNetworks);
+        volunteerResult.Value.UpdateSocialNetworks(socialNetworks);
 
-        volunteerResult.Value.UpdateSocialNetworkList(socialNetworkList);
-        
-        var result = await volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+        await unitOfWork.SaveChanges(cancellationToken);
         
         logger.LogInformation("Updated volunteer social networks with id: {volunteerId}", volunteerId);
         
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }
