@@ -69,13 +69,11 @@ public class AddPhotoToPetService(
         }
         catch (Exception e)
         {
-            logger.LogError(e,
-                "Can not add pet to volunteer - {id} in transaction", 
-                command.VolunteerId);
+            logger.LogError(e, "Can not add photos to pet - {id} in transaction", command.PetId);
 
             transaction.Rollback();
 
-            return Error.Failure("volunteer.pet.failure", "Can not add pet to volunteer");
+            return Error.Failure("pet.photo.failure", "Can not add photos to pet");
         }
     }
 }

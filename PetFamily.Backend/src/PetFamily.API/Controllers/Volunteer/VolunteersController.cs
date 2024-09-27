@@ -104,9 +104,9 @@ public class VolunteersController : ApplicationController
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult<Guid>> AddPet(
         [FromRoute] Guid id,
-        [FromBody] AddPetToVolunteerDto dto,
         [FromServices] AddPetToVolunteerService service,
         [FromServices] IValidator<AddPetToVolunteerRequest> validator,
+        [FromForm] AddPetToVolunteerDto dto,
         CancellationToken cancellationToken)
     {
         var request = new AddPetToVolunteerRequest(id, dto);
