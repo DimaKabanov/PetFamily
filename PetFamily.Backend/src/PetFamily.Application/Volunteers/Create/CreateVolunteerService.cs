@@ -1,5 +1,7 @@
 using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
@@ -9,30 +11,35 @@ namespace PetFamily.Application.Volunteers.Create;
 
 public class CreateVolunteerService(
     IVolunteersRepository volunteersRepository,
+    IValidator<CreateVolunteerCommand> validator,
     ILogger<CreateVolunteerService> logger)
 {
-    public async Task<Result<Guid, Error>> Create(
-        CreateVolunteerRequest request,
+    public async Task<Result<Guid, ErrorList>> Create(
+        CreateVolunteerCommand command,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
         var volunteerId = VolunteerId.NewId();
 
         var fullName = FullName.Create(
-            request.FullName.Name,
-            request.FullName.Surname,
-            request.FullName.Patronymic).Value;
+            command.FullName.Name,
+            command.FullName.Surname,
+            command.FullName.Patronymic).Value;
             
-        var description = Description.Create(request.Description).Value;
+        var description = Description.Create(command.Description).Value;
 
-        var experience = Experience.Create(request.Experience).Value;
+        var experience = Experience.Create(command.Experience).Value;
 
-        var phone = Phone.Create(request.Phone).Value;
+        var phone = Phone.Create(command.Phone).Value;
 
-        var socialNetworks = request.SocialNetworks
+        var socialNetworks = command.SocialNetworks
             .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
             .ToList();
 
-        var requisites = request.Requisites
+        var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         

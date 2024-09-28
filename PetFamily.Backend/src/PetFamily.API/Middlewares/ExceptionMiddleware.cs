@@ -1,4 +1,5 @@
 using PetFamily.API.Response;
+using PetFamily.Domain.Shared;
 
 namespace PetFamily.API.Middlewares;
 
@@ -12,8 +13,8 @@ public class ExceptionMiddleware(RequestDelegate next)
         }
         catch (Exception e)
         {
-            var responseError = new ResponseError("server.internal", e.Message, null);
-            var envelope = Envelope.Error([responseError]);
+            var responseError = Error.Failure("server.internal", e.Message);
+            var envelope = Envelope.Error(responseError);
             
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;

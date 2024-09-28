@@ -5,9 +5,9 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.Create;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
 {
-    public CreateVolunteerRequestValidator()
+    public CreateVolunteerCommandValidator()
     {
         RuleFor(c => c.FullName)
             .MustBeValueObject(f => FullName.Create(f.Name, f.Surname, f.Patronymic));

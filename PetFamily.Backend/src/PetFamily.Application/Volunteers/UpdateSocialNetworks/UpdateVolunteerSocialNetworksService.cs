@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -10,20 +12,25 @@ namespace PetFamily.Application.Volunteers.UpdateSocialNetworks;
 
 public class UpdateVolunteerSocialNetworksService(
     IVolunteersRepository volunteersRepository,
+    IValidator<UpdateVolunteerSocialNetworksCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
-    public async Task<Result<Guid, Error>> Update(
-        UpdateVolunteerSocialNetworksRequest request,
+    public async Task<Result<Guid, ErrorList>> Update(
+        UpdateVolunteerSocialNetworksCommand command,
         CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
+        var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         
-        var socialNetworks = request.Dto.SocialNetworks
+        var socialNetworks = command.SocialNetworks
             .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
             .ToList();
 

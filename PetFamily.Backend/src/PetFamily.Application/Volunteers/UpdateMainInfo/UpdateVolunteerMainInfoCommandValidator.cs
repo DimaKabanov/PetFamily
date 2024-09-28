@@ -6,18 +6,13 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.UpdateMainInfo;
 
-public class UpdateVolunteerMainInfoRequestValidator : AbstractValidator<UpdateVolunteerMainInfoRequest>
+public class UpdateVolunteerMainInfoCommandValidator : AbstractValidator<UpdateVolunteerMainInfoCommand>
 {
-    public UpdateVolunteerMainInfoRequestValidator()
+    public UpdateVolunteerMainInfoCommandValidator()
     {
-        RuleFor(u => u.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-    }
-}
-
-public class UpdateVolunteerMainInfoDtoValidator : AbstractValidator<UpdateVolunteerMainInfoDto>
-{
-    public UpdateVolunteerMainInfoDtoValidator()
-    {
+        RuleFor(u => u.VolunteerId)
+            .NotEmpty().WithError(Errors.General.ValueIsRequired());
+        
         RuleFor(u => u.FullName)
             .MustBeValueObject(f => FullName.Create(f.Name, f.Surname, f.Patronymic));
         

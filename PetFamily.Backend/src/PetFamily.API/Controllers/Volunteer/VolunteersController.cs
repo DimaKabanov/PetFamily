@@ -1,6 +1,5 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using PetFamily.API.Contracts;
+using PetFamily.API.Controllers.Volunteer.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
 using PetFamily.Application.Volunteers.AddPetToVolunteer;
@@ -17,69 +16,44 @@ public class VolunteersController : ApplicationController
 {
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
-        [FromServices] CreateVolunteerService service,
         [FromBody] CreateVolunteerRequest request,
+        [FromServices] CreateVolunteerService service,
         CancellationToken cancellationToken)
-    {
-        var result = await service.Create(request, cancellationToken);
-
+    { 
+        var result = await service.Create(request.ToCommand(), cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
     [HttpPatch("{id:guid}/main-info")]
     public async Task<ActionResult<Guid>> UpdateMainInfo(
         [FromRoute] Guid id,
+        [FromBody] UpdateVolunteerMainInfoRequest request,
         [FromServices] UpdateVolunteerMainInfoService service,
-        [FromServices] IValidator<UpdateVolunteerMainInfoRequest> validator,
-        [FromBody] UpdateVolunteerMainInfoDto dto,
         CancellationToken cancellationToken)
     {
-        var request = new UpdateVolunteerMainInfoRequest(id, dto);
-
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return validationResult.ToValidationErrorResponse();
-        
-        var result = await service.Update(request, cancellationToken);
-        
+        var result = await service.Update(request.ToCommand(id), cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
     [HttpPatch("{id:guid}/social-networks")]
     public async Task<ActionResult<Guid>> UpdateSocialNetworks(
         [FromRoute] Guid id,
+        [FromBody] UpdateVolunteerSocialNetworksRequest request,
         [FromServices] UpdateVolunteerSocialNetworksService service,
-        [FromServices] IValidator<UpdateVolunteerSocialNetworksRequest> validator,
-        [FromBody] UpdateVolunteerSocialNetworksDto dto,
         CancellationToken cancellationToken)
     {
-        var request = new UpdateVolunteerSocialNetworksRequest(id, dto);
-
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return validationResult.ToValidationErrorResponse();
-        
-        var result = await service.Update(request, cancellationToken);
-        
+        var result = await service.Update(request.ToCommand(id), cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
     [HttpPatch("{id:guid}/requisites")]
     public async Task<ActionResult<Guid>> UpdateRequisites(
         [FromRoute] Guid id,
+        [FromBody] UpdateVolunteerRequisitesRequest request,
         [FromServices] UpdateVolunteerRequisitesService service,
-        [FromServices] IValidator<UpdateVolunteerRequisitesRequest> validator,
-        [FromBody] UpdateVolunteerRequisitesDto dto,
         CancellationToken cancellationToken)
     {
-        var request = new UpdateVolunteerRequisitesRequest(id, dto);
-
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return validationResult.ToValidationErrorResponse();
-        
-        var result = await service.Update(request, cancellationToken);
-        
+        var result = await service.Update(request.ToCommand(id), cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -87,36 +61,21 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult<Guid>> Delete(
         [FromRoute] Guid id,
         [FromServices] DeleteVolunteerService service,
-        [FromServices] IValidator<DeleteVolunteerRequest> validator,
         CancellationToken cancellationToken)
     {
-        var request = new DeleteVolunteerRequest(id);
-        
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return validationResult.ToValidationErrorResponse();
-        
-        var result = await service.Delete(request, cancellationToken);
-        
+        var command = new DeleteVolunteerCommand(id);
+        var result = await service.Delete(command, cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult<Guid>> AddPet(
         [FromRoute] Guid id,
+        [FromForm] AddPetToVolunteerRequest request,
         [FromServices] AddPetToVolunteerService service,
-        [FromServices] IValidator<AddPetToVolunteerRequest> validator,
-        [FromForm] AddPetToVolunteerDto dto,
         CancellationToken cancellationToken)
     {
-        var request = new AddPetToVolunteerRequest(id, dto);
-        
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            return validationResult.ToValidationErrorResponse();
-        
-        var result = await service.AddPet(request, cancellationToken);
-        
+        var result = await service.AddPet(request.ToCommand(id), cancellationToken);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
