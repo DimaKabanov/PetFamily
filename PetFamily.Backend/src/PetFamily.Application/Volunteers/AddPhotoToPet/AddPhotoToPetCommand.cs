@@ -3,6 +3,6 @@ namespace PetFamily.Application.Volunteers.AddPhotoToPet;
 public record AddPhotoToPetCommand(
     Guid VolunteerId,
     Guid PetId,
-    IEnumerable<CreatePhotoDto> Photos);
+    IEnumerable<CreatePhotoCommand> Photos);
 
-public record CreatePhotoDto(Stream Content, string PhotoName);
+public record CreatePhotoCommand(Stream Content, string PhotoName);

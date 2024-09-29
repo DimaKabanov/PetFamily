@@ -18,7 +18,7 @@ public class AddPhotoToPetService(
 {
     private const string BUCKET_NAME = "photos";
     
-    public async Task<Result<Guid, Error>> AddPhoto(
+    public async Task<Result<Guid, ErrorList>> AddPhoto(
         AddPhotoToPetCommand command,
         CancellationToken cancellationToken)
     {
@@ -30,13 +30,13 @@ public class AddPhotoToPetService(
         
             var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
             if (volunteerResult.IsFailure)
-                return volunteerResult.Error;
+                return volunteerResult.Error.ToErrorList();
 
             var petId = PetId.Create(command.PetId);
 
             var petResult = volunteerResult.Value.GetPetById(petId);
             if (petResult.IsFailure)
-                return petResult.Error;
+                return petResult.Error.ToErrorList();
             
             List<PhotoData> photosData = [];
             foreach (var photo in command.Photos)
@@ -50,7 +50,7 @@ public class AddPhotoToPetService(
             
             var uploadResult = await fileProvider.UploadFiles(photosData, cancellationToken);
             if (uploadResult.IsFailure)
-                return uploadResult.Error;
+                return uploadResult.Error.ToErrorList();
             
             var photos = photosData
                 .Select(photo => photo.PhotoPath)
@@ -73,7 +73,7 @@ public class AddPhotoToPetService(
 
             transaction.Rollback();
 
-            return Error.Failure("pet.photo.failure", "Can not add photos to pet");
+            return Error.Failure("pet.photo.failure", "Can not add photos to pet").ToErrorList();
         }
     }
 }

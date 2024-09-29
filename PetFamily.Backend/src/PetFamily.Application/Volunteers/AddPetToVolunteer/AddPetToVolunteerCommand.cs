@@ -1,9 +1,10 @@
-using PetFamily.Application.Volunteers.DTO;
+using PetFamily.Application.Dto;
 using PetFamily.Domain.Enums;
 
 namespace PetFamily.Application.Volunteers.AddPetToVolunteer;
 
-public record AddPetToVolunteerDto(
+public record AddPetToVolunteerCommand(
+    Guid VolunteerId,
     string Name,
     string Description,
     PetPhysicalPropertyDto PhysicalProperty,

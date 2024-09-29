@@ -1,6 +1,8 @@
 using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -11,29 +13,34 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo;
 
 public class UpdateVolunteerMainInfoService(
     IVolunteersRepository volunteersRepository,
+    IValidator<UpdateVolunteerMainInfoCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
-    public async Task<Result<Guid, Error>> Update(
-        UpdateVolunteerMainInfoRequest request,
+    public async Task<Result<Guid, ErrorList>> Update(
+        UpdateVolunteerMainInfoCommand command,
         CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
+        var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         
         var fullName = FullName.Create(
-            request.Dto.FullName.Name,
-            request.Dto.FullName.Surname,
-            request.Dto.FullName.Patronymic).Value;
+            command.FullName.Name,
+            command.FullName.Surname,
+            command.FullName.Patronymic).Value;
             
-        var description = Description.Create(request.Dto.Description).Value;
+        var description = Description.Create(command.Description).Value;
 
-        var experience = Experience.Create(request.Dto.Experience).Value;
+        var experience = Experience.Create(command.Experience).Value;
 
-        var phone = Phone.Create(request.Dto.Phone).Value;
+        var phone = Phone.Create(command.Phone).Value;
 
         volunteerResult.Value.UpdateMainInfo(
             fullName,

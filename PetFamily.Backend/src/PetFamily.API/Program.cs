@@ -1,9 +1,7 @@
 using PetFamily.API.Extensions;
-using PetFamily.API.Validation;
 using PetFamily.Application;
 using PetFamily.Infrastructure;
 using Serilog;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +15,6 @@ builder.Services.AddSerilog();
 builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
-
-builder.Services.AddFluentValidationAutoValidation(configuration =>
-{
-    configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
-});
 
 var app = builder.Build();
 

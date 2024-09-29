@@ -1,6 +1,8 @@
 using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.Pets;
@@ -12,39 +14,44 @@ namespace PetFamily.Application.Volunteers.AddPetToVolunteer;
 
 public class AddPetToVolunteerService(
     IVolunteersRepository volunteersRepository,
+    IValidator<AddPetToVolunteerCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<AddPetToVolunteerService> logger)
 {
-    public async Task<Result<Guid, Error>> AddPet(
-        AddPetToVolunteerRequest request,
+    public async Task<Result<Guid, ErrorList>> AddPet(
+        AddPetToVolunteerCommand command,
         CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
+        var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
 
         var petId = PetId.NewId();
-        var name = Name.Create(request.Dto.Name).Value;
-        var description = Description.Create(request.Dto.Description).Value;
+        var name = Name.Create(command.Name).Value;
+        var description = Description.Create(command.Description).Value;
 
         var physicalProperty = PhysicalProperty.Create(
-            request.Dto.PhysicalProperty.Color,
-            request.Dto.PhysicalProperty.Health,
-            request.Dto.PhysicalProperty.Weight,
-            request.Dto.PhysicalProperty.Height).Value;
+            command.PhysicalProperty.Color,
+            command.PhysicalProperty.Health,
+            command.PhysicalProperty.Weight,
+            command.PhysicalProperty.Height).Value;
 
         var address = Address.Create(
-            request.Dto.Address.Street,
-            request.Dto.Address.Home,
-            request.Dto.Address.Flat).Value;
+            command.Address.Street,
+            command.Address.Home,
+            command.Address.Flat).Value;
 
-        var phone = Phone.Create(request.Dto.Phone).Value;
-        var dateOfBirth = DateOfBirth.Create(request.Dto.DateOfBirth).Value;
-        var createdDate = CreatedDate.Create(request.Dto.CreatedDate).Value;
+        var phone = Phone.Create(command.Phone).Value;
+        var dateOfBirth = DateOfBirth.Create(command.DateOfBirth).Value;
+        var createdDate = CreatedDate.Create(command.CreatedDate).Value;
         
-        var requisites = request.Dto.Requisites
+        var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         
@@ -57,10 +64,10 @@ public class AddPetToVolunteerService(
             physicalProperty,
             address,
             phone,
-            request.Dto.IsCastrated,
+            command.IsCastrated,
             dateOfBirth,
-            request.Dto.IsVaccinated,
-            request.Dto.AssistanceStatus,
+            command.IsVaccinated,
+            command.AssistanceStatus,
             createdDate,
             requisites,
             properties);

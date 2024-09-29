@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Shared;
@@ -10,20 +12,25 @@ namespace PetFamily.Application.Volunteers.UpdateRequisites;
 
 public class UpdateVolunteerRequisitesService(
     IVolunteersRepository volunteersRepository,
+    IValidator<UpdateVolunteerRequisitesCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
-    public async Task<Result<Guid, Error>> Update(
-        UpdateVolunteerRequisitesRequest request,
+    public async Task<Result<Guid, ErrorList>> Update(
+        UpdateVolunteerRequisitesCommand command,
         CancellationToken cancellationToken)
     {
-        var volunteerId = VolunteerId.Create(request.VolunteerId);
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
+        var volunteerId = VolunteerId.Create(command.VolunteerId);
         
         var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
 
-        var requisites = request.Dto.Requisites
+        var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
 

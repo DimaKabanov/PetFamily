@@ -6,20 +6,13 @@ using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Volunteers.AddPetToVolunteer;
 
-public class AddPetToVolunteerRequestValidator : AbstractValidator<AddPetToVolunteerRequest>
+public class AddPetToVolunteerCommandValidator : AbstractValidator<AddPetToVolunteerCommand>
 {
-    public AddPetToVolunteerRequestValidator()
+    public AddPetToVolunteerCommandValidator()
     {
         RuleFor(a => a.VolunteerId)
-            .NotEmpty()
-            .WithError(Errors.General.ValueIsRequired());
-    }
-}
-
-public class AddPetToVolunteerDtoValidator : AbstractValidator<AddPetToVolunteerDto>
-{
-    public AddPetToVolunteerDtoValidator()
-    {
+            .NotEmpty().WithError(Errors.General.ValueIsRequired());
+        
         RuleFor(a => a.Name).MustBeValueObject(Name.Create);
         
         RuleFor(a => a.Description).MustBeValueObject(Description.Create);
@@ -33,18 +26,15 @@ public class AddPetToVolunteerDtoValidator : AbstractValidator<AddPetToVolunteer
         RuleFor(a => a.Phone).MustBeValueObject(Phone.Create);
         
         RuleFor(a => a.IsCastrated)
-            .NotEmpty()
-            .WithError(Errors.General.ValueIsRequired());
+            .NotEmpty().WithError(Errors.General.ValueIsRequired());
         
         RuleFor(a => a.DateOfBirth).MustBeValueObject(DateOfBirth.Create);
         
         RuleFor(a => a.IsVaccinated)
-            .NotEmpty()
-            .WithError(Errors.General.ValueIsRequired());
+            .NotEmpty().WithError(Errors.General.ValueIsRequired());
         
         RuleFor(a => a.AssistanceStatus)
-            .NotEmpty()
-            .WithError(Errors.General.ValueIsRequired());
+            .NotEmpty().WithError(Errors.General.ValueIsRequired());
         
         RuleFor(a => a.CreatedDate).MustBeValueObject(CreatedDate.Create);
         

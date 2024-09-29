@@ -1,4 +1,4 @@
-namespace PetFamily.Application.Volunteers.DTO;
+namespace PetFamily.Application.Dto;
 
 public record PetPhysicalPropertyDto(
     string Color,
