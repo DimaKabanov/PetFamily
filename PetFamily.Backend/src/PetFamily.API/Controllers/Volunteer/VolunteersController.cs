@@ -71,7 +71,7 @@ public class VolunteersController : ApplicationController
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult<Guid>> AddPet(
         [FromRoute] Guid id,
-        [FromForm] AddPetToVolunteerRequest request,
+        [FromBody] AddPetToVolunteerRequest request,
         [FromServices] AddPetToVolunteerService service,
         CancellationToken cancellationToken)
     {
@@ -84,16 +84,16 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
         [FromForm] AddPhotoToPetRequest request,
-        [FromServices] AddPhotoToPetService service,
+        [FromServices] UploadPhotoToPetService service,
         CancellationToken cancellationToken)
     {
         await using var photoProcessor = new FormPhotoProcessor();
         
         var photoDtos = photoProcessor.Process(request.Photos);
         
-        var command = new AddPhotoToPetCommand(id, petId, photoDtos);
+        var command = new UploadPhotoToPetCommand(id, petId, photoDtos);
         
-        var result = await service.AddPhoto(command, cancellationToken);
+        var result = await service.UploadPhoto(command, cancellationToken);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

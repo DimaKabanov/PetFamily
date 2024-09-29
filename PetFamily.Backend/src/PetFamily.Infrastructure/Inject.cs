@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Database;
-using PetFamily.Application.Providers;
+using PetFamily.Application.PhotoProvider;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.Options;
 using PetFamily.Infrastructure.Providers;
@@ -31,7 +31,7 @@ public static class Inject
             options.WithSSL(false);
         });
 
-        services.AddScoped<IFileProvider, MinioProvider>();
+        services.AddScoped<IPhotoProvider, MinioProvider>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

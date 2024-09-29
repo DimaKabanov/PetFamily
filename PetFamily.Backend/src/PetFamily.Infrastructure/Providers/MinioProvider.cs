@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using PetFamily.Application.PhotoProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
@@ -11,7 +10,7 @@ namespace PetFamily.Infrastructure.Providers;
 
 public class MinioProvider(
     IMinioClient minioClient,
-    ILogger<MinioProvider> logger) : IFileProvider
+    ILogger<MinioProvider> logger) : IPhotoProvider
 {
     private const int MAX_PARALLELISM = 10;
     

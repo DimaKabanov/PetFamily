@@ -1,11 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Application.PhotoProvider;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Providers;
+namespace PetFamily.Application.PhotoProvider;
 
-public interface IFileProvider
+public interface IPhotoProvider
 {
     Task<Result<IReadOnlyList<PhotoPath>, Error>> UploadFiles(
         IEnumerable<PhotoData> photosData,
