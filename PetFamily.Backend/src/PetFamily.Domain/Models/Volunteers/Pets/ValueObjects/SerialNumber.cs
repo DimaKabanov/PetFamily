@@ -5,6 +5,8 @@ namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record SerialNumber
 {
+    public static SerialNumber First = new(1);
+    
     private SerialNumber(int value)
     {
         Value = value;
