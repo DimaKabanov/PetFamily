@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Volunteers.Pets;
+using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
@@ -75,15 +76,11 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Phone = phone;
     }
     
-    public void UpdateSocialNetworks(ValueObjectList<SocialNetwork> socialNetworks)
-    {
+    public void UpdateSocialNetworks(ValueObjectList<SocialNetwork> socialNetworks) =>
         SocialNetworks = socialNetworks;
-    }
     
-    public void UpdateRequisites(ValueObjectList<Requisite> requisites)
-    {
+    public void UpdateRequisites(ValueObjectList<Requisite> requisites) =>
         Requisites = requisites;
-    }
 
     public void Delete()
     {
@@ -105,6 +102,12 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public UnitResult<Error> AddPet(Pet pet)
     {
+        var serialNumberResult = SerialNumber.Create(_pets.Count + 1);
+        if (serialNumberResult.IsFailure)
+            return serialNumberResult.Error;
+        
+        pet.UpdateSerialNumber(serialNumberResult.Value);
+        
         _pets.Add(pet);
         return Result.Success<Error>();
     }
