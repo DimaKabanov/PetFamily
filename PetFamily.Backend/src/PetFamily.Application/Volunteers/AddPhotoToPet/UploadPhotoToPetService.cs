@@ -1,8 +1,9 @@
 using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.PhotoProvider;
-using PetFamily.Application.Providers;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
@@ -10,22 +11,27 @@ using PetFamily.Domain.Shared;
 
 namespace PetFamily.Application.Volunteers.AddPhotoToPet;
 
-public class AddPhotoToPetService(
+public class UploadPhotoToPetService(
     IVolunteersRepository volunteersRepository,
-    IFileProvider fileProvider,
+    IPhotoProvider photoProvider,
+    IValidator<UploadPhotoToPetCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<AddPhotoToPetService> logger)
+    ILogger<UploadPhotoToPetService> logger)
 {
     private const string BUCKET_NAME = "photos";
     
-    public async Task<Result<Guid, ErrorList>> AddPhoto(
-        AddPhotoToPetCommand command,
+    public async Task<Result<Guid, ErrorList>> UploadPhoto(
+        UploadPhotoToPetCommand command,
         CancellationToken cancellationToken)
     {
         var transaction = await unitOfWork.BeginTransaction(cancellationToken);
         
         try
         {
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            if (!validationResult.IsValid)
+                return validationResult.ToErrorList();
+            
             var volunteerId = VolunteerId.Create(command.VolunteerId);
         
             var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
@@ -48,12 +54,11 @@ public class AddPhotoToPetService(
                 photosData.Add(photoData);
             }
             
-            var uploadResult = await fileProvider.UploadFiles(photosData, cancellationToken);
-            if (uploadResult.IsFailure)
-                return uploadResult.Error.ToErrorList();
+            var photoPathsResult = await photoProvider.UploadFiles(photosData, cancellationToken);
+            if (photoPathsResult.IsFailure)
+                return photoPathsResult.Error.ToErrorList();
             
-            var photos = photosData
-                .Select(photo => photo.PhotoPath)
+            var photos = photoPathsResult.Value
                 .Select(path => new Photo(path, false))
                 .ToList();
             

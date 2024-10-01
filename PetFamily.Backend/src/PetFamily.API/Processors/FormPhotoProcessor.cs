@@ -1,17 +1,18 @@
-﻿using PetFamily.Application.Volunteers.AddPhotoToPet;
+﻿using PetFamily.Application.Dto;
+using PetFamily.Application.Volunteers.AddPhotoToPet;
 
 namespace PetFamily.API.Processors;
 
 public class FormPhotoProcessor : IAsyncDisposable
 {
-    private readonly List<CreatePhotoCommand> _photoDtos = [];
+    private readonly List<UploadPhotoDto> _photoDtos = [];
 
-    public List<CreatePhotoCommand> Process(IFormFileCollection photos)
+    public List<UploadPhotoDto> Process(IFormFileCollection photos)
     {
         foreach (var photo in photos)
         {
             var stream = photo.OpenReadStream();
-            var photoDto = new CreatePhotoCommand(stream, photo.FileName);
+            var photoDto = new UploadPhotoDto(stream, photo.FileName);
 
             _photoDtos.Add(photoDto);
         }

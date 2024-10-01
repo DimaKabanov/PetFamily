@@ -1,11 +1,12 @@
-﻿using PetFamily.Domain.Enums;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Domain.Models.Volunteers.Pets;
 
-public class Pet : Entity<PetId>, ISoftDeletable
+public class Pet : Shared.Entity<PetId>, ISoftDeletable
 {
     private bool _isDeleted = false;
     
@@ -67,11 +68,14 @@ public class Pet : Entity<PetId>, ISoftDeletable
     public ValueObjectList<Photo> Photos { get; private set; }
     
     public Property Properties { get; private set; }
+
+    public Position Position { get; private set; }
     
-    public void UpdatePhotos(ValueObjectList<Photo> photos)
-    {
+    public void UpdatePhotos(ValueObjectList<Photo> photos) =>
         Photos = photos;
-    }
+
+    public void SetPosition(Position position) => 
+        Position = position;
     
     public void Delete()
     {
@@ -83,5 +87,27 @@ public class Pet : Entity<PetId>, ISoftDeletable
     {
         if (_isDeleted)
             _isDeleted = false;
+    }
+
+    public UnitResult<Error> MoveForward()
+    {
+        var newPosition = Position.Forward();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+    
+    public UnitResult<Error> MoveBack()
+    {
+        var newPosition = Position.Back();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
     }
 }

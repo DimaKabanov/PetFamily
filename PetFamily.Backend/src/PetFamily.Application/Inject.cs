@@ -20,7 +20,7 @@ public static class Inject
         services.AddScoped<UpdateVolunteerRequisitesService>();
         services.AddScoped<DeleteVolunteerService>();
         services.AddScoped<AddPetToVolunteerService>();
-        services.AddScoped<AddPhotoToPetService>();
+        services.AddScoped<UploadPhotoToPetService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
