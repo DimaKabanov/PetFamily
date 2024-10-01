@@ -21,7 +21,7 @@ public class VolunteerTests
         var addedPetResult = volunteer.GetPetById(pet.Id);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(addedPetResult.Value.SerialNumber, SerialNumber.First);
+        Assert.Equal(addedPetResult.Value.Position, Position.First);
     }
 
     private static Volunteer CreateVolunteer()

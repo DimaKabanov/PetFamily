@@ -68,13 +68,13 @@ public class Pet : Entity<PetId>, ISoftDeletable
     
     public Property Properties { get; private set; }
 
-    public SerialNumber SerialNumber { get; private set; }
+    public Position Position { get; private set; }
     
     public void UpdatePhotos(ValueObjectList<Photo> photos) =>
         Photos = photos;
 
-    public void UpdateSerialNumber(SerialNumber serialNumber) => 
-        SerialNumber = serialNumber;
+    public void SetPosition(Position position) => 
+        Position = position;
     
     public void Delete()
     {
