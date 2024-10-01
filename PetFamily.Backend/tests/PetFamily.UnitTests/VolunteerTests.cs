@@ -1,4 +1,5 @@
 using Bogus;
+using FluentAssertions;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;
@@ -20,8 +21,8 @@ public class VolunteerTests
         var result = volunteer.AddPet(pet);
         var addedPetResult = volunteer.GetPetById(pet.Id);
 
-        Assert.True(result.IsSuccess);
-        Assert.Equal(addedPetResult.Value.Position, Position.First);
+        result.IsSuccess.Should().BeTrue();
+        addedPetResult.Value.Position.Should().Be(Position.First);
     }
 
     private static Volunteer CreateVolunteer()
