@@ -5,7 +5,7 @@ namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record Position
 {
-    public static Position First = new(1);
+    public static readonly Position First = new(1);
     
     private Position(int value)
     {
@@ -13,10 +13,14 @@ public record Position
     }
 
     public int Value { get; }
+
+    public Result<Position, Error> Forward() => Create(Value + 1);
     
+    public Result<Position, Error> Back() => Create(Value - 1);
+
     public static Result<Position, Error> Create(int position)
     {
-        if (position <= 0)
+        if (position < 1)
             return Errors.General.ValueIsInvalid("Position");
         
         return new Position(position);

@@ -111,4 +111,66 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         _pets.Add(pet);
         return Result.Success<Error>();
     }
+
+    public UnitResult<Error> MovePet(Pet pet, Position newPosition)
+    {
+        var currentPosition = pet.Position;
+
+        if (currentPosition == newPosition)
+            return Result.Success<Error>();
+
+        var adjustedPosition = AdjustNewPositionIfOutOfRange(newPosition);
+        if (adjustedPosition.IsFailure)
+            return adjustedPosition.Error;
+
+        newPosition = adjustedPosition.Value;
+
+        var moveResult = MovePetsBetweenPositions(newPosition, currentPosition);
+        if (moveResult.IsFailure)
+            return moveResult.Error;
+
+        return Result.Success<Error>();
+    }
+
+    private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
+    {
+        if (newPosition.Value <= _pets.Count)
+            return newPosition;
+        
+        var lastPosition = Position.Create(_pets.Count - 1);
+        if (lastPosition.IsFailure)
+            return lastPosition.Error;
+
+        return lastPosition.Value;
+    }
+
+    private UnitResult<Error> MovePetsBetweenPositions(Position newPosition, Position currentPosition)
+    {
+        if (newPosition.Value < currentPosition.Value)
+        {
+            var petsToMove = _pets.Where(p =>
+                p.Position.Value >= newPosition.Value && p.Position.Value < currentPosition.Value);
+
+            foreach (var petToMove in petsToMove)
+            {
+                var moveResult = petToMove.MoveForward();
+                if (moveResult.IsFailure)
+                    return moveResult.Error;
+            }
+        }
+        else if (newPosition.Value > currentPosition.Value)
+        {
+            var petsToMove = _pets.Where(p =>
+                p.Position.Value > currentPosition.Value && p.Position.Value <= newPosition.Value);
+
+            foreach (var petToMove in petsToMove)
+            {
+                var moveResult = petToMove.MoveBack();
+                if (moveResult.IsFailure)
+                    return moveResult.Error;
+            }
+        }
+        
+        return Result.Success<Error>();
+    }
 }
