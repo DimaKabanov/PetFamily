@@ -128,6 +128,8 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         var moveResult = MovePetsBetweenPositions(newPosition, currentPosition);
         if (moveResult.IsFailure)
             return moveResult.Error;
+        
+        pet.SetPosition(newPosition);
 
         return Result.Success<Error>();
     }
