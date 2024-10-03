@@ -19,6 +19,7 @@ public class UploadPhotosToPetTests
     [Fact]
     public async Task Upload_Photos_To_Pet_Should_Be_Success()
     {
+        // arrange
         var ct = new CancellationTokenSource().Token;
         
         var volunteer = VolunteerFactory.CreateVolunteerWithPets(1);
@@ -43,16 +44,18 @@ public class UploadPhotosToPetTests
 
         var loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
         loggerMock.LogInformation("Success");
-
+        
         var service  = new UploadPhotoToPetService(
             volunteersRepositoryMock,
             photoProviderMock,
             validatorMock,
             unitOfWorkMock,
             loggerMock);
-
+        
+        // act
         var result = await service.UploadPhoto(command, ct);
-
+        
+        // assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(pet.Id.Value);
         pet.Photos.Count.Should().Be(1);
@@ -61,6 +64,7 @@ public class UploadPhotosToPetTests
     [Fact]
     public async Task Upload_Photos_To_Pet_Should_Be_Failure()
     {
+        // arrange
         var ct = new CancellationTokenSource().Token;
         
         var volunteer = VolunteerFactory.CreateVolunteerWithPets(1);
@@ -86,16 +90,18 @@ public class UploadPhotosToPetTests
 
         var loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
         loggerMock.LogInformation("Success");
-
+        
         var service  = new UploadPhotoToPetService(
             volunteersRepositoryMock,
             photoProviderMock,
             validatorMock,
             unitOfWorkMock,
             loggerMock);
-
+        
+        // act
         var result = await service.UploadPhoto(command, ct);
 
+        // assert
         result.IsFailure.Should().BeTrue();
         result.Error.First().Code.Should().Be("test.code");
         pet.Photos.Should().BeNull();

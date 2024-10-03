@@ -16,6 +16,7 @@ public class AddPetToVolunteerTests
     [Fact]
     public async Task Add_Pet_To_Volunteer_Should_Be_Success()
     {
+        // arrange
         var ct = new CancellationTokenSource().Token;
         var volunteer = VolunteerFactory.CreateVolunteer();
         var command = VolunteerFactory.CreateAddPetToVolunteerCommand(volunteer.Id.Value);
@@ -37,9 +38,11 @@ public class AddPetToVolunteerTests
             validatorMock,
             unitOfWorkMock,
             loggerMock);
-
+        
+        // act
         var result = await service.AddPet(command, ct);
-
+        
+        // assert
         result.IsSuccess.Should().BeTrue();
         volunteer.Pets.Should().HaveCount(1);
         result.Value.Should().Be(volunteer.Pets[0].Id.Value);
@@ -48,6 +51,7 @@ public class AddPetToVolunteerTests
     [Fact]
     public async Task Add_Pet_To_Volunteer_Should_Be_Failure()
     {
+        // arrange
         var ct = new CancellationTokenSource().Token;
         var volunteer = VolunteerFactory.CreateVolunteer();
         var command = VolunteerFactory.CreateAddPetToVolunteerCommand(volunteer.Id.Value);
@@ -70,9 +74,11 @@ public class AddPetToVolunteerTests
             validatorMock,
             unitOfWorkMock,
             loggerMock);
-
+        
+        // act
         var result = await service.AddPet(command, ct);
-
+        
+        // assert
         result.IsFailure.Should().BeTrue();
         volunteer.Pets.Should().HaveCount(0);
         result.Error.First().Code.Should().Be("test.code");
