@@ -88,12 +88,32 @@ public static class VolunteerFactory
 
     public static List<UploadPhotoDto> CreatePhotoList(int photosCount)
     {
+        var f = new Faker("ru");
         var stream = new MemoryStream();
-        const string photoName = "photo.png";
-
-        var uploadPhotoDto = new UploadPhotoDto(stream, photoName);
-        List<UploadPhotoDto> photos = [uploadPhotoDto];
-
+        
+        List<UploadPhotoDto> photos = [];
+        for (var i = 0; i < photosCount; i++)
+        {
+            var photoName = $"{f.Lorem.Word()}.png";
+            var photo = new UploadPhotoDto(stream, photoName);
+            photos.Add(photo);
+        }
+        
         return photos;
+    }
+    
+    public static List<PhotoPath> CreatePhotoPathList(int pathsCount)
+    {
+        var f = new Faker("ru");
+        
+        List<PhotoPath> paths = [];
+        for (var i = 0; i < pathsCount; i++)
+        {
+            var photoName = $"{f.Lorem.Word()}.png";
+            var path = PhotoPath.Create(photoName).Value;
+            paths.Add(path);
+        }
+        
+        return paths;
     }
 }
