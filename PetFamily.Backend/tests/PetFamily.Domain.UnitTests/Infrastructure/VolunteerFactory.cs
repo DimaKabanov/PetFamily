@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using PetFamily.Application.Dto;
+using PetFamily.Application.Volunteers.AddPetToVolunteer;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;
@@ -84,6 +85,43 @@ public static class VolunteerFactory
             createdDate,
             requisites,
             properties);
+    }
+    
+    public static AddPetToVolunteerCommand CreateAddPetToVolunteerCommand(Guid volunteerId)
+    {
+        var f = new Faker("ru");
+        
+        var name = f.Lorem.Word();
+        var description = f.Lorem.Paragraph();
+        
+        var physicalProperty = new PetPhysicalPropertyDto(
+            f.Commerce.Color(),
+            f.Lorem.Word(),
+            f.Random.Int(1, 10),
+            f.Random.Int(1, 10));
+        
+        var address = new PetAddressDto(
+            f.Address.StreetName(), 
+            f.Random.Int(1, 10), 
+            f.Random.Int(1, 10));
+        
+        var phone = f.Phone.PhoneNumber("###########");
+        var dateOfBirth = DateOnly.FromDateTime(DateTime.Now);
+        var createdDate = DateTime.Now;
+        
+        return new AddPetToVolunteerCommand(
+            volunteerId,
+            name,
+            description,
+            physicalProperty,
+            address,
+            phone,
+            true,
+            dateOfBirth,
+            true,
+            AssistanceStatus.NeedsHelp,
+            createdDate,
+            []);
     }
 
     public static List<UploadPhotoDto> CreatePhotoList(int photosCount)
