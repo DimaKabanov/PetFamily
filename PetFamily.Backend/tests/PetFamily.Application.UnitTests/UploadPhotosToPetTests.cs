@@ -16,6 +16,12 @@ namespace PetFamily.Application.UnitTests;
 
 public class UploadPhotosToPetTests
 {
+    private readonly IVolunteersRepository _volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
+    private readonly IPhotoProvider _photoProviderMock = Substitute.For<IPhotoProvider>();
+    private readonly IValidator<UploadPhotoToPetCommand> _validatorMock = Substitute.For<IValidator<UploadPhotoToPetCommand>>();
+    private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<UploadPhotoToPetService> _loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
+
     [Fact]
     public async Task Upload_Photos_To_Pet_Should_Be_Success()
     {
@@ -28,29 +34,20 @@ public class UploadPhotosToPetTests
         var paths = VolunteerFactory.CreatePhotoPathList(1);
         
         var command = new UploadPhotoToPetCommand(volunteer.Id.Value, pet.Id.Value, photos);
-
-        var volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
-        volunteersRepositoryMock.GetById(volunteer.Id, ct).Returns(volunteer);
-
-        var photoProviderMock = Substitute.For<IPhotoProvider>();
-        photoProviderMock.UploadFiles(Arg.Any<List<PhotoData>>(), ct)
+        
+        _volunteersRepositoryMock.GetById(volunteer.Id, ct).Returns(volunteer);
+        _photoProviderMock.UploadFiles(Arg.Any<List<PhotoData>>(), ct)
             .Returns(Result.Success<IReadOnlyList<PhotoPath>, Error>(paths));
-
-        var validatorMock = Substitute.For<IValidator<UploadPhotoToPetCommand>>();
-        validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
-
-        var unitOfWorkMock = Substitute.For<IUnitOfWork>();
-        unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
-
-        var loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
-        loggerMock.LogInformation("Success");
+        _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
+        _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _loggerMock.LogInformation("Success");
         
         var service  = new UploadPhotoToPetService(
-            volunteersRepositoryMock,
-            photoProviderMock,
-            validatorMock,
-            unitOfWorkMock,
-            loggerMock);
+            _volunteersRepositoryMock,
+            _photoProviderMock,
+            _validatorMock,
+            _unitOfWorkMock,
+            _loggerMock);
         
         // act
         var result = await service.UploadPhoto(command, ct);
@@ -73,30 +70,23 @@ public class UploadPhotosToPetTests
         var paths = VolunteerFactory.CreatePhotoPathList(1);
         
         var command = new UploadPhotoToPetCommand(volunteer.Id.Value, pet.Id.Value, photos);
-
-        var volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
-        volunteersRepositoryMock.GetById(volunteer.Id, ct)
+        
+        _volunteersRepositoryMock.GetById(volunteer.Id, ct)
             .Returns(Error.Failure("test.code", "test message"));
-
-        var photoProviderMock = Substitute.For<IPhotoProvider>();
-        photoProviderMock.UploadFiles(Arg.Any<List<PhotoData>>(), ct)
+        
+        _photoProviderMock.UploadFiles(Arg.Any<List<PhotoData>>(), ct)
             .Returns(Result.Success<IReadOnlyList<PhotoPath>, Error>(paths));
-
-        var validatorMock = Substitute.For<IValidator<UploadPhotoToPetCommand>>();
-        validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
-
-        var unitOfWorkMock = Substitute.For<IUnitOfWork>();
-        unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
-
-        var loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
-        loggerMock.LogInformation("Success");
+        
+        _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
+        _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _loggerMock.LogInformation("Success");
         
         var service  = new UploadPhotoToPetService(
-            volunteersRepositoryMock,
-            photoProviderMock,
-            validatorMock,
-            unitOfWorkMock,
-            loggerMock);
+            _volunteersRepositoryMock,
+            _photoProviderMock,
+            _validatorMock,
+            _unitOfWorkMock,
+            _loggerMock);
         
         // act
         var result = await service.UploadPhoto(command, ct);

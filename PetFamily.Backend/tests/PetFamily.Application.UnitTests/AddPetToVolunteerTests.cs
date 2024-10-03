@@ -13,6 +13,11 @@ namespace PetFamily.Application.UnitTests;
 
 public class AddPetToVolunteerTests
 {
+    private readonly IVolunteersRepository _volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
+    private readonly IValidator<AddPetToVolunteerCommand> _validatorMock =  Substitute.For<IValidator<AddPetToVolunteerCommand>>();
+    private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<AddPetToVolunteerService> _loggerMock = Substitute.For<ILogger<AddPetToVolunteerService>>();
+    
     [Fact]
     public async Task Add_Pet_To_Volunteer_Should_Be_Success()
     {
@@ -21,23 +26,16 @@ public class AddPetToVolunteerTests
         var volunteer = VolunteerFactory.CreateVolunteer();
         var command = VolunteerFactory.CreateAddPetToVolunteerCommand(volunteer.Id.Value);
         
-        var volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
-        volunteersRepositoryMock.GetById(volunteer.Id, ct).Returns(volunteer);
-        
-        var validatorMock = Substitute.For<IValidator<AddPetToVolunteerCommand>>();
-        validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
-        
-        var unitOfWorkMock = Substitute.For<IUnitOfWork>();
-        unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
-        
-        var loggerMock = Substitute.For<ILogger<AddPetToVolunteerService>>();
-        loggerMock.LogInformation("Success");
+        _volunteersRepositoryMock.GetById(volunteer.Id, ct).Returns(volunteer);
+        _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
+        _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _loggerMock.LogInformation("Success");
         
         var service  = new AddPetToVolunteerService(
-            volunteersRepositoryMock,
-            validatorMock,
-            unitOfWorkMock,
-            loggerMock);
+            _volunteersRepositoryMock,
+            _validatorMock,
+            _unitOfWorkMock,
+            _loggerMock);
         
         // act
         var result = await service.AddPet(command, ct);
@@ -55,25 +53,19 @@ public class AddPetToVolunteerTests
         var ct = new CancellationTokenSource().Token;
         var volunteer = VolunteerFactory.CreateVolunteer();
         var command = VolunteerFactory.CreateAddPetToVolunteerCommand(volunteer.Id.Value);
-
-        var volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
-        volunteersRepositoryMock.GetById(volunteer.Id, ct)
+        
+        _volunteersRepositoryMock.GetById(volunteer.Id, ct)
             .Returns(Error.Failure("test.code", "test message"));
 
-        var validatorMock = Substitute.For<IValidator<AddPetToVolunteerCommand>>();
-        validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
-
-        var unitOfWorkMock = Substitute.For<IUnitOfWork>();
-        unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
-
-        var loggerMock = Substitute.For<ILogger<AddPetToVolunteerService>>();
-        loggerMock.LogInformation("Success");
+        _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
+        _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _loggerMock.LogInformation("Success");
 
         var service = new AddPetToVolunteerService(
-            volunteersRepositoryMock,
-            validatorMock,
-            unitOfWorkMock,
-            loggerMock);
+            _volunteersRepositoryMock,
+            _validatorMock,
+            _unitOfWorkMock,
+            _loggerMock);
         
         // act
         var result = await service.AddPet(command, ct);
