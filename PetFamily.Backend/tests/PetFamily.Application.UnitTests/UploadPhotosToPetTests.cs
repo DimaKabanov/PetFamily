@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using PetFamily.Application.Database;
+using PetFamily.Application.Messaging;
 using PetFamily.Application.PhotoProvider;
 using PetFamily.Application.Volunteers;
 using PetFamily.Application.Volunteers.AddPhotoToPet;
@@ -20,8 +21,9 @@ public class UploadPhotosToPetTests
     private readonly IPhotoProvider _photoProviderMock = Substitute.For<IPhotoProvider>();
     private readonly IValidator<UploadPhotoToPetCommand> _validatorMock = Substitute.For<IValidator<UploadPhotoToPetCommand>>();
     private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
+    private readonly IMessageQueue<IEnumerable<PhotoInfo>> _messageQueue = Substitute.For<IMessageQueue<IEnumerable<PhotoInfo>>>();
     private readonly ILogger<UploadPhotoToPetService> _loggerMock = Substitute.For<ILogger<UploadPhotoToPetService>>();
-
+    
     [Fact]
     public async Task Upload_Photos_To_Pet_Should_Be_Success()
     {
@@ -40,6 +42,7 @@ public class UploadPhotosToPetTests
             .Returns(Result.Success<IReadOnlyList<PhotoPath>, Error>(paths));
         _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
         _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _messageQueue.WriteAsync(Arg.Any<List<PhotoInfo>>(), ct).Returns(Task.CompletedTask);
         _loggerMock.LogInformation("Success");
         
         var service  = new UploadPhotoToPetService(
@@ -47,6 +50,7 @@ public class UploadPhotosToPetTests
             _photoProviderMock,
             _validatorMock,
             _unitOfWorkMock,
+            _messageQueue,
             _loggerMock);
         
         // act
@@ -79,6 +83,7 @@ public class UploadPhotosToPetTests
         
         _validatorMock.ValidateAsync(command, ct).Returns(new ValidationResult());
         _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
+        _messageQueue.WriteAsync(Arg.Any<List<PhotoInfo>>(), ct).Returns(Task.CompletedTask);
         _loggerMock.LogInformation("Success");
         
         var service  = new UploadPhotoToPetService(
@@ -86,6 +91,7 @@ public class UploadPhotosToPetTests
             _photoProviderMock,
             _validatorMock,
             _unitOfWorkMock,
+            _messageQueue,
             _loggerMock);
         
         // act
