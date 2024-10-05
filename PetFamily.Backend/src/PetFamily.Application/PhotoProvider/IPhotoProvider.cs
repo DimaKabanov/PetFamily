@@ -10,9 +10,8 @@ public interface IPhotoProvider
         IEnumerable<PhotoData> photosData,
         CancellationToken cancellationToken);
     
-    Task<Result<string, Error>> DeleteFile(
-        string bucketName,
-        string fileName,
+    Task<UnitResult<Error>> RemoveFile(
+        PhotoInfo photoInfo,
         CancellationToken cancellationToken);
     
     Task<Result<string, Error>> DownloadFile(
