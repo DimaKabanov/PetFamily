@@ -47,7 +47,7 @@ public class MinioProvider(
         }
     }
 
-    public async Task<Result<string, Error>> RemoveFile(PhotoInfo photoInfo, CancellationToken ct)
+    public async Task<UnitResult<Error>> RemoveFile(PhotoInfo photoInfo, CancellationToken ct)
     {
         try
         {
@@ -57,22 +57,21 @@ public class MinioProvider(
 
             var objectStat = await minioClient.StatObjectAsync(statObjectArgs, ct);
             if (objectStat is null)
-                return Error.Failure("file.delete", "File already deleted");
+                return Result.Success<Error>();
 
             var removeObjectArgs = new RemoveObjectArgs()
                 .WithBucket(photoInfo.BucketName)
                 .WithObject(photoInfo.PhotoPath.Path);
 
             await minioClient.RemoveObjectAsync(removeObjectArgs, ct);
-
-            return photoInfo.PhotoPath.Path;
         }
         catch (Exception e)
         {
             logger.LogError(e, "Failed to delete file");
-
             return Error.Failure("file.delete", "Failed to delete file");
         }
+        
+        return Result.Success<Error>();
     }
 
     public async Task<Result<string, Error>> DownloadFile(string bucketName, string fileName)
