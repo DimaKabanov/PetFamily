@@ -3,9 +3,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
-using PetFamily.Domain.Shared;
 
-namespace PetFamily.Infrastructure.Configurations;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
 public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
@@ -25,7 +24,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             nb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("name");
         });
 
@@ -33,7 +32,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             db.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_HIGH_TEXT_LENGTH)
                 .HasColumnName("description"); 
         });
 
@@ -41,12 +40,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             ppb.Property(pp => pp.Color)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("color");
         
             ppb.Property(pp => pp.Health)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("health");
         
             ppb.Property(pp => pp.Weight)
@@ -62,7 +61,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             ab.Property(a => a.Street)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_MIDDLE_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_MIDDLE_TEXT_LENGTH)
                 .HasColumnName("street");
             
             ab.Property(a => a.Home)
@@ -78,7 +77,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(p => p.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("phone");
         });
         
@@ -116,7 +115,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                         p => p.Path,
                         value => PhotoPath.Create(value).Value)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_MIDDLE_TEXT_LENGTH);
+                    .HasMaxLength(Domain.Shared.Constants.MAX_MIDDLE_TEXT_LENGTH);
                 
                 ppb.Property(pp => pp.IsMain)
                     .IsRequired();
@@ -131,11 +130,11 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             {
                 rb.Property(r => r.Name)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH);
+                    .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
                 
                 rb.Property(r => r.Description)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENGTH);
+                    .HasMaxLength(Domain.Shared.Constants.MAX_HIGH_TEXT_LENGTH);
             });
         });
 

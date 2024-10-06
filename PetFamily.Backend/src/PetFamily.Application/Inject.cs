@@ -4,6 +4,7 @@ using PetFamily.Application.Volunteers.AddPetToVolunteer;
 using PetFamily.Application.Volunteers.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.Delete;
+using PetFamily.Application.Volunteers.Queries.GetVolunteers;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
 using PetFamily.Application.Volunteers.UpdateRequisites;
 using PetFamily.Application.Volunteers.UpdateSocialNetworks;
@@ -21,6 +22,7 @@ public static class Inject
         services.AddScoped<DeleteVolunteerService>();
         services.AddScoped<AddPetToVolunteerService>();
         services.AddScoped<UploadPhotoToPetService>();
+        services.AddScoped<GetVolunteersService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetFamily.Domain.Models.Species;
-using PetFamily.Domain.Shared;
 
-namespace PetFamily.Infrastructure.Configurations;
+namespace PetFamily.Infrastructure.Configurations.Write;
 
 public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
@@ -23,7 +22,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         {
             nb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENGTH)
+                .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("name");
         });
         
