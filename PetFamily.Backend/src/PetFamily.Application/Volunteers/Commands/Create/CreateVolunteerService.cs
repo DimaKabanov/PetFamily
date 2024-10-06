@@ -7,7 +7,7 @@ using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.Create;
+namespace PetFamily.Application.Volunteers.Commands.Create;
 
 public class CreateVolunteerService(
     IVolunteersRepository volunteersRepository,

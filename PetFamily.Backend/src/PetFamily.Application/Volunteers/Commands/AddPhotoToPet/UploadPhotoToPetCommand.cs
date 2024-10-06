@@ -1,6 +1,6 @@
 using PetFamily.Application.Dto;
 
-namespace PetFamily.Application.Volunteers.AddPhotoToPet;
+namespace PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 
 public record UploadPhotoToPetCommand(
     Guid VolunteerId,

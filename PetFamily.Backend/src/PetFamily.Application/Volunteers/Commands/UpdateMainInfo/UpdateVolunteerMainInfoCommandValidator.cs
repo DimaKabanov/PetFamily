@@ -4,7 +4,7 @@ using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.UpdateMainInfo;
+namespace PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 
 public class UpdateVolunteerMainInfoCommandValidator : AbstractValidator<UpdateVolunteerMainInfoCommand>
 {

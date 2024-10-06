@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Dto;
 
-namespace PetFamily.Application.Volunteers.UpdateSocialNetworks;
+namespace PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
 
 public record UpdateVolunteerSocialNetworksCommand(
     Guid VolunteerId,

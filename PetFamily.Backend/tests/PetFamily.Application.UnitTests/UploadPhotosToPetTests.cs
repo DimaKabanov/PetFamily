@@ -8,7 +8,7 @@ using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.PhotoProvider;
 using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.AddPhotoToPet;
+using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.UnitTests.Infrastructure;

@@ -1,5 +1,4 @@
 ﻿using PetFamily.Application.Dto;
-using PetFamily.Application.Volunteers.AddPhotoToPet;
 
 namespace PetFamily.API.Processors;
 

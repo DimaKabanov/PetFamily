@@ -1,6 +1,6 @@
 ﻿using PetFamily.Application.Dto;
 
-namespace PetFamily.Application.Volunteers.UpdateRequisites;
+namespace PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 
 public record UpdateVolunteerRequisitesCommand(
     Guid VolunteerId,

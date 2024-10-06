@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Domain.Shared;
 using PetFamily.UnitTests.Infrastructure;
 

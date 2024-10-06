@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using PetFamily.Application.Dto;
-using PetFamily.Application.Volunteers.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;

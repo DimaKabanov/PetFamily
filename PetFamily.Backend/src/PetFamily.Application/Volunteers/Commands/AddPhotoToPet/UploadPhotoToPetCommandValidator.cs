@@ -3,7 +3,7 @@ using PetFamily.Application.Dto;
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.AddPhotoToPet;
+namespace PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 
 public class UploadPhotoToPetCommandValidator : AbstractValidator<UploadPhotoToPetCommand>
 {

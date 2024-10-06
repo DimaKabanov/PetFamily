@@ -1,24 +1,23 @@
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Volunteers.Create;
+using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.UpdateMainInfo;
+namespace PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
 
-public class UpdateVolunteerMainInfoService(
+public class UpdateVolunteerSocialNetworksService(
     IVolunteersRepository volunteersRepository,
-    IValidator<UpdateVolunteerMainInfoCommand> validator,
+    IValidator<UpdateVolunteerSocialNetworksCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger)
 {
     public async Task<Result<Guid, ErrorList>> Update(
-        UpdateVolunteerMainInfoCommand command,
+        UpdateVolunteerSocialNetworksCommand command,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -31,27 +30,16 @@ public class UpdateVolunteerMainInfoService(
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
         
-        var fullName = FullName.Create(
-            command.FullName.Name,
-            command.FullName.Surname,
-            command.FullName.Patronymic).Value;
-            
-        var description = Description.Create(command.Description).Value;
+        var socialNetworks = command.SocialNetworks
+            .Select(s => SocialNetwork.Create(s.Title, s.Url).Value)
+            .ToList();
 
-        var experience = Experience.Create(command.Experience).Value;
-
-        var phone = Phone.Create(command.Phone).Value;
-
-        volunteerResult.Value.UpdateMainInfo(
-            fullName,
-            description,
-            experience,
-            phone);
+        volunteerResult.Value.UpdateSocialNetworks(socialNetworks);
 
         await unitOfWork.SaveChanges(cancellationToken);
-
-        logger.LogInformation("Updated volunteer with id: {volunteerId}", volunteerId);
-
+        
+        logger.LogInformation("Updated volunteer social networks with id: {volunteerId}", volunteerId);
+        
         return volunteerResult.Value.Id.Value;
     }
 }

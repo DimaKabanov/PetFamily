@@ -1,23 +1,21 @@
-﻿using CSharpFunctionalExtensions;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Volunteers.Create;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Shared;
-using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.UpdateRequisites;
+namespace PetFamily.Application.Volunteers.Commands.Delete;
 
-public class UpdateVolunteerRequisitesService(
+public class DeleteVolunteerService(
     IVolunteersRepository volunteersRepository,
-    IValidator<UpdateVolunteerRequisitesCommand> validator,
+    IValidator<DeleteVolunteerCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<CreateVolunteerService> logger)
+    ILogger<DeleteVolunteerService> logger)
 {
-    public async Task<Result<Guid, ErrorList>> Update(
-        UpdateVolunteerRequisitesCommand command,
+    public async Task<Result<Guid, ErrorList>> Delete(
+        DeleteVolunteerCommand command,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -30,16 +28,12 @@ public class UpdateVolunteerRequisitesService(
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
-        var requisites = command.Requisites
-            .Select(r => Requisite.Create(r.Name, r.Description).Value)
-            .ToList();
-
-        volunteerResult.Value.UpdateRequisites(requisites);
-
+        volunteerResult.Value.Delete();
+        
         await unitOfWork.SaveChanges(cancellationToken);
         
-        logger.LogInformation("Updated volunteer requisites with id: {volunteerId}", volunteerId);
-        
+        logger.LogInformation("Deleted volunteer with id: {volunteerId}", volunteerId);
+
         return volunteerResult.Value.Id.Value;
     }
 }

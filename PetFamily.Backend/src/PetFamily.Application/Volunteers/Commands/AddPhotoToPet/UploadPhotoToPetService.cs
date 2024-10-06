@@ -10,7 +10,7 @@ using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.AddPhotoToPet;
+namespace PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 
 public class UploadPhotoToPetService(
     IVolunteersRepository volunteersRepository,
