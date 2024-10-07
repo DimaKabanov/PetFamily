@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Messaging;
@@ -18,11 +19,11 @@ public class UploadPhotoToPetService(
     IValidator<UploadPhotoToPetCommand> validator,
     IUnitOfWork unitOfWork,
     IMessageQueue<IEnumerable<PhotoInfo>> messageQueue,
-    ILogger<UploadPhotoToPetService> logger)
+    ILogger<UploadPhotoToPetService> logger) : ICommandService<Guid, UploadPhotoToPetCommand>
 {
     private const string BUCKET_NAME = "photos";
     
-    public async Task<Result<Guid, ErrorList>> UploadPhoto(
+    public async Task<Result<Guid, ErrorList>> Run(
         UploadPhotoToPetCommand command,
         CancellationToken ct)
     {

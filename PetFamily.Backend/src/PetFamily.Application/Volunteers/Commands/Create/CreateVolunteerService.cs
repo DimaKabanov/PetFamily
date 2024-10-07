@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.ValueObjects;
@@ -12,13 +13,13 @@ namespace PetFamily.Application.Volunteers.Commands.Create;
 public class CreateVolunteerService(
     IVolunteersRepository volunteersRepository,
     IValidator<CreateVolunteerCommand> validator,
-    ILogger<CreateVolunteerService> logger)
+    ILogger<CreateVolunteerService> logger) : ICommandService<Guid, CreateVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Create(
+    public async Task<Result<Guid, ErrorList>> Run(
         CreateVolunteerCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        var validationResult = await validator.ValidateAsync(command, ct);
         if (!validationResult.IsValid)
             return validationResult.ToErrorList();
         
@@ -52,7 +53,7 @@ public class CreateVolunteerService(
             socialNetworks,
             requisites);
 
-        await volunteersRepository.Add(volunteer, cancellationToken);
+        await volunteersRepository.Add(volunteer, ct);
         
         logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
 

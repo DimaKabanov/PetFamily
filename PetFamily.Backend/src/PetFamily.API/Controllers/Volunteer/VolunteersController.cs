@@ -21,7 +21,7 @@ public class VolunteersController : ApplicationController
         [FromServices] GetVolunteersService service,
         CancellationToken ct)
     {
-        var response = await service.GetVolunteers(request.ToQuery(), ct);
+        var response = await service.Run(request.ToQuery(), ct);
 
         return Ok(response);
     }
@@ -32,7 +32,7 @@ public class VolunteersController : ApplicationController
         [FromServices] CreateVolunteerService service,
         CancellationToken ct)
     { 
-        var result = await service.Create(request.ToCommand(), ct);
+        var result = await service.Run(request.ToCommand(), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -43,7 +43,7 @@ public class VolunteersController : ApplicationController
         [FromServices] UpdateVolunteerMainInfoService service,
         CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), ct);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -54,7 +54,7 @@ public class VolunteersController : ApplicationController
         [FromServices] UpdateVolunteerSocialNetworksService service,
         CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), ct);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -65,7 +65,7 @@ public class VolunteersController : ApplicationController
         [FromServices] UpdateVolunteerRequisitesService service,
         CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), ct);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -76,7 +76,7 @@ public class VolunteersController : ApplicationController
         CancellationToken ct)
     {
         var command = new DeleteVolunteerCommand(id);
-        var result = await service.Delete(command, ct);
+        var result = await service.Run(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -87,7 +87,7 @@ public class VolunteersController : ApplicationController
         [FromServices] AddPetToVolunteerService service,
         CancellationToken ct)
     {
-        var result = await service.AddPet(request.ToCommand(id), ct);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -105,7 +105,7 @@ public class VolunteersController : ApplicationController
         
         var command = new UploadPhotoToPetCommand(id, petId, photoDtos);
         
-        var result = await service.UploadPhoto(command, ct);
+        var result = await service.Run(command, ct);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

@@ -1,3 +1,4 @@
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Dto;
 using PetFamily.Domain.Enums;
 
@@ -15,4 +16,4 @@ public record AddPetToVolunteerCommand(
     bool IsVaccinated,
     AssistanceStatus AssistanceStatus,
     DateTime CreatedDate,
-    IEnumerable<RequisiteDto> Requisites);
+    IEnumerable<RequisiteDto> Requisites) : ICommand;

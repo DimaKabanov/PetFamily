@@ -1,6 +1,7 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Models.Species;
@@ -16,19 +17,19 @@ public class AddPetToVolunteerService(
     IVolunteersRepository volunteersRepository,
     IValidator<AddPetToVolunteerCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<AddPetToVolunteerService> logger)
+    ILogger<AddPetToVolunteerService> logger) : ICommandService<Guid, AddPetToVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> AddPet(
+    public async Task<Result<Guid, ErrorList>> Run(
         AddPetToVolunteerCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        var validationResult = await validator.ValidateAsync(command, ct);
         if (!validationResult.IsValid)
             return validationResult.ToErrorList();
         
         var volunteerId = VolunteerId.Create(command.VolunteerId);
         
-        var volunteerResult = await volunteersRepository.GetById(volunteerId, cancellationToken);
+        var volunteerResult = await volunteersRepository.GetById(volunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
@@ -74,7 +75,7 @@ public class AddPetToVolunteerService(
 
         volunteerResult.Value.AddPet(pet);
         
-        await unitOfWork.SaveChanges(cancellationToken);
+        await unitOfWork.SaveChanges(ct);
         
         logger.LogInformation(
             "Added pet with id {petId} to volunteer with id {volunteerId}",

@@ -1,3 +1,4 @@
+using PetFamily.Application.Abstractions;
 using PetFamily.Application.Dto;
 
 namespace PetFamily.Application.Volunteers.Commands.Create;
@@ -8,5 +9,4 @@ public record CreateVolunteerCommand(
     int Experience,
     string Phone,
     IEnumerable<SocialNetworkDto> SocialNetworks,
-    IEnumerable<RequisiteDto> Requisites
-);
+    IEnumerable<RequisiteDto> Requisites) : ICommand;

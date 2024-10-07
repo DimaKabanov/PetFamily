@@ -38,7 +38,7 @@ public class AddPetToVolunteerTests
             _loggerMock);
         
         // act
-        var result = await service.AddPet(command, ct);
+        var result = await service.Run(command, ct);
         
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -68,7 +68,7 @@ public class AddPetToVolunteerTests
             _loggerMock);
         
         // act
-        var result = await service.AddPet(command, ct);
+        var result = await service.Run(command, ct);
         
         // assert
         result.IsFailure.Should().BeTrue();
