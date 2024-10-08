@@ -1,6 +1,12 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dto;
 using PetFamily.Domain.Models.Volunteers;
+using PetFamily.Domain.Models.Volunteers.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Infrastructure.Extensions;
 
 namespace PetFamily.Infrastructure.Configurations.Write;
 
@@ -58,38 +64,18 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH)
                 .HasColumnName("phone");
         });
-        
-        b.OwnsOne(v => v.SocialNetworks, vb =>
-        {
-            vb.ToJson("social_networks");
-            
-            vb.OwnsMany(d => d.Values, sb =>
-            {
-                sb.Property(s => s.Title)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-                
-                sb.Property(s => s.Url)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-            });
-        });
-        
-        b.OwnsOne(v => v.Requisites, vb =>
-        {
-            vb.ToJson("requisites");
 
-            vb.OwnsMany(d => d.Values, rb =>
-            {
-                rb.Property(r => r.Name)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-                
-                rb.Property(r => r.Description)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_HIGH_TEXT_LENGTH);
-            });
-        });
+        b.Property(v => v.SocialNetworks)
+            .ValueObjectsCollectionJsonConversion(
+                sn => new SocialNetworkDto(sn.Title, sn.Url),
+                dto => SocialNetwork.Create(dto.Title, dto.Url).Value)
+            .HasColumnName("social_networks");
+
+        b.Property(v => v.Requisites)
+            .ValueObjectsCollectionJsonConversion(
+                r => new RequisiteDto(r.Name, r.Description),
+                dto => Requisite.Create(dto.Name, dto.Description).Value)
+            .HasColumnName("requisites");
         
         b.HasMany(v => v.Pets)
             .WithOne()

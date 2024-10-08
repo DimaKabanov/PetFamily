@@ -16,7 +16,7 @@ public class VolunteerDto
 
     public string Phone { get; init; } = string.Empty;
     
-    public string Requisites { get; init; } = string.Empty;
+    public RequisiteDto[] Requisites { get; init; } = null!;
     
-    public string SocialNetworks { get; init; } = string.Empty;
+    public SocialNetworkDto[] SocialNetworks { get; init; } = null!;
 }
