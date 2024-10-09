@@ -18,7 +18,7 @@ public class UpdateVolunteerMainInfoService(
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger) : ICommandService<Guid, UpdateVolunteerMainInfoCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         UpdateVolunteerMainInfoCommand command,
         CancellationToken ct)
     {

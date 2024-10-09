@@ -54,7 +54,7 @@ public class UploadPhotosToPetTests
             _loggerMock);
         
         // act
-        var result = await service.Run(command, ct);
+        var result = await service.Handle(command, ct);
         
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -95,7 +95,7 @@ public class UploadPhotosToPetTests
             _loggerMock);
         
         // act
-        var result = await service.Run(command, ct);
+        var result = await service.Handle(command, ct);
 
         // assert
         result.IsFailure.Should().BeTrue();

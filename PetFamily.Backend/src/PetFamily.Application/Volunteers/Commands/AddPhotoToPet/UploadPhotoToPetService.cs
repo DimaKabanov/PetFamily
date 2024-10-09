@@ -23,7 +23,7 @@ public class UploadPhotoToPetService(
 {
     private const string BUCKET_NAME = "photos";
     
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         UploadPhotoToPetCommand command,
         CancellationToken ct)
     {

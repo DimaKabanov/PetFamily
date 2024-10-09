@@ -17,7 +17,7 @@ public class CreateVolunteerService(
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger) : ICommandService<Guid, CreateVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         CreateVolunteerCommand command,
         CancellationToken ct)
     {

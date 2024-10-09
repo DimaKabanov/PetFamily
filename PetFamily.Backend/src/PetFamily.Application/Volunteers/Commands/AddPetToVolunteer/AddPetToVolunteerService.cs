@@ -19,7 +19,7 @@ public class AddPetToVolunteerService(
     IUnitOfWork unitOfWork,
     ILogger<AddPetToVolunteerService> logger) : ICommandService<Guid, AddPetToVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         AddPetToVolunteerCommand command,
         CancellationToken ct)
     {

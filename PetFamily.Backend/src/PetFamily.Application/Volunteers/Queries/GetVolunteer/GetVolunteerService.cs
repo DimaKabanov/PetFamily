@@ -10,7 +10,7 @@ namespace PetFamily.Application.Volunteers.Queries.GetVolunteer;
 public class GetVolunteerService(
     IReadDbContext readDbContext) : IQueryService<Result<VolunteerDto, Error>, GetVolunteerQuery>
 {
-    public async Task<Result<VolunteerDto, Error>> Run(
+    public async Task<Result<VolunteerDto, Error>> Handle(
         GetVolunteerQuery query,
         CancellationToken ct)
     {

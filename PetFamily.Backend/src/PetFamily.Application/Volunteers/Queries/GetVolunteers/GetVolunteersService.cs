@@ -9,7 +9,7 @@ namespace PetFamily.Application.Volunteers.Queries.GetVolunteers;
 public class GetVolunteersService(
     IReadDbContext readDbContext) : IQueryService<PagedList<VolunteerDto>, GetVolunteersQuery>
 {
-    public async Task<PagedList<VolunteerDto>> Run(
+    public async Task<PagedList<VolunteerDto>> Handle(
         GetVolunteersQuery query,
         CancellationToken ct)
     {
