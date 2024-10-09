@@ -15,7 +15,7 @@ public class DeleteVolunteerService(
     IUnitOfWork unitOfWork,
     ILogger<DeleteVolunteerService> logger) : ICommandService<Guid, DeleteVolunteerCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         DeleteVolunteerCommand command,
         CancellationToken ct)
     {

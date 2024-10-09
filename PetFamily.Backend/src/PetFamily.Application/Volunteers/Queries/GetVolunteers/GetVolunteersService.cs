@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dto;
@@ -10,7 +9,7 @@ namespace PetFamily.Application.Volunteers.Queries.GetVolunteers;
 public class GetVolunteersService(
     IReadDbContext readDbContext) : IQueryService<PagedList<VolunteerDto>, GetVolunteersQuery>
 {
-    public async Task<PagedList<VolunteerDto>> Run(
+    public async Task<PagedList<VolunteerDto>> Handle(
         GetVolunteersQuery query,
         CancellationToken ct)
     {

@@ -17,7 +17,7 @@ public class UpdateVolunteerRequisitesService(
     IUnitOfWork unitOfWork,
     ILogger<CreateVolunteerService> logger) : ICommandService<Guid, UpdateVolunteerRequisitesCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Run(
+    public async Task<Result<Guid, ErrorList>> Handle(
         UpdateVolunteerRequisitesCommand command,
         CancellationToken ct)
     {
