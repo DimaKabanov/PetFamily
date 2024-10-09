@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Volunteers;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Shared;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories;
 
-public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersRepository
+public class VolunteersRepository(WriteDbContext dbContext) : IVolunteersRepository
 {
     public async Task<Guid> Add(Volunteer volunteer, CancellationToken cancellationToken)
     {

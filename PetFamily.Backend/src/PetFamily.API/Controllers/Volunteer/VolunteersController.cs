@@ -2,25 +2,37 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteer.Requests;
 using PetFamily.API.Extensions;
 using PetFamily.API.Processors;
-using PetFamily.Application.Volunteers.AddPetToVolunteer;
-using PetFamily.Application.Volunteers.AddPhotoToPet;
-using PetFamily.Application.Volunteers.Create;
-using PetFamily.Application.Volunteers.Delete;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
-using PetFamily.Application.Volunteers.UpdateRequisites;
-using PetFamily.Application.Volunteers.UpdateSocialNetworks;
+using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
+using PetFamily.Application.Volunteers.Commands.Create;
+using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
+using PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
+using PetFamily.Application.Volunteers.Queries.GetVolunteers;
 
 namespace PetFamily.API.Controllers.Volunteer;
 
 public class VolunteersController : ApplicationController
 {
+    [HttpGet]
+    public async Task<ActionResult> Get(
+        [FromQuery] GetVolunteersRequest request,
+        [FromServices] GetVolunteersService service,
+        CancellationToken ct)
+    {
+        var response = await service.Run(request.ToQuery(), ct);
+
+        return Ok(response);
+    }
+    
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         [FromBody] CreateVolunteerRequest request,
         [FromServices] CreateVolunteerService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     { 
-        var result = await service.Create(request.ToCommand(), cancellationToken);
+        var result = await service.Run(request.ToCommand(), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -29,9 +41,9 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid id,
         [FromBody] UpdateVolunteerMainInfoRequest request,
         [FromServices] UpdateVolunteerMainInfoService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), cancellationToken);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -40,9 +52,9 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid id,
         [FromBody] UpdateVolunteerSocialNetworksRequest request,
         [FromServices] UpdateVolunteerSocialNetworksService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), cancellationToken);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -51,9 +63,9 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid id,
         [FromBody] UpdateVolunteerRequisitesRequest request,
         [FromServices] UpdateVolunteerRequisitesService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var result = await service.Update(request.ToCommand(id), cancellationToken);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -61,10 +73,10 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult<Guid>> Delete(
         [FromRoute] Guid id,
         [FromServices] DeleteVolunteerService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var command = new DeleteVolunteerCommand(id);
-        var result = await service.Delete(command, cancellationToken);
+        var result = await service.Run(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -73,9 +85,9 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid id,
         [FromBody] AddPetToVolunteerRequest request,
         [FromServices] AddPetToVolunteerService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var result = await service.AddPet(request.ToCommand(id), cancellationToken);
+        var result = await service.Run(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -85,7 +97,7 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid petId,
         [FromForm] AddPhotoToPetRequest request,
         [FromServices] UploadPhotoToPetService service,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         await using var photoProcessor = new FormPhotoProcessor();
         
@@ -93,7 +105,7 @@ public class VolunteersController : ApplicationController
         
         var command = new UploadPhotoToPetCommand(id, petId, photoDtos);
         
-        var result = await service.UploadPhoto(command, cancellationToken);
+        var result = await service.Run(command, ct);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

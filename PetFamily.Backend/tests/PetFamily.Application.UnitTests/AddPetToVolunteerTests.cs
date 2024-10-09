@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Domain.Shared;
 using PetFamily.UnitTests.Infrastructure;
 
@@ -38,7 +38,7 @@ public class AddPetToVolunteerTests
             _loggerMock);
         
         // act
-        var result = await service.AddPet(command, ct);
+        var result = await service.Run(command, ct);
         
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -68,7 +68,7 @@ public class AddPetToVolunteerTests
             _loggerMock);
         
         // act
-        var result = await service.AddPet(command, ct);
+        var result = await service.Run(command, ct);
         
         // assert
         result.IsFailure.Should().BeTrue();

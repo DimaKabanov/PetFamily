@@ -8,7 +8,7 @@ using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.PhotoProvider;
 using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.AddPhotoToPet;
+using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.UnitTests.Infrastructure;
@@ -54,7 +54,7 @@ public class UploadPhotosToPetTests
             _loggerMock);
         
         // act
-        var result = await service.UploadPhoto(command, ct);
+        var result = await service.Run(command, ct);
         
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -95,7 +95,7 @@ public class UploadPhotosToPetTests
             _loggerMock);
         
         // act
-        var result = await service.UploadPhoto(command, ct);
+        var result = await service.Run(command, ct);
 
         // assert
         result.IsFailure.Should().BeTrue();
