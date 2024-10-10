@@ -4,10 +4,10 @@ public record SpeciesId
 {
     private SpeciesId(Guid id)
     {
-        Id = id;
+        Value = id;
     }
     
-    public Guid Id { get; }
+    public Guid Value { get; }
 
     public static SpeciesId NewId => new(Guid.NewGuid());
 
