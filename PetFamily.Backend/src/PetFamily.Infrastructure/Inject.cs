@@ -4,6 +4,7 @@ using Minio;
 using PetFamily.Application.Database;
 using PetFamily.Application.Messaging;
 using PetFamily.Application.PhotoProvider;
+using PetFamily.Application.Species;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.DbContexts;
 using PetFamily.Infrastructure.MessageQueues;
@@ -23,6 +24,7 @@ public static class Inject
         services.AddScoped<IReadDbContext, ReadDbContext>();
         
         services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
         services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.MINIO));
 

@@ -14,7 +14,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         
         b.Property(s => s.Id)
             .HasConversion(
-                speciesId => speciesId.Id,
+                speciesId => speciesId.Value,
                 id => SpeciesId.Create(id)
             );
 

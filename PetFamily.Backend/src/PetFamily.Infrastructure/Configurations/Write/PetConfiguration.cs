@@ -142,7 +142,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(pp => pp.SpeciesId)
                 .HasConversion(
-                    speciesId => speciesId.Id,
+                    speciesId => speciesId.Value,
                     id => SpeciesId.Create(id)
                 )
                 .IsRequired()

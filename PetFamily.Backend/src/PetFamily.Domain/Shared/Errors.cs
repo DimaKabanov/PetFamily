@@ -27,5 +27,11 @@ public static class Errors
             var label = name ?? "value";
             return Error.Validation("value.too.long", $"{label} to long. Max length {maxLength}");
         }
+        
+        public static Error ValueStillUsing(Guid id, string? name = null)
+        {
+            var label = name ?? "value";
+            return Error.Failure("value.still.using", $"{label} with id '{id}' still in use");
+        }
     }
 }

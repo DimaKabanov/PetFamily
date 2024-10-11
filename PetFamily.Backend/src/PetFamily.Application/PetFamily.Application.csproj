@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Species\Queries" />
       <Folder Include="Volunteers\Commands\" />
     </ItemGroup>
 

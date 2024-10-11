@@ -14,7 +14,7 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
         
         b.Property(br => br.Id)
             .HasConversion(
-                breedId => breedId.Id,
+                breedId => breedId.Value,
                 id => BreedId.Create(id)
             );
 

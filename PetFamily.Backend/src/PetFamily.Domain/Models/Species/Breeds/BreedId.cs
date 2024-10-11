@@ -4,10 +4,10 @@ public record BreedId
 {
     private BreedId(Guid id)
     {
-        Id = id;
+        Value = id;
     }
     
-    public Guid Id { get; }
+    public Guid Value { get; }
 
     public static BreedId NewId => new(Guid.NewGuid());
 
