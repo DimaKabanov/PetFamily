@@ -37,7 +37,6 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(query, ct);
         
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
-        
     }
     
     [HttpPost]

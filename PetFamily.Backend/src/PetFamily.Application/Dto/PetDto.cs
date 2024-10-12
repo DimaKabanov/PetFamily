@@ -1,6 +1,4 @@
 using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects;
 
 namespace PetFamily.Application.Dto;
 
@@ -47,4 +45,6 @@ public class PetDto
     public Guid BreedId { get; init; }
 
     public int Position { get; init; }
+    
+    public bool IsDeleted { get; init; }
 }

@@ -13,10 +13,9 @@ public class Species : Shared.Entity<SpeciesId>
     {
     }
     
-    public Species(SpeciesId id, Name name,  List<Breed> breeds) : base(id)
+    public Species(SpeciesId id, Name name) : base(id)
     {
         Name = name;
-        _breeds = breeds;
     }
     
     public Name Name { get; private set; } = default!;
