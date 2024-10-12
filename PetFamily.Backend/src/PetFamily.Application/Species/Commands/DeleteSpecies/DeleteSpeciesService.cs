@@ -29,7 +29,7 @@ public class DeleteSpeciesService(
         
         var petWithDeletingSpecies = await readDbContext.Pets
             .FirstOrDefaultAsync(p => p.SpeciesId == speciesId.Value, ct);
-
+        
         if (petWithDeletingSpecies is not null)
             return Errors.General.ValueStillUsing(command.SpeciesId).ToErrorList();
 

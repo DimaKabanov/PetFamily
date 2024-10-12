@@ -9,9 +9,9 @@ public record BreedId
     
     public Guid Value { get; }
 
-    public static BreedId NewId => new(Guid.NewGuid());
+    public static BreedId NewId() => new(Guid.NewGuid());
 
-    public static BreedId EmptyId => new(Guid.Empty);
+    public static BreedId EmptyId() => new(Guid.Empty);
     
     public static BreedId Create(Guid id) => new(id);
 }

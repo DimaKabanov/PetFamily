@@ -30,6 +30,15 @@ public class Species : Shared.Entity<SpeciesId>
 
         return breed;
     }
+    
+    public Result<Breed, Error> GetBreedByName(Breeds.ValueObjects.Name name)
+    {
+        var breed = _breeds.FirstOrDefault(b => b.Name == name);
+        if (breed is null)
+            return Errors.General.NotFound();
+
+        return breed;
+    }
 
     public void AddBreed(Breed breed) => _breeds.Add(breed);
 

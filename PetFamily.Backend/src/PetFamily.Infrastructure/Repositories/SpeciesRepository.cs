@@ -9,6 +9,13 @@ namespace PetFamily.Infrastructure.Repositories;
 
 public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
 {
+    public async Task<Guid> Add(Species species, CancellationToken ct)
+    {
+        await dbContext.Species.AddAsync(species, ct);
+
+        return species.Id.Value;
+    }
+    
     public async Task<Result<Species, Error>> GetSpeciesById(SpeciesId speciesId, CancellationToken ct)
     {
         var species = await dbContext.Species

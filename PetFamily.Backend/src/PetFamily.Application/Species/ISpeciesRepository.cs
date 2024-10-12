@@ -6,6 +6,8 @@ namespace PetFamily.Application.Species;
 
 public interface ISpeciesRepository
 {
+    Task<Guid> Add(Domain.Models.Species.Species species, CancellationToken ct);
+    
     Task<Result<Domain.Models.Species.Species, Error>> GetSpeciesById(SpeciesId speciesId, CancellationToken ct);
     
     Guid DeleteSpecies(Domain.Models.Species.Species species, CancellationToken ct);

@@ -56,7 +56,7 @@ public class AddPetToVolunteerService(
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         
-        var properties = new Property(SpeciesId.EmptyId, Guid.Empty);
+        var properties = new Property(SpeciesId.EmptyId(), Guid.Empty);
         
         var pet = new Pet(
             petId,
