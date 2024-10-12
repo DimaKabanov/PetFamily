@@ -69,6 +69,8 @@ namespace PetFamily.Infrastructure.Migrations
                     is_castrated = table.Column<bool>(type: "boolean", nullable: false),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     assistance_status = table.Column<int>(type: "integer", nullable: false),
+                    requisites = table.Column<string>(type: "jsonb", nullable: false),
+                    photos = table.Column<string>(type: "jsonb", nullable: false),
                     is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: true),
                     flat = table.Column<int>(type: "integer", nullable: false),
@@ -85,9 +87,7 @@ namespace PetFamily.Infrastructure.Migrations
                     weight = table.Column<double>(type: "double precision", nullable: false),
                     position = table.Column<int>(type: "integer", nullable: false),
                     breed_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    photos = table.Column<string>(type: "jsonb", nullable: false),
-                    requisites = table.Column<string>(type: "jsonb", nullable: false)
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
