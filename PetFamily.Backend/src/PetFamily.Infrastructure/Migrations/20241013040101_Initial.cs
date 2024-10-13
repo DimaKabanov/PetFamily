@@ -44,7 +44,7 @@ namespace PetFamily.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "breed",
+                name: "breeds",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -53,9 +53,9 @@ namespace PetFamily.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_breed", x => x.id);
+                    table.PrimaryKey("pk_breeds", x => x.id);
                     table.ForeignKey(
-                        name: "fk_breed_species_species_id",
+                        name: "fk_breeds_species_species_id",
                         column: x => x.species_id,
                         principalTable: "species",
                         principalColumn: "id");
@@ -101,8 +101,8 @@ namespace PetFamily.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_breed_species_id",
-                table: "breed",
+                name: "ix_breeds_species_id",
+                table: "breeds",
                 column: "species_id");
 
             migrationBuilder.CreateIndex(
@@ -115,7 +115,7 @@ namespace PetFamily.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "breed");
+                name: "breeds");
 
             migrationBuilder.DropTable(
                 name: "pets");

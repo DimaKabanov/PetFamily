@@ -11,9 +11,5 @@ public class SpeciesDtoConfiguration : IEntityTypeConfiguration<SpeciesDto>
         b.ToTable("species");
 
         b.HasKey(s => s.Id);
-        
-        b.HasMany(s => s.Breeds)
-            .WithOne()
-            .HasForeignKey("species_id");
     }
 }

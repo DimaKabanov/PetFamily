@@ -111,6 +111,8 @@ public static class VolunteerFactory
         
         return new AddPetToVolunteerCommand(
             volunteerId,
+            Guid.Empty,
+            Guid.Empty, 
             name,
             description,
             physicalProperty,

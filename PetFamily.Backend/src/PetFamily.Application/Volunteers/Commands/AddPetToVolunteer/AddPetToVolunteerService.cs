@@ -57,14 +57,14 @@ public class AddPetToVolunteerService(
         var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
-
+        
         var species = await readDbContext.Species
-            .Include(s => s.Breeds)
             .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, ct);
         if (species is null)
             return Errors.General.NotFound(command.SpeciesId).ToErrorList();
-
-        var breed = species.Breeds.FirstOrDefault(b => b.Id == command.BreedId);
+        
+        var breed = await readDbContext.Breeds
+            .FirstOrDefaultAsync(b => b.SpeciesId == species.Id, ct);
         if (breed is null)
             return Errors.General.NotFound(command.BreedId).ToErrorList();
         

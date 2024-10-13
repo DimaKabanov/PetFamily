@@ -13,7 +13,7 @@ using PetFamily.Infrastructure.DbContexts;
 namespace PetFamily.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20241012103613_Initial")]
+    [Migration("20241013040101_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -48,12 +48,12 @@ namespace PetFamily.Infrastructure.Migrations
                         });
 
                     b.HasKey("Id")
-                        .HasName("pk_breed");
+                        .HasName("pk_breeds");
 
                     b.HasIndex("species_id")
-                        .HasDatabaseName("ix_breed_species_id");
+                        .HasDatabaseName("ix_breeds_species_id");
 
-                    b.ToTable("breed", (string)null);
+                    b.ToTable("breeds", (string)null);
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Models.Species.Species", b =>
@@ -325,7 +325,7 @@ namespace PetFamily.Infrastructure.Migrations
                     b.HasOne("PetFamily.Domain.Models.Species.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
-                        .HasConstraintName("fk_breed_species_species_id");
+                        .HasConstraintName("fk_breeds_species_species_id");
                 });
 
             modelBuilder.Entity("PetFamily.Domain.Models.Volunteers.Pets.Pet", b =>

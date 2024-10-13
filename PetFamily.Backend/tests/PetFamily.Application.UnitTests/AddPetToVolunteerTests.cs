@@ -14,6 +14,7 @@ namespace PetFamily.Application.UnitTests;
 public class AddPetToVolunteerTests
 {
     private readonly IVolunteersRepository _volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
+    private readonly IReadDbContext _readDbContextMock = Substitute.For<IReadDbContext>();
     private readonly IValidator<AddPetToVolunteerCommand> _validatorMock =  Substitute.For<IValidator<AddPetToVolunteerCommand>>();
     private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
     private readonly ILogger<AddPetToVolunteerService> _loggerMock = Substitute.For<ILogger<AddPetToVolunteerService>>();
@@ -33,6 +34,7 @@ public class AddPetToVolunteerTests
         
         var service  = new AddPetToVolunteerService(
             _volunteersRepositoryMock,
+            _readDbContextMock,
             _validatorMock,
             _unitOfWorkMock,
             _loggerMock);
@@ -63,6 +65,7 @@ public class AddPetToVolunteerTests
 
         var service = new AddPetToVolunteerService(
             _volunteersRepositoryMock,
+            _readDbContextMock,
             _validatorMock,
             _unitOfWorkMock,
             _loggerMock);
