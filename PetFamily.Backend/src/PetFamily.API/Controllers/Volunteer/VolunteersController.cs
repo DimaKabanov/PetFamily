@@ -6,6 +6,7 @@ using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.DeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
@@ -120,6 +121,18 @@ public class VolunteersController : ApplicationController
         
         var result = await service.Handle(command, ct);
         
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpDelete("{id:guid}/pet/{petId:guid}/soft")]
+    public async Task<ActionResult<Guid>> DeletePet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromServices] DeletePetService service,
+        CancellationToken ct)
+    {
+        var command = new DeletePetCommand(id, petId);
+        var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 }
