@@ -6,6 +6,8 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 
 public record AddPetToVolunteerCommand(
     Guid VolunteerId,
+    Guid SpeciesId,
+    Guid BreedId,
     string Name,
     string Description,
     PetPhysicalPropertyDto PhysicalProperty,

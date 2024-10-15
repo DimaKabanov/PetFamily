@@ -26,7 +26,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         bool isVaccinated,
         AssistanceStatus assistanceStatus,
         CreatedDate createdDate,
-        ValueObjectList<Requisite> requisites,
+        IReadOnlyList<Requisite> requisites,
         Property properties) : base(id)
     {
         Name = name;
@@ -63,15 +63,15 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
 
     public CreatedDate CreatedDate { get; private set; }
     
-    public ValueObjectList<Requisite> Requisites { get; private set; }
-    
-    public ValueObjectList<Photo> Photos { get; private set; }
+    public IReadOnlyList<Requisite> Requisites { get; private set; }
+
+    public IReadOnlyList<Photo> Photos { get; private set; } = [];
     
     public Property Properties { get; private set; }
 
     public Position Position { get; private set; }
     
-    public void UpdatePhotos(ValueObjectList<Photo> photos) =>
+    public void UpdatePhotos(IReadOnlyList<Photo> photos) =>
         Photos = photos;
 
     public void SetPosition(Position position) => 

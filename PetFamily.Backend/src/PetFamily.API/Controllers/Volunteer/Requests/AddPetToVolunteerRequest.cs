@@ -5,6 +5,8 @@ using PetFamily.Domain.Enums;
 namespace PetFamily.API.Controllers.Volunteer.Requests;
 
 public record AddPetToVolunteerRequest(
+    Guid SpeciesId,
+    Guid BreedId,
     string Name,
     string Description,
     PetPhysicalPropertyDto PhysicalProperty,
@@ -19,7 +21,9 @@ public record AddPetToVolunteerRequest(
 {
     public AddPetToVolunteerCommand ToCommand(Guid volunteerId) => 
         new(
-            volunteerId, 
+            volunteerId,
+            SpeciesId,
+            BreedId,
             Name, 
             Description, 
             PhysicalProperty, 

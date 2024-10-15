@@ -8,13 +8,13 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 {
     public void Configure(EntityTypeBuilder<Breed> b)
     {
-        b.ToTable("breed");
+        b.ToTable("breeds");
 
         b.HasKey(br => br.Id);
         
         b.Property(br => br.Id)
             .HasConversion(
-                breedId => breedId.Id,
+                breedId => breedId.Value,
                 id => BreedId.Create(id)
             );
 

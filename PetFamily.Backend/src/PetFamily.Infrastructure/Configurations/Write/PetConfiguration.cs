@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dto;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
+using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Infrastructure.Extensions;
 
 namespace PetFamily.Infrastructure.Configurations.Write;
 
@@ -103,46 +106,26 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired()
                 .HasColumnName("created_date");
         });
-        
-        b.OwnsOne(p => p.Photos, pb =>
-        {
-            pb.ToJson("photos");
-            
-            pb.OwnsMany(d => d.Values, ppb =>
-            {
-                ppb.Property(pp => pp.Path)
-                    .HasConversion(
-                        p => p.Path,
-                        value => PhotoPath.Create(value).Value)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_MIDDLE_TEXT_LENGTH);
-                
-                ppb.Property(pp => pp.IsMain)
-                    .IsRequired();
-            });
-        });
-        
-        b.OwnsOne(p => p.Requisites, pb =>
-        {
-            pb.ToJson("requisites");
 
-            pb.OwnsMany(r => r.Values, rb =>
-            {
-                rb.Property(r => r.Name)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_LOW_TEXT_LENGTH);
-                
-                rb.Property(r => r.Description)
-                    .IsRequired()
-                    .HasMaxLength(Domain.Shared.Constants.MAX_HIGH_TEXT_LENGTH);
-            });
-        });
+        b.Property(p => p.Photos)
+            .ValueObjectsCollectionJsonConversion(
+                p => new PhotoDto(p.Path.Path, p.IsMain),
+                dto => new Photo(
+                    PhotoPath.Create(dto.Path).Value,
+                    dto.IsMain))
+            .HasColumnName("photos");
+        
+        b.Property(p => p.Requisites)
+            .ValueObjectsCollectionJsonConversion(
+                r => new RequisiteDto(r.Name, r.Description),
+                dto => Requisite.Create(dto.Name, dto.Description).Value)
+            .HasColumnName("requisites");
 
         b.ComplexProperty(p => p.Properties, pb =>
         {
             pb.Property(pp => pp.SpeciesId)
                 .HasConversion(
-                    speciesId => speciesId.Id,
+                    speciesId => speciesId.Value,
                     id => SpeciesId.Create(id)
                 )
                 .IsRequired()

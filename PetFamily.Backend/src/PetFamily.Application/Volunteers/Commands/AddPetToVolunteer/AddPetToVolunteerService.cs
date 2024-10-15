@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
@@ -15,6 +16,7 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 
 public class AddPetToVolunteerService(
     IVolunteersRepository volunteersRepository,
+    IReadDbContext readDbContext,
     IValidator<AddPetToVolunteerCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<AddPetToVolunteerService> logger) : ICommandService<Guid, AddPetToVolunteerCommand>
@@ -56,7 +58,17 @@ public class AddPetToVolunteerService(
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         
-        var properties = new Property(SpeciesId.EmptyId, Guid.Empty);
+        var species = await readDbContext.Species
+            .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, ct);
+        if (species is null)
+            return Errors.General.NotFound(command.SpeciesId).ToErrorList();
+        
+        var breed = await readDbContext.Breeds
+            .FirstOrDefaultAsync(b => b.SpeciesId == species.Id, ct);
+        if (breed is null)
+            return Errors.General.NotFound(command.BreedId).ToErrorList();
+        
+        var properties = new Property(SpeciesId.Create(command.SpeciesId), command.BreedId);
         
         var pet = new Pet(
             petId,

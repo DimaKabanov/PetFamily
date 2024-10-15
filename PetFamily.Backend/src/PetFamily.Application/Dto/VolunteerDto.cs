@@ -19,4 +19,8 @@ public class VolunteerDto
     public RequisiteDto[] Requisites { get; init; } = null!;
     
     public SocialNetworkDto[] SocialNetworks { get; init; } = null!;
+    
+    public PetDto[] Pets { get; init; } = null!;
+    
+    public bool IsDeleted { get; init; }
 }

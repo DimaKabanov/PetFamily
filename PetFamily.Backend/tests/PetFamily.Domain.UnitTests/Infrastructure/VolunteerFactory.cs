@@ -69,7 +69,7 @@ public static class VolunteerFactory
         var dateOfBirth = DateOfBirth.Create(DateOnly.FromDateTime(DateTime.Now)).Value;
         var createdDate = CreatedDate.Create(DateTime.Now).Value;
         var requisites = new ValueObjectList<Requisite>([]);
-        var properties = new Property(SpeciesId.EmptyId, Guid.Empty);
+        var properties = new Property(SpeciesId.EmptyId(), Guid.Empty);
         
         return new Pet(
             PetId.NewId(),
@@ -111,6 +111,8 @@ public static class VolunteerFactory
         
         return new AddPetToVolunteerCommand(
             volunteerId,
+            Guid.Empty,
+            Guid.Empty, 
             name,
             description,
             physicalProperty,
