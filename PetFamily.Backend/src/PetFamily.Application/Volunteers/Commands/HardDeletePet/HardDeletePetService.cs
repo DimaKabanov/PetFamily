@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
+using PetFamily.Application.Messaging;
+using PetFamily.Application.PhotoProvider;
 using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Shared;
@@ -14,6 +16,7 @@ public class HardDeletePetService(
     IVolunteersRepository volunteersRepository,
     IValidator<HardDeletePetCommand> validator,
     IUnitOfWork unitOfWork,
+    IMessageQueue<IEnumerable<PhotoInfo>> messageQueue,
     ILogger<HardDeletePetService> logger) : ICommandService<Guid, HardDeletePetCommand>
 {
     public async Task<Result<Guid, ErrorList>> Handle(
@@ -36,9 +39,13 @@ public class HardDeletePetService(
         if (petResult.IsFailure)
             return petResult.Error.ToErrorList();
 
-        var photosPathsToDelete = petResult.Value.Photos
-            .Select(p => p.Path.Path);
-        
+        var photoInfosList= petResult.Value.Photos
+            .Select(p => new PhotoInfo(p.Path, Constants.PHOTO_BUCKET_NAME));
+
+        await messageQueue.WriteAsync(photoInfosList, ct);
+
+        volunteerResult.Value.RemovePet(petResult.Value);
+
         await unitOfWork.SaveChanges(ct);
         
         logger.LogInformation("Deleted pet with id: {petId}", petId);
