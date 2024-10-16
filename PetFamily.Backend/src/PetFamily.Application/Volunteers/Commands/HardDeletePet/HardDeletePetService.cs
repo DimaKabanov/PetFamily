@@ -8,16 +8,16 @@ using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.Commands.DeletePet;
+namespace PetFamily.Application.Volunteers.Commands.HardDeletePet;
 
-public class DeletePetService(
+public class HardDeletePetService(
     IVolunteersRepository volunteersRepository,
-    IValidator<DeletePetCommand> validator,
+    IValidator<HardDeletePetCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<DeletePetService> logger) : ICommandService<Guid, DeletePetCommand>
+    ILogger<HardDeletePetService> logger) : ICommandService<Guid, HardDeletePetCommand>
 {
     public async Task<Result<Guid, ErrorList>> Handle(
-        DeletePetCommand command,
+        HardDeletePetCommand command,
         CancellationToken ct)
     {
         var validationResult = await validator.ValidateAsync(command, ct);
@@ -35,13 +35,14 @@ public class DeletePetService(
         var petResult = volunteerResult.Value.GetPetById(petId);
         if (petResult.IsFailure)
             return petResult.Error.ToErrorList();
-        
-        petResult.Value.Delete();
+
+        var photosPathsToDelete = petResult.Value.Photos
+            .Select(p => p.Path.Path);
         
         await unitOfWork.SaveChanges(ct);
         
         logger.LogInformation("Deleted pet with id: {petId}", petId);
-
+        
         return petId.Value;
     }
 }

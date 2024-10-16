@@ -1,12 +1,13 @@
 using FluentValidation;
 using PetFamily.Application.Validation;
+using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.Commands.DeletePet;
+namespace PetFamily.Application.Volunteers.Commands.HardDeletePet;
 
-public class DeletePetCommandValidator : AbstractValidator<DeletePetCommand>
+public class HardDeletePetCommandValidator : AbstractValidator<HardDeletePetCommand>
 {
-    public DeletePetCommandValidator()
+    public HardDeletePetCommandValidator()
     {
         RuleFor(d => d.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
         
