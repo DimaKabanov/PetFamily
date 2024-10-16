@@ -6,6 +6,7 @@ using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.EditPet;
 using PetFamily.Application.Volunteers.Commands.HardDeletePet;
 using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
@@ -103,6 +104,18 @@ public class VolunteersController : ApplicationController
         CancellationToken ct)
     {
         var result = await service.Handle(request.ToCommand(id), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpPut("{id:guid}/pet/{petId:guid}")]
+    public async Task<ActionResult<Guid>> EditPet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromBody] EditPetRequest request,
+        [FromServices] EditPetService service,
+        CancellationToken ct)
+    {
+        var result = await service.Handle(request.ToCommand(id, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     

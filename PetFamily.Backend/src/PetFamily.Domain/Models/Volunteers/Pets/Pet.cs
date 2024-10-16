@@ -70,6 +70,34 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public Property Properties { get; private set; }
 
     public Position Position { get; private set; }
+
+    public void EditPet(
+        Name name,
+        Description description,
+        PhysicalProperty physicalProperty,
+        Address address,
+        Phone phone,
+        bool isCastrated,
+        DateOfBirth dateOfBirth,
+        bool isVaccinated,
+        AssistanceStatus assistanceStatus,
+        CreatedDate createdDate,
+        IReadOnlyList<Requisite> requisites,
+        Property properties)
+    {
+        Name = name;
+        Description = description;
+        PhysicalProperty = physicalProperty;
+        Address = address;
+        Phone = phone;
+        IsCastrated = isCastrated;
+        DateOfBirth = dateOfBirth;
+        IsVaccinated = isVaccinated;
+        AssistanceStatus = assistanceStatus;
+        CreatedDate = createdDate;
+        Requisites = requisites;
+        Properties = properties;
+    }
     
     public void UpdatePhotos(IReadOnlyList<Photo> photos) =>
         Photos = photos;
