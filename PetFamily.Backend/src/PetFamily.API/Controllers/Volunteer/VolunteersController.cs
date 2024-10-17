@@ -6,10 +6,10 @@ using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.Delete;
-using PetFamily.Application.Volunteers.Commands.EditPet;
 using PetFamily.Application.Volunteers.Commands.HardDeletePet;
 using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
+using PetFamily.Application.Volunteers.Commands.UpdatePet;
 using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
 using PetFamily.Application.Volunteers.Queries.GetVolunteer;
@@ -108,11 +108,11 @@ public class VolunteersController : ApplicationController
     }
     
     [HttpPut("{id:guid}/pet/{petId:guid}")]
-    public async Task<ActionResult<Guid>> EditPet(
+    public async Task<ActionResult<Guid>> UpdatePet(
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
-        [FromBody] EditPetRequest request,
-        [FromServices] EditPetService service,
+        [FromBody] UpdatePetRequest request,
+        [FromServices] UpdatePetService service,
         CancellationToken ct)
     {
         var result = await service.Handle(request.ToCommand(id, petId), ct);

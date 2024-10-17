@@ -71,7 +71,7 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
 
     public Position Position { get; private set; }
 
-    public void EditPet(
+    public void UpdatePet(
         Name name,
         Description description,
         PhysicalProperty physicalProperty,

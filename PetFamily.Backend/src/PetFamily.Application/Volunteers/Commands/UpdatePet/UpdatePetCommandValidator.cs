@@ -4,11 +4,11 @@ using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.Commands.EditPet;
+namespace PetFamily.Application.Volunteers.Commands.UpdatePet;
 
-public class EditPetCommandValidator : AbstractValidator<EditPetCommand>
+public class UpdatePetCommandValidator : AbstractValidator<UpdatePetCommand>
 {
-    public EditPetCommandValidator()
+    public UpdatePetCommandValidator()
     {
         RuleFor(e => e.VolunteerId)
             .NotEmpty().WithError(Errors.General.ValueIsRequired());

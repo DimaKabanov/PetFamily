@@ -12,16 +12,16 @@ using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.Domain.Shared;
 using PetFamily.Domain.Shared.ValueObjects;
 
-namespace PetFamily.Application.Volunteers.Commands.EditPet;
+namespace PetFamily.Application.Volunteers.Commands.UpdatePet;
 
-public class EditPetService(
+public class UpdatePetService(
     IVolunteersRepository volunteersRepository,
     IReadDbContext readDbContext,
-    IValidator<EditPetCommand> validator,
+    IValidator<UpdatePetCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<EditPetService> logger): ICommandService<Guid, EditPetCommand>
+    ILogger<UpdatePetService> logger): ICommandService<Guid, UpdatePetCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(EditPetCommand command, CancellationToken ct)
+    public async Task<Result<Guid, ErrorList>> Handle(UpdatePetCommand command, CancellationToken ct)
     {
         var validationResult = await validator.ValidateAsync(command, ct);
         if (!validationResult.IsValid)
@@ -73,7 +73,7 @@ public class EditPetService(
 
         var properties = new Property(SpeciesId.Create(command.SpeciesId), command.BreedId);
 
-        petResult.Value.EditPet(
+        petResult.Value.UpdatePet(
             name,
             description,
             physicalProperty,

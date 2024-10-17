@@ -2,9 +2,9 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Dto;
 using PetFamily.Domain.Enums;
 
-namespace PetFamily.Application.Volunteers.Commands.EditPet;
+namespace PetFamily.Application.Volunteers.Commands.UpdatePet;
 
-public record EditPetCommand(
+public record UpdatePetCommand(
     Guid VolunteerId,
     Guid PetId,
     Guid SpeciesId,

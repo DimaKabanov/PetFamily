@@ -1,10 +1,10 @@
 using PetFamily.Application.Dto;
-using PetFamily.Application.Volunteers.Commands.EditPet;
+using PetFamily.Application.Volunteers.Commands.UpdatePet;
 using PetFamily.Domain.Enums;
 
 namespace PetFamily.API.Controllers.Volunteer.Requests;
 
-public record EditPetRequest(
+public record UpdatePetRequest(
     Guid SpeciesId,
     Guid BreedId,
     string Name,
@@ -19,7 +19,7 @@ public record EditPetRequest(
     DateTime CreatedDate,
     IEnumerable<RequisiteDto> Requisites)
 {
-    public EditPetCommand ToCommand(Guid volunteerId, Guid petId) => 
+    public UpdatePetCommand ToCommand(Guid volunteerId, Guid petId) => 
         new(
             volunteerId,
             petId,
