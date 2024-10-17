@@ -32,9 +32,10 @@ public class AddPetToVolunteerCommandValidator : AbstractValidator<AddPetToVolun
         
         RuleFor(a => a.IsVaccinated)
             .NotEmpty().WithError(Errors.General.ValueIsRequired());
-        
+
         RuleFor(a => a.AssistanceStatus)
-            .NotEmpty().WithError(Errors.General.ValueIsRequired());
+            .IsInEnum()
+            .WithError(Errors.General.ValueIsInvalid());
         
         RuleFor(a => a.CreatedDate).MustBeValueObject(CreatedDate.Create);
         

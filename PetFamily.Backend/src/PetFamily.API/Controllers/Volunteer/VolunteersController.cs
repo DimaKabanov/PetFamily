@@ -11,6 +11,7 @@ using PetFamily.Application.Volunteers.Commands.HardDeletePet;
 using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.Volunteers.Commands.UpdatePet;
+using PetFamily.Application.Volunteers.Commands.UpdatePetStatus;
 using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 using PetFamily.Application.Volunteers.Commands.UpdateSocialNetworks;
 using PetFamily.Application.Volunteers.Queries.GetVolunteer;
@@ -137,7 +138,7 @@ public class VolunteersController : ApplicationController
     public async Task<ActionResult<Guid>> UpdatePetStatus(
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
-        [FromForm] UpdatePetStatusRequest request,
+        [FromBody] UpdatePetStatusRequest request,
         [FromServices] UpdatePetStatusService service,
         CancellationToken ct)
     {

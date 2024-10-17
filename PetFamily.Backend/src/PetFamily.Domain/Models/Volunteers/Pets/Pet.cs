@@ -101,6 +101,8 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     
     public void UpdatePhotos(IReadOnlyList<Photo> photos) => Photos = photos;
 
+    public void UpdateAssistanceStatus(AssistanceStatus assistanceStatus) => AssistanceStatus = assistanceStatus;
+
     public void DeleteAllPhotos() => Photos = [];
 
     public void SetPosition(Position position) => Position = position;
