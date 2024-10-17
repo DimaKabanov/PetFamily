@@ -133,6 +133,18 @@ public class VolunteersController : ApplicationController
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
+    [HttpPatch("{id:guid}/pet/{petId:guid}/status")]
+    public async Task<ActionResult<Guid>> UpdatePetStatus(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromForm] UpdatePetStatusRequest request,
+        [FromServices] UpdatePetStatusService service,
+        CancellationToken ct)
+    {
+        var result = await service.Handle(request.ToCommand(id, petId), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
     [HttpDelete("{id:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult<Guid>> DeletePhotosFromPet(
         [FromRoute] Guid id,
