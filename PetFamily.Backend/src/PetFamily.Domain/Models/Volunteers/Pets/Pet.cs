@@ -104,6 +104,20 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public void UpdateAssistanceStatus(AssistanceStatus assistanceStatus) => AssistanceStatus = assistanceStatus;
 
     public void DeleteAllPhotos() => Photos = [];
+    
+    public Result<Photo, Error> GetPetPhotoByPath(PhotoPath photoPath)
+    {
+        var photo = Photos.FirstOrDefault(p => p.Path == photoPath);
+        return photo is null ? Errors.General.NotFound() : photo;
+    }
+
+    public void UpdateMainPhoto(PhotoPath mainPhotoPath)
+    {
+        var updatedPhotos = Photos
+            .Select(p => new Photo(p.Path, p.Path == mainPhotoPath));
+
+        Photos = updatedPhotos.ToList();
+    }
 
     public void SetPosition(Position position) => Position = position;
     
