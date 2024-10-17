@@ -99,11 +99,11 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
         Properties = properties;
     }
     
-    public void UpdatePhotos(IReadOnlyList<Photo> photos) =>
-        Photos = photos;
+    public void UpdatePhotos(IReadOnlyList<Photo> photos) => Photos = photos;
 
-    public void SetPosition(Position position) => 
-        Position = position;
+    public void DeleteAllPhotos() => Photos = [];
+
+    public void SetPosition(Position position) => Position = position;
     
     public void Delete()
     {

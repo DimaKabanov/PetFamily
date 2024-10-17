@@ -6,6 +6,7 @@ using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
 using PetFamily.Application.Volunteers.Commands.AddPhotoToPet;
 using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.Delete;
+using PetFamily.Application.Volunteers.Commands.DeletePhotosFromPet;
 using PetFamily.Application.Volunteers.Commands.HardDeletePet;
 using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
@@ -20,13 +21,12 @@ namespace PetFamily.API.Controllers.Volunteer;
 public class VolunteersController : ApplicationController
 {
     [HttpGet]
-    public async Task<ActionResult> Get(
+    public async Task<ActionResult> GetAll(
         [FromQuery] GetVolunteersRequest request,
         [FromServices] GetVolunteersService service,
         CancellationToken ct)
     {
         var response = await service.Handle(request.ToQuery(), ct);
-
         return Ok(response);
     }
 
@@ -38,7 +38,6 @@ public class VolunteersController : ApplicationController
     {
         var query = new GetVolunteerQuery(id);
         var result = await service.Handle(query, ct);
-        
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
@@ -128,13 +127,21 @@ public class VolunteersController : ApplicationController
         CancellationToken ct)
     {
         await using var photoProcessor = new FormPhotoProcessor();
-        
         var photoDtos = photoProcessor.Process(request.Photos);
-        
         var command = new UploadPhotoToPetCommand(id, petId, photoDtos);
-        
         var result = await service.Handle(command, ct);
-        
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpDelete("{id:guid}/pet/{petId:guid}/photos")]
+    public async Task<ActionResult<Guid>> DeletePhotosFromPet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromServices] DeletePhotosFromPetService service,
+        CancellationToken ct)
+    {
+        var command = new DeletePhotosFromPetCommand(id, petId);
+        var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
