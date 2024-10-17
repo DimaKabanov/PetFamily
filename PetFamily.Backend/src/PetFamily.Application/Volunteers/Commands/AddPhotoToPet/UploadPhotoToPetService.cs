@@ -21,8 +21,6 @@ public class UploadPhotoToPetService(
     IMessageQueue<IEnumerable<PhotoInfo>> messageQueue,
     ILogger<UploadPhotoToPetService> logger) : ICommandService<Guid, UploadPhotoToPetCommand>
 {
-    private const string BUCKET_NAME = "photos";
-    
     public async Task<Result<Guid, ErrorList>> Handle(
         UploadPhotoToPetCommand command,
         CancellationToken ct)
@@ -53,7 +51,7 @@ public class UploadPhotoToPetService(
                 var extension = Path.GetExtension(photo.PhotoName);
                 var photoPath = PhotoPath.Create(Guid.NewGuid(), extension);
 
-                var photoData = new PhotoData(photo.Content, new PhotoInfo(photoPath.Value, BUCKET_NAME));
+                var photoData = new PhotoData(photo.Content, new PhotoInfo(photoPath.Value, Constants.PHOTO_BUCKET_NAME));
                 photosData.Add(photoData);
             }
             
