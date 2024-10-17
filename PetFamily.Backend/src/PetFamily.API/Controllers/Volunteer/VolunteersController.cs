@@ -8,6 +8,7 @@ using PetFamily.Application.Volunteers.Commands.Create;
 using PetFamily.Application.Volunteers.Commands.Delete;
 using PetFamily.Application.Volunteers.Commands.DeletePhotosFromPet;
 using PetFamily.Application.Volunteers.Commands.HardDeletePet;
+using PetFamily.Application.Volunteers.Commands.SetPetMainPhoto;
 using PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 using PetFamily.Application.Volunteers.Commands.UpdatePet;
@@ -140,6 +141,18 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid petId,
         [FromBody] UpdatePetStatusRequest request,
         [FromServices] UpdatePetStatusService service,
+        CancellationToken ct)
+    {
+        var result = await service.Handle(request.ToCommand(id, petId), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
+    }
+    
+    [HttpPatch("{id:guid}/pet/{petId:guid}/main-photo")]
+    public async Task<ActionResult<Guid>> SetPetMainPhoto(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromBody] SetPetMainPhotoRequest request,
+        [FromServices] SetPetMainPhotoService service,
         CancellationToken ct)
     {
         var result = await service.Handle(request.ToCommand(id, petId), ct);

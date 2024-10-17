@@ -8,15 +8,15 @@ using PetFamily.Domain.Models.Volunteers;
 using PetFamily.Domain.Models.Volunteers.Pets;
 using PetFamily.Domain.Shared;
 
-namespace PetFamily.Application.Volunteers.Commands.UpdatePetStatus;
+namespace PetFamily.Application.Volunteers.Commands.SetPetMainPhoto;
 
-public class UpdatePetStatusService(
+public class SetPetMainPhotoService(
     IVolunteersRepository volunteersRepository,
-    IValidator<UpdatePetStatusCommand> validator,
+    IValidator<SetPetMainPhotoCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<UpdatePetStatusService> logger) : ICommandService<Guid, UpdatePetStatusCommand>
+    ILogger<SetPetMainPhotoService> logger) : ICommandService<Guid, SetPetMainPhotoCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(UpdatePetStatusCommand command, CancellationToken ct)
+    public async Task<Result<Guid, ErrorList>> Handle(SetPetMainPhotoCommand command, CancellationToken ct)
     {
         var validationResult = await validator.ValidateAsync(command, ct);
         if (!validationResult.IsValid)
@@ -33,13 +33,5 @@ public class UpdatePetStatusService(
         var petResult = volunteerResult.Value.GetPetById(petId);
         if (petResult.IsFailure)
             return petResult.Error.ToErrorList();
-
-        petResult.Value.UpdateAssistanceStatus(command.AssistanceStatus);
-
-        await unitOfWork.SaveChanges(ct);
-
-        logger.LogInformation("Updated AssistanceStatus for pet with id {petId}", petId);
-
-        return petId.Value;
     }
 }
