@@ -5,7 +5,7 @@ using PetFamily.Application.Dto;
 
 namespace PetFamily.Infrastructure.Configurations.Read;
 
-public class PetDtoConfiguration  : IEntityTypeConfiguration<PetDto>
+public class PetDtoConfiguration : IEntityTypeConfiguration<PetDto>
 {
     public void Configure(EntityTypeBuilder<PetDto> b)
     {
