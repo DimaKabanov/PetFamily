@@ -13,6 +13,10 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
 
         b.HasKey(v => v.Id);
         
+        b.HasMany(v => v.Pets)
+            .WithOne()
+            .HasForeignKey(p => p.VolunteerId);
+        
         b.Property(v => v.SocialNetworks)
             .HasConversion(
                 s => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
