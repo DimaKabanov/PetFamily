@@ -1,6 +1,3 @@
-using CSharpFunctionalExtensions;
-using PetFamily.Domain.Shared;
-
 namespace PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 
 public record Photo

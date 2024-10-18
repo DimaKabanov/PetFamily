@@ -54,15 +54,6 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public int PetsSearchHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.SearchAHome);
     
     public int PetsFoundHomeCount() => _pets.Count(p => p.AssistanceStatus == AssistanceStatus.FoundAHome);
-    
-    public Result<Pet, Error> GetPetById(PetId petId)
-    {
-        var pet = _pets.FirstOrDefault(p => p.Id == petId);
-        if (pet is null)
-            return Errors.General.NotFound(petId.Value);
-
-        return pet;
-    }
 
     public void UpdateMainInfo(
         FullName fullName,
@@ -98,6 +89,21 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         _isDeleted = false;
         foreach (var pet in _pets)
             pet.Restore();
+    }
+    
+    public Result<Pet, Error> GetPetById(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        if (pet is null)
+            return Errors.General.NotFound(petId.Value);
+
+        return pet;
+    }
+    
+    public UnitResult<Error> RemovePet(Pet pet)
+    {
+        _pets.Remove(pet);
+        return Result.Success<Error>();
     }
 
     public UnitResult<Error> AddPet(Pet pet)

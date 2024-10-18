@@ -70,12 +70,56 @@ public class Pet : Shared.Entity<PetId>, ISoftDeletable
     public Property Properties { get; private set; }
 
     public Position Position { get; private set; }
-    
-    public void UpdatePhotos(IReadOnlyList<Photo> photos) =>
-        Photos = photos;
 
-    public void SetPosition(Position position) => 
-        Position = position;
+    public void UpdatePet(
+        Name name,
+        Description description,
+        PhysicalProperty physicalProperty,
+        Address address,
+        Phone phone,
+        bool isCastrated,
+        DateOfBirth dateOfBirth,
+        bool isVaccinated,
+        AssistanceStatus assistanceStatus,
+        CreatedDate createdDate,
+        IReadOnlyList<Requisite> requisites,
+        Property properties)
+    {
+        Name = name;
+        Description = description;
+        PhysicalProperty = physicalProperty;
+        Address = address;
+        Phone = phone;
+        IsCastrated = isCastrated;
+        DateOfBirth = dateOfBirth;
+        IsVaccinated = isVaccinated;
+        AssistanceStatus = assistanceStatus;
+        CreatedDate = createdDate;
+        Requisites = requisites;
+        Properties = properties;
+    }
+    
+    public void UpdatePhotos(IReadOnlyList<Photo> photos) => Photos = photos;
+
+    public void UpdateAssistanceStatus(AssistanceStatus assistanceStatus) => AssistanceStatus = assistanceStatus;
+
+    public void DeleteAllPhotos() => Photos = [];
+    
+    public Result<Photo, Error> GetPetPhotoByPath(PhotoPath photoPath)
+    {
+        var photo = Photos.FirstOrDefault(p => p.Path == photoPath);
+        return photo is null ? Errors.General.NotFound() : photo;
+    }
+
+    public void UpdateMainPhoto(PhotoPath mainPhotoPath)
+    {
+        var updatedPhotos = Photos
+            .Select(p => new Photo(p.Path, p.Path == mainPhotoPath));
+
+        Photos = updatedPhotos.ToList();
+    }
+
+    public void SetPosition(Position position) => Position = position;
     
     public void Delete()
     {
