@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using PetFamily.Application.Database;
 using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.Pet.AddToVolunteer;
 using PetFamily.Domain.Shared;
 using PetFamily.UnitTests.Infrastructure;
 
@@ -15,9 +15,9 @@ public class AddPetToVolunteerTests
 {
     private readonly IVolunteersRepository _volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
     private readonly IReadDbContext _readDbContextMock = Substitute.For<IReadDbContext>();
-    private readonly IValidator<AddPetToVolunteerCommand> _validatorMock =  Substitute.For<IValidator<AddPetToVolunteerCommand>>();
+    private readonly IValidator<AddToVolunteerCommand> _validatorMock =  Substitute.For<IValidator<AddToVolunteerCommand>>();
     private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
-    private readonly ILogger<AddPetToVolunteerService> _loggerMock = Substitute.For<ILogger<AddPetToVolunteerService>>();
+    private readonly ILogger<AddToVolunteerService> _loggerMock = Substitute.For<ILogger<AddToVolunteerService>>();
     
     [Fact]
     public async Task Add_Pet_To_Volunteer_Should_Be_Success()
@@ -32,7 +32,7 @@ public class AddPetToVolunteerTests
         _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
         _loggerMock.LogInformation("Success");
         
-        var service  = new AddPetToVolunteerService(
+        var service  = new AddToVolunteerService(
             _volunteersRepositoryMock,
             _readDbContextMock,
             _validatorMock,
@@ -63,7 +63,7 @@ public class AddPetToVolunteerTests
         _unitOfWorkMock.SaveChanges(ct).Returns(Task.CompletedTask);
         _loggerMock.LogInformation("Success");
 
-        var service = new AddPetToVolunteerService(
+        var service = new AddToVolunteerService(
             _volunteersRepositoryMock,
             _readDbContextMock,
             _validatorMock,

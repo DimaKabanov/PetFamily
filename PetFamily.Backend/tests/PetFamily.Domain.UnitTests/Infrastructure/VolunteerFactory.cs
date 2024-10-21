@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using PetFamily.Application.Dto;
-using PetFamily.Application.Volunteers.Commands.AddPetToVolunteer;
+using PetFamily.Application.Volunteers.Commands.Pet.AddToVolunteer;
 using PetFamily.Domain.Enums;
 using PetFamily.Domain.Models.Species;
 using PetFamily.Domain.Models.Volunteers;
@@ -87,7 +87,7 @@ public static class VolunteerFactory
             properties);
     }
     
-    public static AddPetToVolunteerCommand CreateAddPetToVolunteerCommand(Guid volunteerId)
+    public static AddToVolunteerCommand CreateAddPetToVolunteerCommand(Guid volunteerId)
     {
         var f = new Faker("ru");
         
@@ -109,7 +109,7 @@ public static class VolunteerFactory
         var dateOfBirth = DateOnly.FromDateTime(DateTime.Now);
         var createdDate = DateTime.Now;
         
-        return new AddPetToVolunteerCommand(
+        return new AddToVolunteerCommand(
             volunteerId,
             Guid.Empty,
             Guid.Empty, 
