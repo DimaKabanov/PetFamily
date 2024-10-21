@@ -66,7 +66,7 @@ public class AddToVolunteerService(
         
         var properties = new Property(SpeciesId.Create(command.SpeciesId), command.BreedId);
         
-        var pet = new Domain.Models.Volunteers.Pets.Pet(
+        var pet = new Domain.Pets.Pet(
             petId,
             name,
             description,
