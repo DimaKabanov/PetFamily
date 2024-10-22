@@ -1,3 +1,5 @@
+using PetFamily.SharedKernel.ValueObjects;
+
 namespace PetFamily.Volunteers.Domain.Pets.ValueObjects;
 
 public record Photo

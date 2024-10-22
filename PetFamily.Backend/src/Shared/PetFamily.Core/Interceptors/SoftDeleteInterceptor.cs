@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using PetFamily.Core.Abstractions;
+using PetFamily.SharedKernel.Interfaces;
 
 namespace PetFamily.Core.Interceptors;
 

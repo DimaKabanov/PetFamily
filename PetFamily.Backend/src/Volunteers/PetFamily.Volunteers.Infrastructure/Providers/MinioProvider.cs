@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
-using PetFamily.Core.Abstractions;
-using PetFamily.Core.PhotoProvider;
 using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Domain.Pets.ValueObjects;
+using PetFamily.SharedKernel.Interfaces;
+using PetFamily.SharedKernel.PhotoProvider;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.Infrastructure.Providers;
 

@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PetFamily.Core.Abstractions.CQRS;
 
@@ -5,7 +6,7 @@ namespace PetFamily.Volunteers.Application;
 
 public static class Inject
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddVolunteersApplication(this IServiceCollection services)
     {
         services
             .AddCommands()

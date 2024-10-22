@@ -1,4 +1,4 @@
-namespace PetFamily.Core.Abstractions;
+namespace PetFamily.SharedKernel.Interfaces;
 
 public interface ISoftDeletable
 {

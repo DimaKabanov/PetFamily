@@ -1,13 +1,13 @@
 ﻿using Bogus;
-using PetFamily.Application.Dto;
-using PetFamily.Application.Volunteers.Commands.Pet.AddToVolunteer;
-using PetFamily.Domain.Enums;
-using PetFamily.Domain.Models.Species;
-using PetFamily.Domain.Models.Volunteers;
-using PetFamily.Domain.Models.Volunteers.Pets;
-using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
-using PetFamily.Domain.Models.Volunteers.ValueObjects;
-using PetFamily.Domain.Shared.ValueObjects;
+using PetFamily.Core.Dto;
+using PetFamily.SharedKernel.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects.EntityIds;
+using PetFamily.Volunteers.Application.Commands.Pet.AddToVolunteer;
+using PetFamily.Volunteers.Domain;
+using PetFamily.Volunteers.Domain.Enums;
+using PetFamily.Volunteers.Domain.Pets;
+using PetFamily.Volunteers.Domain.Pets.ValueObjects;
+using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.UnitTests.Infrastructure;
 

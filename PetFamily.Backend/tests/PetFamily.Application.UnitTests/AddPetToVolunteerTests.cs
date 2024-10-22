@@ -3,11 +3,10 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using PetFamily.Application.Database;
-using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.Commands.Pet.AddToVolunteer;
-using PetFamily.Domain.Shared;
+using PetFamily.SharedKernel;
 using PetFamily.UnitTests.Infrastructure;
+using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Application.Commands.Pet.AddToVolunteer;
 
 namespace PetFamily.Application.UnitTests;
 

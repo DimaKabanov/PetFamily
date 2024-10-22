@@ -1,3 +1,15 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Minio;
+using PetFamily.Core.Abstractions;
+using PetFamily.Core.MessageQueues;
+using PetFamily.Core.Options;
+using PetFamily.SharedKernel.Interfaces;
+using PetFamily.SharedKernel.PhotoProvider;
+using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Infrastructure.Providers;
+
 namespace PetFamily.Volunteers.Infrastructure;
 
 public static class Inject

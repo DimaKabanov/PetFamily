@@ -1,6 +1,6 @@
-using PetFamily.Volunteers.Domain.Pets.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 
-namespace PetFamily.Core.PhotoProvider;
+namespace PetFamily.SharedKernel.PhotoProvider;
 
 public record PhotoData(Stream Stream, PhotoInfo Info);
 

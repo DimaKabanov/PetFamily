@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.CQRS;
 using PetFamily.Core.Extensions;
-using PetFamily.Core.PhotoProvider;
 using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.PhotoProvider;
 using PetFamily.SharedKernel.ValueObjects.EntityIds;
 
 namespace PetFamily.Volunteers.Application.Commands.Pet.HardDelete;

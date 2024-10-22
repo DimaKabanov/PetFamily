@@ -1,7 +1,6 @@
 using CSharpFunctionalExtensions;
-using PetFamily.SharedKernel;
 
-namespace PetFamily.Volunteers.Domain.Pets.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public record PhotoPath
 {

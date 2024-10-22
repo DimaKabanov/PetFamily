@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
-using PetFamily.Core.PhotoProvider;
+using PetFamily.SharedKernel.Interfaces;
+using PetFamily.SharedKernel.PhotoProvider;
 
 namespace PetFamily.Core.BackgroundServices;
 

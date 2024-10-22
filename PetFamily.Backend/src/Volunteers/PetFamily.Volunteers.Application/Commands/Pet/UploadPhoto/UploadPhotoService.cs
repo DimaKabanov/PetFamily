@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Abstractions.CQRS;
 using PetFamily.Core.Extensions;
-using PetFamily.Core.PhotoProvider;
 using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.Interfaces;
+using PetFamily.SharedKernel.PhotoProvider;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.EntityIds;
 using PetFamily.Volunteers.Domain.Pets.ValueObjects;
 

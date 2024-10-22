@@ -1,9 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using PetFamily.Core.PhotoProvider;
-using PetFamily.SharedKernel;
-using PetFamily.Volunteers.Domain.Pets.ValueObjects;
+using PetFamily.SharedKernel.PhotoProvider;
+using PetFamily.SharedKernel.ValueObjects;
 
-namespace PetFamily.Core.Abstractions;
+namespace PetFamily.SharedKernel.Interfaces;
 
 public interface IPhotoProvider
 {

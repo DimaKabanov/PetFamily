@@ -4,14 +4,14 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using PetFamily.Application.Database;
-using PetFamily.Application.Messaging;
-using PetFamily.Application.PhotoProvider;
-using PetFamily.Application.Volunteers;
-using PetFamily.Application.Volunteers.Commands.Pet.UploadPhoto;
-using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
-using PetFamily.Domain.Shared;
+using PetFamily.Core.Abstractions;
+using PetFamily.SharedKernel;
+using PetFamily.SharedKernel.Interfaces;
+using PetFamily.SharedKernel.PhotoProvider;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.UnitTests.Infrastructure;
+using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Application.Commands.Pet.UploadPhoto;
 
 namespace PetFamily.Application.UnitTests;
 

@@ -1,4 +1,8 @@
 using PetFamily.API.Extensions;
+using PetFamily.Species.Application;
+using PetFamily.Species.Infrastructure;
+using PetFamily.Volunteers.Application;
+using PetFamily.Volunteers.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
 
 builder.Services
-    .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddVolunteersInfrastructure(builder.Configuration)
+    .AddSpeciesInfrastructure(builder.Configuration)
+    .AddVolunteersApplication()
+    .AddSpeciesApplication();
 
 var app = builder.Build();
 
