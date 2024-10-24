@@ -18,7 +18,7 @@ using PetFamily.Volunteers.Application.Queries.Volunteer.GetVolunteers;
 using PetFamily.Volunteers.Presentation.Processors;
 using PetFamily.Volunteers.Presentation.Volunteer.Requests;
 
-namespace PetFamily.Volunteers.Presentation.Volunteer;
+namespace PetFamily.Volunteers.Presentation;
 
 public class VolunteersController : ApplicationController
 {

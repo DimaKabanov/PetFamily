@@ -4,7 +4,7 @@ using PetFamily.Volunteers.Domain.Enums;
 
 namespace PetFamily.Volunteers.Application.Commands.Pet.UpdateMainInfo;
 
-public record UpdateMainIngoCommand(
+public record UpdateMainInfoCommand(
     Guid VolunteerId,
     Guid PetId,
     Guid SpeciesId,

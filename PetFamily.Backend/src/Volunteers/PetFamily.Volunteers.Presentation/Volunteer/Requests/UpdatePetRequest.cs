@@ -19,7 +19,7 @@ public record UpdatePetRequest(
     DateTime CreatedDate,
     IEnumerable<RequisiteDto> Requisites)
 {
-    public UpdateMainIngoCommand ToCommand(Guid volunteerId, Guid petId) => 
+    public UpdateMainInfoCommand ToCommand(Guid volunteerId, Guid petId) => 
         new(
             volunteerId,
             petId,

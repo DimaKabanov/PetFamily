@@ -6,7 +6,7 @@ using PetFamily.Volunteers.Domain.Pets.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.Pet.UpdateMainInfo;
 
-public class UpdateMainInfoCommandValidator : AbstractValidator<UpdateMainIngoCommand>
+public class UpdateMainInfoCommandValidator : AbstractValidator<UpdateMainInfoCommand>
 {
     public UpdateMainInfoCommandValidator()
     {

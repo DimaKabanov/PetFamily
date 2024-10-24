@@ -4,7 +4,7 @@ using PetFamily.Volunteers.Application.Queries.Pet.GetPet;
 using PetFamily.Volunteers.Application.Queries.Pet.GetPets;
 using PetFamily.Volunteers.Presentation.Pets.Requests;
 
-namespace PetFamily.Volunteers.Presentation.Pets;
+namespace PetFamily.Volunteers.Presentation;
 
 public class PetsController : ApplicationController
 {

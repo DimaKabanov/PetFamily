@@ -5,12 +5,13 @@ using PetFamily.Core.Abstractions.CQRS;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects.EntityIds;
+using PetFamily.Volunteers.Contracts;
 
 namespace PetFamily.Species.Application.Commands.Breed.DeleteBreed;
 
 public class DeleteBreedService(
+    IVolunteersContract volunteersContract,
     ISpeciesRepository speciesRepository,
-    IReadDbContext readDbContext,
     IValidator<DeleteBreedCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<DeleteBreedService> logger) : ICommandService<Guid, DeleteBreedCommand>
@@ -26,10 +27,8 @@ public class DeleteBreedService(
         var speciesId = SpeciesId.Create(breedCommand.SpeciesId);
         var breedId = BreedId.Create(breedCommand.BreedId);
         
-        var petWithDeletingBreed = await readDbContext.Pets
-            .FirstOrDefaultAsync(p => p.BreedId == breedId.Value, ct);
-
-        if (petWithDeletingBreed is not null)
+        var petWithDeletingBreedResult = await volunteersContract.GetPetByBreedId(breedId.Value, ct);
+        if (petWithDeletingBreedResult.IsSuccess)
             return Errors.General.ValueStillUsing(breedId.Value).ToErrorList();
         
         var speciesResult = await speciesRepository.GetSpeciesById(speciesId, ct);

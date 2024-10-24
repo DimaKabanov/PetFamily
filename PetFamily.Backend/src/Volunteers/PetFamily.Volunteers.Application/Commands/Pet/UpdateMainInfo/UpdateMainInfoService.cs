@@ -13,61 +13,61 @@ namespace PetFamily.Volunteers.Application.Commands.Pet.UpdateMainInfo;
 public class UpdateMainInfoService(
     IVolunteersRepository volunteersRepository,
     IReadDbContext readDbContext,
-    IValidator<UpdateMainIngoCommand> validator,
+    IValidator<UpdateMainInfoCommand> validator,
     IUnitOfWork unitOfWork,
-    ILogger<UpdateMainInfoService> logger): ICommandService<Guid, UpdateMainIngoCommand>
+    ILogger<UpdateMainInfoService> logger): ICommandService<Guid, UpdateMainInfoCommand>
 {
-    public async Task<Result<Guid, ErrorList>> Handle(UpdateMainIngoCommand mainIngoCommand, CancellationToken ct)
+    public async Task<Result<Guid, ErrorList>> Handle(UpdateMainInfoCommand mainInfoCommand, CancellationToken ct)
     {
-        var validationResult = await validator.ValidateAsync(mainIngoCommand, ct);
+        var validationResult = await validator.ValidateAsync(mainInfoCommand, ct);
         if (!validationResult.IsValid)
             return validationResult.ToErrorList();
         
-        var volunteerId = VolunteerId.Create(mainIngoCommand.VolunteerId);
+        var volunteerId = VolunteerId.Create(mainInfoCommand.VolunteerId);
         
         var volunteerResult = await volunteersRepository.GetById(volunteerId, ct);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
-        var petId = PetId.Create(mainIngoCommand.PetId);
+        var petId = PetId.Create(mainInfoCommand.PetId);
 
         var petResult = volunteerResult.Value.GetPetById(petId);
         if (petResult.IsFailure)
             return petResult.Error.ToErrorList();
 
-        var name = Name.Create(mainIngoCommand.Name).Value;
-        var description = Description.Create(mainIngoCommand.Description).Value;
+        var name = Name.Create(mainInfoCommand.Name).Value;
+        var description = Description.Create(mainInfoCommand.Description).Value;
 
         var physicalProperty = PhysicalProperty.Create(
-            mainIngoCommand.PhysicalProperty.Color,
-            mainIngoCommand.PhysicalProperty.Health,
-            mainIngoCommand.PhysicalProperty.Weight,
-            mainIngoCommand.PhysicalProperty.Height).Value;
+            mainInfoCommand.PhysicalProperty.Color,
+            mainInfoCommand.PhysicalProperty.Health,
+            mainInfoCommand.PhysicalProperty.Weight,
+            mainInfoCommand.PhysicalProperty.Height).Value;
 
         var address = Address.Create(
-            mainIngoCommand.Address.Street,
-            mainIngoCommand.Address.Home,
-            mainIngoCommand.Address.Flat).Value;
+            mainInfoCommand.Address.Street,
+            mainInfoCommand.Address.Home,
+            mainInfoCommand.Address.Flat).Value;
 
-        var phone = Phone.Create(mainIngoCommand.Phone).Value;
-        var dateOfBirth = DateOfBirth.Create(mainIngoCommand.DateOfBirth).Value;
-        var createdDate = CreatedDate.Create(mainIngoCommand.CreatedDate).Value;
+        var phone = Phone.Create(mainInfoCommand.Phone).Value;
+        var dateOfBirth = DateOfBirth.Create(mainInfoCommand.DateOfBirth).Value;
+        var createdDate = CreatedDate.Create(mainInfoCommand.CreatedDate).Value;
 
-        var requisites = mainIngoCommand.Requisites
+        var requisites = mainInfoCommand.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
 
         var species = await readDbContext.Species
-            .FirstOrDefaultAsync(s => s.Id == mainIngoCommand.SpeciesId, ct);
+            .FirstOrDefaultAsync(s => s.Id == mainInfoCommand.SpeciesId, ct);
         if (species is null)
-            return Errors.General.NotFound(mainIngoCommand.SpeciesId).ToErrorList();
+            return Errors.General.NotFound(mainInfoCommand.SpeciesId).ToErrorList();
 
         var breed = await readDbContext.Breeds
             .FirstOrDefaultAsync(b => b.SpeciesId == species.Id, ct);
         if (breed is null)
-            return Errors.General.NotFound(mainIngoCommand.BreedId).ToErrorList();
+            return Errors.General.NotFound(mainInfoCommand.BreedId).ToErrorList();
 
-        var properties = new Property(SpeciesId.Create(mainIngoCommand.SpeciesId), mainIngoCommand.BreedId);
+        var properties = new Property(SpeciesId.Create(mainInfoCommand.SpeciesId), mainInfoCommand.BreedId);
 
         petResult.Value.UpdatePet(
             name,
@@ -75,10 +75,10 @@ public class UpdateMainInfoService(
             physicalProperty,
             address,
             phone,
-            mainIngoCommand.IsCastrated,
+            mainInfoCommand.IsCastrated,
             dateOfBirth,
-            mainIngoCommand.IsVaccinated,
-            mainIngoCommand.AssistanceStatus,
+            mainInfoCommand.IsVaccinated,
+            mainInfoCommand.AssistanceStatus,
             createdDate,
             requisites,
             properties);
