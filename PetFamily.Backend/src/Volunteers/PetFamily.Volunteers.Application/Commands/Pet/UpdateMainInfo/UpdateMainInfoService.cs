@@ -6,13 +6,14 @@ using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.EntityIds;
+using PetFamily.Species.Contracts;
 using PetFamily.Volunteers.Domain.Pets.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.Pet.UpdateMainInfo;
 
 public class UpdateMainInfoService(
+    ISpeciesContract speciesContract,
     IVolunteersRepository volunteersRepository,
-    IReadDbContext readDbContext,
     IValidator<UpdateMainInfoCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<UpdateMainInfoService> logger): ICommandService<Guid, UpdateMainInfoCommand>
@@ -57,14 +58,12 @@ public class UpdateMainInfoService(
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
 
-        var species = await readDbContext.Species
-            .FirstOrDefaultAsync(s => s.Id == mainInfoCommand.SpeciesId, ct);
-        if (species is null)
+        var speciesResult = await speciesContract.GetSpeciesById(mainInfoCommand.SpeciesId, ct);
+        if (speciesResult.IsSuccess)
             return Errors.General.NotFound(mainInfoCommand.SpeciesId).ToErrorList();
 
-        var breed = await readDbContext.Breeds
-            .FirstOrDefaultAsync(b => b.SpeciesId == species.Id, ct);
-        if (breed is null)
+        var breedResult = await speciesContract.GetBreedBySpeciesId(speciesResult.Value.Id, ct);
+        if (breedResult.IsSuccess)
             return Errors.General.NotFound(mainInfoCommand.BreedId).ToErrorList();
 
         var properties = new Property(SpeciesId.Create(mainInfoCommand.SpeciesId), mainInfoCommand.BreedId);

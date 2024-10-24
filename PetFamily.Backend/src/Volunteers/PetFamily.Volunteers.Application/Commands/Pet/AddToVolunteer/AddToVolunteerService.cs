@@ -6,13 +6,14 @@ using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.EntityIds;
+using PetFamily.Species.Contracts;
 using PetFamily.Volunteers.Domain.Pets.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.Pet.AddToVolunteer;
 
 public class AddToVolunteerService(
+    ISpeciesContract speciesContract,
     IVolunteersRepository volunteersRepository,
-    IReadDbContext readDbContext,
     IValidator<AddToVolunteerCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<AddToVolunteerService> logger) : ICommandService<Guid, AddToVolunteerCommand>
@@ -53,15 +54,13 @@ public class AddToVolunteerService(
         var requisites = command.Requisites
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
-        
-        var species = await readDbContext.Species
-            .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, ct);
-        if (species is null)
+
+        var speciesResult = await speciesContract.GetSpeciesById(command.SpeciesId, ct);
+        if (speciesResult.IsSuccess)
             return Errors.General.NotFound(command.SpeciesId).ToErrorList();
-        
-        var breed = await readDbContext.Breeds
-            .FirstOrDefaultAsync(b => b.SpeciesId == species.Id, ct);
-        if (breed is null)
+
+        var breedResult = await speciesContract.GetBreedBySpeciesId(speciesResult.Value.Id, ct);
+        if (breedResult.IsSuccess)
             return Errors.General.NotFound(command.BreedId).ToErrorList();
         
         var properties = new Property(SpeciesId.Create(command.SpeciesId), command.BreedId);
