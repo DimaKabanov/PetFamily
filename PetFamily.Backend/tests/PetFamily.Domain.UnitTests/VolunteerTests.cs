@@ -1,6 +1,6 @@
 using FluentAssertions;
-using PetFamily.Domain.Models.Volunteers.Pets.ValueObjects;
 using PetFamily.UnitTests.Infrastructure;
+using PetFamily.Volunteers.Domain.Pets.ValueObjects;
 
 namespace PetFamily.UnitTests;
 
