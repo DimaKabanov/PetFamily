@@ -4,6 +4,7 @@ using PetFamily.Species.Presentation;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Presentation;
+using PetFamily.Web;
 using PetFamily.Web.Extensions;
 using Serilog;
 
@@ -11,10 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.ConfigureAppLogger();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSerilog();
+builder.Services.AddWebServices();
 
 builder.Services
     .AddVolunteersInfrastructure(builder.Configuration)
@@ -35,6 +33,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
