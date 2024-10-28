@@ -18,10 +18,10 @@ builder.Services.AddSerilog();
 
 builder.Services
     .AddVolunteersInfrastructure(builder.Configuration)
-    .AddSpeciesInfrastructure(builder.Configuration)
-    .AddVolunteerPresentation()
-    .AddSpeciesPresentation()
+    .AddVolunteersPresentation()
     .AddVolunteersApplication()
+    .AddSpeciesInfrastructure()
+    .AddSpeciesPresentation()
     .AddSpeciesApplication();
 
 var app = builder.Build();
