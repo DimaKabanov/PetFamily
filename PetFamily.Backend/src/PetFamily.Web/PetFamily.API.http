@@ -1,6 +1,6 @@
-@PetFamily.API_HostAddress = http://localhost:5240
+@PetFamily.Web_HostAddress = http://localhost:5240
 
-GET {{PetFamily.API_HostAddress}}/
+GET {{PetFamily.Web_HostAddress}}/
 Accept: application/json
 
 ###

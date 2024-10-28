@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace PetFamily.API.Extensions;
+namespace PetFamily.Web.Extensions;
 
 public static class LoggerExtension
 {

@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
       <UserSecretsId>4cb88b23-91f7-43c9-b5ba-78350cde737b</UserSecretsId>
-      <RootNamespace>PetFamily.API</RootNamespace>
+      <RootNamespace>PetFamily.Web</RootNamespace>
   </PropertyGroup>
 
     <ItemGroup>
