@@ -22,6 +22,8 @@ public class AccountsWriteDbContext(IConfiguration configuration) : IdentityDbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(AccountsWriteDbContext).Assembly,
             type => type.FullName?.Contains("Configurations.Write") ?? false);

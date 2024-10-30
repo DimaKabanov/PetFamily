@@ -1,3 +1,5 @@
+using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
 using PetFamily.Species.Application;
 using PetFamily.Species.Infrastructure;
 using PetFamily.Species.Presentation;
@@ -20,7 +22,9 @@ builder.Services
     .AddVolunteersApplication()
     .AddSpeciesInfrastructure()
     .AddSpeciesPresentation()
-    .AddSpeciesApplication();
+    .AddSpeciesApplication()
+    .AddAccountsInfrastructure()
+    .AddAccountsApplication();
 
 var app = builder.Build();
 

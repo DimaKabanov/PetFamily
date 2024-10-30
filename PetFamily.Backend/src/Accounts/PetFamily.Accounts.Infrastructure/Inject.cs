@@ -11,7 +11,10 @@ public static class Inject
         services.AddScoped<AccountsWriteDbContext>();
 
         services
-            .AddIdentity<User, Role>()
+            .AddIdentity<User, Role>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
             .AddEntityFrameworkStores<AccountsWriteDbContext>();
 
         services.AddAuthorization();
