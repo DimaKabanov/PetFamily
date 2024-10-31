@@ -14,6 +14,6 @@ public class AccountController : ApplicationController
         CancellationToken ct)
     {
         var result = await service.Handle(request.ToCommand(), ct);
-        return result.IsFailure ? result.Error.ToResponse() : Ok(result);
+        return result.IsFailure ? result.Error.ToResponse() : Ok();
     }
 }
