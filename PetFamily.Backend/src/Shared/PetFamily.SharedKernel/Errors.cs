@@ -40,4 +40,12 @@ public static class Errors
             return Error.Failure("value.already.existing", $"{label} with id '{id}' already existing");
         }
     }
+
+    public static class User
+    {
+        public static Error InvalidCredentials()
+        {
+            return Error.Failure("credentials.is.invalid", "Password or email is invalid");
+        }
+    }
 }

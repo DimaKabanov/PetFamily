@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Framework;
 using PetFamily.Volunteers.Application.Commands.Pet.AddToVolunteer;
@@ -43,6 +44,7 @@ public class VolunteersController : ApplicationController
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         [FromBody] CreateVolunteerRequest request,
@@ -52,7 +54,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPatch("{id:guid}/main-info")]
     public async Task<ActionResult<Guid>> UpdateMainInfo(
         [FromRoute] Guid id,
@@ -63,7 +66,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPatch("{id:guid}/social-networks")]
     public async Task<ActionResult<Guid>> UpdateSocialNetworks(
         [FromRoute] Guid id,
@@ -74,7 +78,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPatch("{id:guid}/requisites")]
     public async Task<ActionResult<Guid>> UpdateRequisites(
         [FromRoute] Guid id,
@@ -85,7 +90,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> Delete(
         [FromRoute] Guid id,
@@ -96,7 +102,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult<Guid>> AddPet(
         [FromRoute] Guid id,
@@ -107,7 +114,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPut("{id:guid}/pet/{petId:guid}")]
     public async Task<ActionResult<Guid>> UpdatePet(
         [FromRoute] Guid id,
@@ -119,7 +127,8 @@ public class VolunteersController : ApplicationController
         var result = await mainInfoService.Handle(request.ToCommand(id, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPost("{id:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult<Guid>> AddPhotosToPet(
         [FromRoute] Guid id,
@@ -134,7 +143,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPatch("{id:guid}/pet/{petId:guid}/status")]
     public async Task<ActionResult<Guid>> UpdatePetStatus(
         [FromRoute] Guid id,
@@ -146,7 +156,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpPatch("{id:guid}/pet/{petId:guid}/main-photo")]
     public async Task<ActionResult<Guid>> SetPetMainPhoto(
         [FromRoute] Guid id,
@@ -158,7 +169,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(request.ToCommand(id, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpDelete("{id:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult<Guid>> DeletePhotosFromPet(
         [FromRoute] Guid id,
@@ -170,7 +182,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpDelete("{id:guid}/pet/{petId:guid}/soft")]
     public async Task<ActionResult<Guid>> SoftDeletePet(
         [FromRoute] Guid id,
@@ -182,7 +195,8 @@ public class VolunteersController : ApplicationController
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
-    
+
+    [Authorize]
     [HttpDelete("{id:guid}/pet/{petId:guid}/hard")]
     public async Task<ActionResult<Guid>> HardDeletePet(
         [FromRoute] Guid id,

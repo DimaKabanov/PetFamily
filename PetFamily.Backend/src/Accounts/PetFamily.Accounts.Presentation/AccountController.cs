@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetFamily.Accounts.Application.Commands.LoginUser;
 using PetFamily.Accounts.Application.Commands.RegisterUser;
 using PetFamily.Accounts.Presentation.Requests;
 using PetFamily.Framework;
@@ -15,5 +16,15 @@ public class AccountController : ApplicationController
     {
         var result = await service.Handle(request.ToCommand(), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok();
+    }
+    
+    [HttpPost("login")]
+    public async Task<ActionResult> Login(
+        [FromBody] LoginUserRequest request,
+        [FromServices] LoginUserService service,
+        CancellationToken ct)
+    {
+        var result = await service.Handle(request.ToCommand(), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 }

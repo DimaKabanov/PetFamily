@@ -23,7 +23,7 @@ builder.Services
     .AddSpeciesInfrastructure()
     .AddSpeciesPresentation()
     .AddSpeciesApplication()
-    .AddAccountsInfrastructure()
+    .AddAccountsInfrastructure(builder.Configuration)
     .AddAccountsApplication();
 
 var app = builder.Build();
