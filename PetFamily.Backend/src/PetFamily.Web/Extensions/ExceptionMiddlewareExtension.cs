@@ -1,6 +1,6 @@
-using PetFamily.API.Middlewares;
+using PetFamily.Web.Middlewares;
 
-namespace PetFamily.API.Extensions;
+namespace PetFamily.Web.Extensions;
 
 public static class ExceptionMiddlewareExtension
 {

@@ -11,10 +11,11 @@ public class WriteDbContext(IConfiguration configuration) : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.DATABASE));
-        optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+        optionsBuilder
+            .UseNpgsql(configuration.GetConnectionString(Constants.DATABASE))
+            .UseSnakeCaseNamingConvention()
+            .EnableSensitiveDataLogging()
+            .UseLoggerFactory(CreateLoggerFactory());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

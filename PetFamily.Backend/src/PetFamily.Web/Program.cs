@@ -1,28 +1,30 @@
-using PetFamily.API.Extensions;
+using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
 using PetFamily.Species.Application;
 using PetFamily.Species.Infrastructure;
 using PetFamily.Species.Presentation;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Presentation;
+using PetFamily.Web;
+using PetFamily.Web.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.ConfigureAppLogger();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSerilog();
+builder.Services.AddWebServices();
 
 builder.Services
     .AddVolunteersInfrastructure(builder.Configuration)
-    .AddSpeciesInfrastructure(builder.Configuration)
-    .AddVolunteerPresentation()
-    .AddSpeciesPresentation()
+    .AddVolunteersPresentation()
     .AddVolunteersApplication()
-    .AddSpeciesApplication();
+    .AddSpeciesInfrastructure()
+    .AddSpeciesPresentation()
+    .AddSpeciesApplication()
+    .AddAccountsInfrastructure(builder.Configuration)
+    .AddAccountsApplication();
 
 var app = builder.Build();
 
@@ -35,6 +37,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

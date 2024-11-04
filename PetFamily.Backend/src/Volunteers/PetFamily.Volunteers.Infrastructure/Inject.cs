@@ -19,10 +19,12 @@ public static class Inject
     {
         services.AddScoped<WriteDbContext>();
         services.AddScoped<IReadDbContext, ReadDbContext>();
-        
         services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+        services.AddScoped<IPhotoProvider, MinioProvider>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.MINIO));
+        services.AddSingleton<IMessageQueue<IEnumerable<PhotoInfo>>, InMemoryMessageQueue<IEnumerable<PhotoInfo>>>();
 
         services.AddMinio(options =>
         {
@@ -33,11 +35,6 @@ public static class Inject
             options.WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
             options.WithSSL(false);
         });
-
-        services.AddScoped<IPhotoProvider, MinioProvider>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        services.AddSingleton<IMessageQueue<IEnumerable<PhotoInfo>>, InMemoryMessageQueue<IEnumerable<PhotoInfo>>>();
 
         return services;
     }

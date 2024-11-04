@@ -5,7 +5,7 @@ namespace PetFamily.Volunteers.Presentation;
 
 public static class Inject
 {
-    public static IServiceCollection AddVolunteerPresentation(this IServiceCollection services)
+    public static IServiceCollection AddVolunteersPresentation(this IServiceCollection services)
     {
         services.AddScoped<IVolunteersContract, VolunteersContract>();
 
