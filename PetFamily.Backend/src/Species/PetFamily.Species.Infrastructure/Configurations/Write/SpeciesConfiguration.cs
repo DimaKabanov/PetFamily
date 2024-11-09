@@ -29,6 +29,9 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Domain.Species>
         
         b.HasMany(s => s.Breeds)
             .WithOne()
-            .HasForeignKey("species_id");
+            .HasForeignKey("species_id")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        b.Navigation(s => s.Breeds).AutoInclude();
     }
 }

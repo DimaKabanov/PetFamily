@@ -24,6 +24,18 @@ public class CreateVolunteerService(
         if (!validationResult.IsValid)
             return validationResult.ToErrorList();
         
+        var volunteer = CreateVolunteer(command);
+
+        await volunteersRepository.Add(volunteer, ct);
+        await unitOfWork.SaveChanges(ct);
+        
+        logger.LogInformation("Create volunteer with id: {volunteerId}", volunteer.Id);
+
+        return volunteer.Id.Value;
+    }
+
+    private static Domain.Volunteer CreateVolunteer(CreateVolunteerCommand command)
+    {
         var volunteerId = VolunteerId.NewId();
 
         var fullName = FullName.Create(
@@ -45,7 +57,7 @@ public class CreateVolunteerService(
             .Select(r => Requisite.Create(r.Name, r.Description).Value)
             .ToList();
         
-        var volunteer = new Domain.Volunteer(
+        return new Domain.Volunteer(
             volunteerId,
             fullName,
             description,
@@ -53,12 +65,5 @@ public class CreateVolunteerService(
             phone,
             socialNetworks,
             requisites);
-
-        await volunteersRepository.Add(volunteer, ct);
-        await unitOfWork.SaveChanges(ct);
-        
-        logger.LogInformation("Create volunteer with id: {volunteerId}", volunteerId);
-
-        return volunteerId.Value;
     }
 }

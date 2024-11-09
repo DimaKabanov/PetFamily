@@ -1,18 +1,26 @@
 using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
+using FluentValidation;
 using PetFamily.Core.Abstractions.CQRS;
 using PetFamily.Core.Dto;
 using PetFamily.Core.Extensions;
 using PetFamily.Core.Models;
+using PetFamily.SharedKernel;
 
 namespace PetFamily.Volunteers.Application.Queries.Pet.GetPets;
 
 public class GetPetsService(
-    IReadDbContext readDbContext) : IQueryService<PagedList<PetDto>, GetPetsQuery>
+    IReadDbContext readDbContext,
+    IValidator<GetPetsQuery> validator) : IQueryService<Result<PagedList<PetDto>, ErrorList>, GetPetsQuery>
 {
-    public async Task<PagedList<PetDto>> Handle(
+    public async Task<Result<PagedList<PetDto>, ErrorList>> Handle(
         GetPetsQuery query,
         CancellationToken ct)
     {
+        var validationResult = await validator.ValidateAsync(query, ct);
+        if (!validationResult.IsValid)
+            return validationResult.ToErrorList();
+        
         var petsQuery = readDbContext.Pets;
 
         petsQuery = petsQuery.WhereIf(

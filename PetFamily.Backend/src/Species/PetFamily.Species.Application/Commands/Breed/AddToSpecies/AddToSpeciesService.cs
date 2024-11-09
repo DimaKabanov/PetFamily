@@ -11,7 +11,6 @@ namespace PetFamily.Species.Application.Commands.Breed.AddToSpecies;
 
 public class AddToSpeciesService(
     ISpeciesRepository speciesRepository,
-    IReadDbContext readDbContext,
     IValidator<AddToSpeciesCommand> validator,
     IUnitOfWork unitOfWork,
     ILogger<AddToSpeciesService> logger) : ICommandService<Guid, AddToSpeciesCommand>
@@ -32,15 +31,14 @@ public class AddToSpeciesService(
         
         var name = Name.Create(command.Name).Value;
         
-        var existingBreed = speciesResult.Value.GetBreedByName(name);
-        if (existingBreed.IsSuccess)
-            return Errors.General.ValueAlreadyExisting(existingBreed.Value.Id.Value).ToErrorList();
+        var existingBreedResult = speciesResult.Value.GetBreedByName(name);
+        if (existingBreedResult.IsSuccess)
+            return Errors.General.ValueAlreadyExisting(existingBreedResult.Value.Id.Value).ToErrorList();
 
         var breedId = BreedId.NewId();
-
-        var breed = new Domain.Breeds.Breed(breedId, name);
+        var newBreed = new Domain.Breeds.Breed(breedId, name);
         
-        speciesResult.Value.AddBreed(breed);
+        speciesResult.Value.AddBreed(newBreed);
         await unitOfWork.SaveChanges(ct);
         
         logger.LogInformation("Added breed with id: {breedId}", breedId);

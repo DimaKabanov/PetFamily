@@ -14,17 +14,17 @@ public class PetsController : ApplicationController
         [FromServices] GetPetsService service,
         CancellationToken ct)
     {
-        var response = await service.Handle(request.ToQuery(), ct);
-        return Ok(response);
+        var result = await service.Handle(request.ToQuery(), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{petId:guid}")]
     public async Task<ActionResult> GetById(
-        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
         [FromServices] GetPetService service,
         CancellationToken ct)
     {
-        var query = new GetPetQuery(id);
+        var query = new GetPetQuery(petId);
         var result = await service.Handle(query, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

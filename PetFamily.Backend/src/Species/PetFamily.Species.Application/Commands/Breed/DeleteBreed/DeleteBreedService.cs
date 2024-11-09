@@ -27,19 +27,17 @@ public class DeleteBreedService(
         var speciesId = SpeciesId.Create(breedCommand.SpeciesId);
         var breedId = BreedId.Create(breedCommand.BreedId);
         
-        var petWithDeletingBreedResult = await volunteersContract.GetPetByBreedId(breedId.Value, ct);
-        if (petWithDeletingBreedResult.IsSuccess)
+        var petResult = await volunteersContract.GetPetByBreedId(breedId.Value, ct);
+        if (petResult.IsSuccess)
             return Errors.General.ValueStillUsing(breedId.Value).ToErrorList();
         
         var speciesResult = await speciesRepository.GetSpeciesById(speciesId, ct);
         if (speciesResult.IsFailure)
             return speciesResult.Error.ToErrorList();
 
-        var breedToDeleteResult = speciesResult.Value.GetBreedById(breedId);
-        if (breedToDeleteResult.IsFailure)
-            return breedToDeleteResult.Error.ToErrorList();
-
-        speciesResult.Value.DeleteBreed(breedToDeleteResult.Value);
+        var deletingBreedResult = speciesResult.Value.DeleteBreed(breedId);
+        if (deletingBreedResult.IsFailure)
+            return deletingBreedResult.Error.ToErrorList();
 
         await unitOfWork.SaveChanges(ct);
 
