@@ -29,17 +29,17 @@ public class VolunteersController : ApplicationController
         [FromServices] GetVolunteersService service,
         CancellationToken ct)
     {
-        var response = await service.Handle(request.ToQuery(), ct);
-        return Ok(response);
+        var result = await service.Handle(request.ToQuery(), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{volunteerId:guid}")]
     public async Task<ActionResult> GetById(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromServices] GetVolunteerService service,
         CancellationToken ct)
     {
-        var query = new GetVolunteerQuery(id);
+        var query = new GetVolunteerQuery(volunteerId);
         var result = await service.Handle(query, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
@@ -56,82 +56,82 @@ public class VolunteersController : ApplicationController
     }
 
     [Authorize]
-    [HttpPatch("{id:guid}/main-info")]
+    [HttpPatch("{volunteerId:guid}/main-info")]
     public async Task<ActionResult<Guid>> UpdateMainInfo(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromBody] UpdateVolunteerMainInfoRequest request,
         [FromServices] UpdateVolunteerMainInfoService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPatch("{id:guid}/social-networks")]
+    [HttpPatch("{volunteerId:guid}/social-networks")]
     public async Task<ActionResult<Guid>> UpdateSocialNetworks(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromBody] UpdateVolunteerSocialNetworksRequest request,
         [FromServices] UpdateVolunteerSocialNetworksService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPatch("{id:guid}/requisites")]
+    [HttpPatch("{volunteerId:guid}/requisites")]
     public async Task<ActionResult<Guid>> UpdateRequisites(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromBody] UpdateVolunteerRequisitesRequest request,
         [FromServices] UpdateVolunteerRequisitesService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{volunteerId:guid}")]
     public async Task<ActionResult<Guid>> Delete(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromServices] DeleteVolunteerService service,
         CancellationToken ct)
     {
-        var command = new DeleteVolunteerCommand(id);
+        var command = new DeleteVolunteerCommand(volunteerId);
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPost("{id:guid}/pet")]
+    [HttpPost("{volunteerId:guid}/pet")]
     public async Task<ActionResult<Guid>> AddPet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromBody] AddPetToVolunteerRequest request,
         [FromServices] AddToVolunteerService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPut("{id:guid}/pet/{petId:guid}")]
+    [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
     public async Task<ActionResult<Guid>> UpdatePet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromBody] UpdatePetRequest request,
         [FromServices] UpdateMainInfoService mainInfoService,
         CancellationToken ct)
     {
-        var result = await mainInfoService.Handle(request.ToCommand(id, petId), ct);
+        var result = await mainInfoService.Handle(request.ToCommand(volunteerId, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPost("{id:guid}/pet/{petId:guid}/photos")]
+    [HttpPost("{volunteerId:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult<Guid>> AddPhotosToPet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromForm] AddPhotoToPetRequest request,
         [FromServices] UploadPhotoService service,
@@ -139,72 +139,72 @@ public class VolunteersController : ApplicationController
     {
         await using var photoProcessor = new FormPhotoProcessor();
         var photoDtos = photoProcessor.Process(request.Photos);
-        var command = new UploadPhotoCommand(id, petId, photoDtos);
+        var command = new UploadPhotoCommand(volunteerId, petId, photoDtos);
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPatch("{id:guid}/pet/{petId:guid}/status")]
+    [HttpPatch("{volunteerId:guid}/pet/{petId:guid}/status")]
     public async Task<ActionResult<Guid>> UpdatePetStatus(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromBody] UpdatePetStatusRequest request,
         [FromServices] UpdateStatusService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id, petId), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpPatch("{id:guid}/pet/{petId:guid}/main-photo")]
+    [HttpPatch("{volunteerId:guid}/pet/{petId:guid}/main-photo")]
     public async Task<ActionResult<Guid>> SetPetMainPhoto(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromBody] SetPetMainPhotoRequest request,
         [FromServices] SetMainPhotoService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id, petId), ct);
+        var result = await service.Handle(request.ToCommand(volunteerId, petId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}/pet/{petId:guid}/photos")]
+    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/photos")]
     public async Task<ActionResult<Guid>> DeletePhotosFromPet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromServices] DeletePhotosService service,
         CancellationToken ct)
     {
-        var command = new DeletePhotosCommand(id, petId);
+        var command = new DeletePhotosCommand(volunteerId, petId);
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}/pet/{petId:guid}/soft")]
+    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/soft")]
     public async Task<ActionResult<Guid>> SoftDeletePet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromServices] SoftDeleteService service,
         CancellationToken ct)
     {
-        var command = new SoftDeleteCommand(id, petId);
+        var command = new SoftDeleteCommand(volunteerId, petId);
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}/pet/{petId:guid}/hard")]
+    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/hard")]
     public async Task<ActionResult<Guid>> HardDeletePet(
-        [FromRoute] Guid id,
+        [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromServices] HardDeleteService service,
         CancellationToken ct)
     {
-        var command = new HardDeleteCommand(id, petId);
+        var command = new HardDeleteCommand(volunteerId, petId);
         var result = await service.Handle(command, ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }

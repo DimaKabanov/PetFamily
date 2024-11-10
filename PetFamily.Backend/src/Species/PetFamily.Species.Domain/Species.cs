@@ -43,5 +43,14 @@ public class Species : SharedKernel.Entity<SpeciesId>
 
     public void AddBreed(Breed breed) => _breeds.Add(breed);
 
-    public void DeleteBreed(Breed breed) => _breeds.Remove(breed);
+    public UnitResult<Error> DeleteBreed(BreedId breedId)
+    {
+        var breedResult = GetBreedById(breedId);
+        if (breedResult.IsFailure)
+            return breedResult.Error;
+        
+        _breeds.Remove(breedResult.Value);
+
+        return Result.Success<Error>();
+    }
 }

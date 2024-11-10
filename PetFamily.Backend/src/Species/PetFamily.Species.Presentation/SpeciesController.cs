@@ -19,20 +19,18 @@ public class SpeciesController : ApplicationController
         [FromServices] GetSpeciesService service,
         CancellationToken ct)
     {
-        var response = await service.Handle(request.ToQuery(), ct);
-
-        return Ok(response);
+        var result = await service.Handle(request.ToQuery(), ct);
+        return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
     
-    [HttpGet("{id:guid}/breeds")]
+    [HttpGet("{speciesId:guid}/breeds")]
     public async Task<ActionResult> GetBreedsBySpecies(
-        [FromRoute] Guid id,
+        [FromRoute] Guid speciesId,
         [FromServices] GetBreedsBySpeciesService service,
         CancellationToken ct)
     {
-        var query = new GetBreedsBySpeciesQuery(id);
+        var query = new GetBreedsBySpeciesQuery(speciesId);
         var result = await service.Handle(query, ct);
-        
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
@@ -48,41 +46,39 @@ public class SpeciesController : ApplicationController
     }
 
     [Authorize]
-    [HttpPost("{id:guid}/breeds")]
+    [HttpPost("{speciesId:guid}/breeds")]
     public async Task<ActionResult> AddBreed(
-        [FromRoute] Guid id,
+        [FromRoute] Guid speciesId,
         [FromBody] AddBreedToSpeciesRequest request,
         [FromServices] AddToSpeciesService service,
         CancellationToken ct)
     {
-        var result = await service.Handle(request.ToCommand(id), ct);
+        var result = await service.Handle(request.ToCommand(speciesId), ct);
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{speciesId:guid}")]
     public async Task<ActionResult<Guid>> Delete(
-        [FromRoute] Guid id,
+        [FromRoute] Guid speciesId,
         [FromServices] DeleteSpeciesService service,
         CancellationToken ct)
     {
-        var command = new DeleteSpeciesCommand(id);
+        var command = new DeleteSpeciesCommand(speciesId);
         var result = await service.Handle(command, ct);
-
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 
     [Authorize]
-    [HttpDelete("{id:guid}/breeds/{breedId:guid}")]
+    [HttpDelete("{speciesId:guid}/breeds/{breedId:guid}")]
     public async Task<ActionResult<Guid>> DeleteBreed(
-        [FromRoute] Guid id,
+        [FromRoute] Guid speciesId,
         [FromRoute] Guid breedId,
         [FromServices] DeleteBreedService service,
         CancellationToken ct)
     {
-        var command = new DeleteBreedCommand(id, breedId);
+        var command = new DeleteBreedCommand(speciesId, breedId);
         var result = await service.Handle(command, ct);
-
         return result.IsFailure ? result.Error.ToResponse() : Ok(result.Value);
     }
 }

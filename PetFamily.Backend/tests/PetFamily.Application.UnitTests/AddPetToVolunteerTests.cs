@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using PetFamily.SharedKernel;
+using PetFamily.Species.Contracts;
 using PetFamily.UnitTests.Infrastructure;
 using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Application.Commands.Pet.AddToVolunteer;
@@ -13,7 +14,7 @@ namespace PetFamily.Application.UnitTests;
 public class AddPetToVolunteerTests
 {
     private readonly IVolunteersRepository _volunteersRepositoryMock = Substitute.For<IVolunteersRepository>();
-    private readonly IReadDbContext _readDbContextMock = Substitute.For<IReadDbContext>();
+    private readonly ISpeciesContract _speciesContract = Substitute.For<ISpeciesContract>();
     private readonly IValidator<AddToVolunteerCommand> _validatorMock =  Substitute.For<IValidator<AddToVolunteerCommand>>();
     private readonly IUnitOfWork _unitOfWorkMock = Substitute.For<IUnitOfWork>();
     private readonly ILogger<AddToVolunteerService> _loggerMock = Substitute.For<ILogger<AddToVolunteerService>>();
@@ -32,8 +33,8 @@ public class AddPetToVolunteerTests
         _loggerMock.LogInformation("Success");
         
         var service  = new AddToVolunteerService(
+            _speciesContract,
             _volunteersRepositoryMock,
-            _readDbContextMock,
             _validatorMock,
             _unitOfWorkMock,
             _loggerMock);
@@ -63,8 +64,8 @@ public class AddPetToVolunteerTests
         _loggerMock.LogInformation("Success");
 
         var service = new AddToVolunteerService(
+            _speciesContract,
             _volunteersRepositoryMock,
-            _readDbContextMock,
             _validatorMock,
             _unitOfWorkMock,
             _loggerMock);

@@ -32,6 +32,25 @@ public class AddToVolunteerService(
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
 
+        var petResult = await CreatePet(command, ct);
+        if (petResult.IsFailure)
+            return petResult.Error;
+
+        volunteerResult.Value.AddPet(petResult.Value);
+        await unitOfWork.SaveChanges(ct);
+        
+        logger.LogInformation(
+            "Added pet with id {petId} to volunteer with id {volunteerId}",
+            petResult.Value.Id,
+            volunteerId);
+        
+        return petResult.Value.Id.Value;
+    }
+    
+    private async Task<Result<Domain.Pets.Pet, ErrorList>> CreatePet(
+        AddToVolunteerCommand command,
+        CancellationToken ct)
+    {
         var petId = PetId.NewId();
         var name = Name.Create(command.Name).Value;
         var description = Description.Create(command.Description).Value;
@@ -65,7 +84,7 @@ public class AddToVolunteerService(
         
         var properties = new Property(SpeciesId.Create(command.SpeciesId), command.BreedId);
         
-        var pet = new Domain.Pets.Pet(
+        return new Domain.Pets.Pet(
             petId,
             name,
             description,
@@ -79,16 +98,5 @@ public class AddToVolunteerService(
             createdDate,
             requisites,
             properties);
-
-        volunteerResult.Value.AddPet(pet);
-        
-        await unitOfWork.SaveChanges(ct);
-        
-        logger.LogInformation(
-            "Added pet with id {petId} to volunteer with id {volunteerId}",
-            petId,
-            volunteerId);
-        
-        return petId.Value;
     }
 }
